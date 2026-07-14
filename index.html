@@ -1566,27 +1566,7 @@
 @media(min-width:768px){.mobile-home{display:none!important}}
 </style>
 
-</head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div>
-<script id="docsend-home-slider-script">
-(function(){
- function initSlider(root){
-  if(!root||root.dataset.ready==='1')return; root.dataset.ready='1';
-  const track=root.querySelector('.slider-track'),slides=[...root.querySelectorAll('.slider-slide')],dots=[...root.querySelectorAll('.slider-dots button')];
-  let index=0,timer=null,startX=0;
-  const show=(i)=>{index=(i+slides.length)%slides.length;track.style.transform=`translateX(-${index*100}%)`;slides.forEach((s,n)=>s.classList.toggle('is-active',n===index));dots.forEach((d,n)=>d.classList.toggle('active',n===index));};
-  const autoplay=()=>{clearInterval(timer);timer=setInterval(()=>show(index+1),4500)};
-  root.querySelector('.prev')?.addEventListener('click',()=>{show(index-1);autoplay()});
-  root.querySelector('.next')?.addEventListener('click',()=>{show(index+1);autoplay()});
-  dots.forEach((d,n)=>d.addEventListener('click',()=>{show(n);autoplay()}));
-  root.addEventListener('pointerdown',e=>{startX=e.clientX;clearInterval(timer)});
-  root.addEventListener('pointerup',e=>{const dx=e.clientX-startX;if(Math.abs(dx)>45)show(index+(dx<0?1:-1));autoplay()});
-  root.addEventListener('mouseenter',()=>clearInterval(timer));root.addEventListener('mouseleave',autoplay);
-  show(0);autoplay();
- }
- document.addEventListener('DOMContentLoaded',()=>{initSlider(document.getElementById('mobileHomeSlider'));initSlider(document.getElementById('desktopHomeSlider'))});
-})();
-</script>
-</body></html>`);
+</head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div></body></html>`);
             tab.document.close();
         }
 
@@ -2234,5 +2214,40 @@
             }
         });
     </script>
+
+<script id="docsend-home-slider-script">
+(function(){
+ function initSlider(root){
+  if(!root||root.dataset.ready==='1')return;
+  root.dataset.ready='1';
+  const track=root.querySelector('.slider-track');
+  const slides=[...root.querySelectorAll('.slider-slide')];
+  const dots=[...root.querySelectorAll('.slider-dots button')];
+  if(!track||!slides.length)return;
+  let index=0,timer=null,startX=0;
+  const show=(i)=>{
+   index=(i+slides.length)%slides.length;
+   track.style.transform='translateX(-'+(index*100)+'%)';
+   slides.forEach((slide,n)=>slide.classList.toggle('is-active',n===index));
+   dots.forEach((dot,n)=>dot.classList.toggle('active',n===index));
+  };
+  const autoplay=()=>{clearInterval(timer);timer=setInterval(()=>show(index+1),4500);};
+  const prev=root.querySelector('.prev');
+  const next=root.querySelector('.next');
+  if(prev)prev.addEventListener('click',()=>{show(index-1);autoplay();});
+  if(next)next.addEventListener('click',()=>{show(index+1);autoplay();});
+  dots.forEach((dot,n)=>dot.addEventListener('click',()=>{show(n);autoplay();}));
+  root.addEventListener('pointerdown',(event)=>{startX=event.clientX;clearInterval(timer);});
+  root.addEventListener('pointerup',(event)=>{const dx=event.clientX-startX;if(Math.abs(dx)>45)show(index+(dx<0?1:-1));autoplay();});
+  root.addEventListener('mouseenter',()=>clearInterval(timer));
+  root.addEventListener('mouseleave',autoplay);
+  show(0);autoplay();
+ }
+ document.addEventListener('DOMContentLoaded',()=>{
+  initSlider(document.getElementById('mobileHomeSlider'));
+  initSlider(document.getElementById('desktopHomeSlider'));
+ });
+})();
+</script>
 </body>
 </html>
