@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://doc-send-go.vercel.app/sitemap.xml

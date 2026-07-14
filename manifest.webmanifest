@@ -1,14 +1,31 @@
 {
   "name": "DocSendGo",
   "short_name": "DocSendGo",
-  "description": "Scan receiver QR and send files securely.",
-  "start_url": "./index.html",
+  "description": "Scan \u2022 Send \u2022 Receive \u2022 Print files using a personal QR code.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0ea5e9",
   "orientation": "portrait-primary",
   "icons": [
-    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
-  ]
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "./",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "lang": "en"
 }

@@ -1,0 +1,26 @@
+DOCSENDGO v1.0.0
+
+App name: DocSendGo
+Tagline: Scan • Send • Receive • Print
+Category: Productivity
+
+Short description:
+Scan a personal QR code to send, receive, view, print and download files.
+
+Full description:
+DocSendGo is a QR-based document sharing and productivity app. Each user can create one profile with a personal QR code. A sender scans the receiver's QR code, uploads a file and sends it directly to the receiver's inbox. Supported files can be viewed, printed or downloaded. DocSendGo also includes PDF, image and government-document tools for general users, students, offices, CSC centres, online service centres and print shops.
+
+Main features:
+- One profile per user
+- Personal QR code
+- QR-based file sending
+- Received-files inbox
+- View, print and download
+- PDF and image tools
+- Mobile and desktop support
+
+Required before store submission:
+- Build and sign an Android APK/AAB
+- Add a permanent support email to contact.html and the store listing
+- Capture current in-app screenshots
+- Test Firebase rules and file deletion/retention

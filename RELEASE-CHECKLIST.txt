@@ -1,0 +1,13 @@
+DocSendGo v1.0 release checklist
+
+[ ] Replace GitHub project files with this release package
+[ ] Deploy on Vercel
+[ ] Open /privacy.html, /terms.html, /contact.html and /faq.html
+[ ] Test profile creation and profile editing
+[ ] Test QR scanning on Android Chrome
+[ ] Send a PDF and an image between two different devices
+[ ] Test View, Print and Download
+[ ] Review Firebase Firestore and Storage security rules
+[ ] Submit /sitemap.xml in Google Search Console
+[ ] Add a permanent support email before app-store submission
+[ ] Build and sign APK/AAB separately
