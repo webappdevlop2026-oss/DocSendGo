@@ -316,6 +316,32 @@
  body.panel-open{overflow:hidden}
 }
 </style>
+
+<style id="docsend-home-slider-style">
+.desktop-slider-wrap{padding:38px 28px 46px;background:linear-gradient(180deg,#eff6ff,#fff)}
+.home-slider{position:relative;overflow:hidden;border-radius:30px;max-width:1180px;margin:auto;box-shadow:0 22px 55px rgba(15,42,95,.18);background:#1d4ed8}
+.slider-track{display:flex;transition:transform .6s cubic-bezier(.22,.61,.36,1);will-change:transform}
+.slider-slide{position:relative;min-width:100%;height:430px;overflow:hidden;color:#fff}
+.slider-slide>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slider-copy{position:absolute;z-index:2;left:8%;top:50%;transform:translateY(-50%);width:46%;text-align:left}
+.slider-copy span{display:inline-flex;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);padding:8px 13px;border-radius:999px;font-size:13px;font-weight:800;margin-bottom:18px;backdrop-filter:blur(8px)}
+.slider-copy h1{font-size:48px;line-height:1.08;font-weight:900;letter-spacing:-1.5px;margin:0 0 16px}
+.slider-copy p{font-size:18px;line-height:1.6;color:#eaf2ff;margin:0 0 24px;max-width:530px}
+.slider-copy button{background:#fff;color:#1554d1;padding:13px 22px;border-radius:14px;font-weight:900;box-shadow:0 9px 22px rgba(0,0,0,.16);margin-right:10px}
+.slider-copy button.secondary{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px)}
+.slider-arrow{position:absolute;z-index:4;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.9);color:#174ea6;font-size:32px;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+.slider-arrow.prev{left:16px}.slider-arrow.next{right:16px}
+.slider-dots{position:absolute;z-index:4;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:8px}
+.slider-dots button{width:9px;height:9px;border-radius:99px;background:rgba(255,255,255,.55);transition:.25s}.slider-dots button.active{width:26px;background:#fff}
+.mobile-slider{display:none}
+@media(max-width:767px){
+ .desktop-slider-wrap{display:none!important}.mobile-slider{display:block;height:230px;border-radius:25px;margin:0;box-shadow:0 14px 32px rgba(57,70,205,.24)}
+ .mobile-slider .slider-slide{height:230px}.mobile-slider .slider-copy{left:19px;top:23px;transform:none;width:58%}
+ .mobile-slider .slider-copy span{font-size:10px;padding:5px 8px;margin-bottom:10px}.mobile-slider .slider-copy h1{font-size:25px;line-height:1.12;letter-spacing:-.6px;margin-bottom:9px}.mobile-slider .slider-copy p{font-size:12px;line-height:1.4;margin-bottom:12px}.mobile-slider .slider-copy button{font-size:11px;padding:8px 11px;border-radius:10px;margin:0}
+ .mobile-slider .slider-arrow{width:31px;height:31px;font-size:22px;background:rgba(255,255,255,.82)}.mobile-slider .slider-arrow.prev{left:7px}.mobile-slider .slider-arrow.next{right:7px}
+ .mobile-slider .slider-dots{bottom:9px}.mobile-slider .slider-dots button{width:6px;height:6px}.mobile-slider .slider-dots button.active{width:18px}
+}
+</style>
 </head>
 <body class="bg-slate-50 min-h-screen">
 
@@ -396,9 +422,14 @@
             <div class="mh-logo"><div class="mh-logo-mark">D</div><div><strong>DocSend<span>Go</span></strong><small>Scan • Send • Receive • Print</small></div></div>
             <button class="mh-bell" onclick="toggleNotificationPanel()" aria-label="Notifications">🔔<span id="mobileNotificationBadge" class="mh-badge">0</span></button>
           </header>
-          <section class="mh-hero">
-            <div class="mh-hero-copy"><div class="mh-secure">🛡️ Secure • Fast • Easy</div><h1>Share Documents<br>with QR Code</h1><p>Send, Receive, Print<br>anytime, anywhere</p></div>
-            <div class="mh-flying">▦</div><div class="mh-printer"></div><div class="mh-dots"><i></i><i></i><i></i><i></i></div>
+          <section class="home-slider mobile-slider" id="mobileHomeSlider" aria-label="DocSendGo highlights">
+            <div class="slider-track">
+              <article class="slider-slide is-active"><img src="banner-share.svg" alt="Secure QR document sharing"><div class="slider-copy"><span>🛡️ Secure • Fast • Easy</span><h1>Share Documents<br>with QR Code</h1><p>Scan, send, receive and print anywhere.</p><button onclick="showPage('send')">Scan & Send</button></div></article>
+              <article class="slider-slide"><img src="banner-tools.svg" alt="PDF and image tools"><div class="slider-copy"><span>🛠️ Useful Tools</span><h1>PDF & Image<br>Tools Together</h1><p>Merge, split, resize and convert files easily.</p><button onclick="showPage('tools')">Open Tools</button></div></article>
+              <article class="slider-slide"><img src="banner-profile.svg" alt="Personal profile and QR code"><div class="slider-copy"><span>👤 Personal Profile</span><h1>Your Own QR<br>for Receiving Files</h1><p>Show your QR and receive files directly.</p><button onclick="showPage('shops')">My Profile</button></div></article>
+            </div>
+            <button class="slider-arrow prev" aria-label="Previous slide">‹</button><button class="slider-arrow next" aria-label="Next slide">›</button>
+            <div class="slider-dots"><button class="active" aria-label="Slide 1"></button><button aria-label="Slide 2"></button><button aria-label="Slide 3"></button></div>
           </section>
           <div class="mh-actions">
             <button class="mh-action blue" onclick="showPage('send')"><div class="ico">▣</div>Scan QR<small>Scan & Send</small></button>
@@ -427,8 +458,16 @@
             <div class="mh-how"><div class="mh-step"><div class="num">1</div><div class="sico">▦</div>Scan QR</div><div class="mh-step"><div class="num">2</div><div class="sico">📤</div>Upload File</div><div class="mh-step"><div class="num">3</div><div class="sico">📥</div>Receiver Get</div><div class="mh-step"><div class="num" style="background:#18b64b">✓</div><div class="sico">🖨️</div>View / Print</div></div>
           </section>
         </div>
-        <section class="gradient-bg hero-pattern text-white py-20 px-4">
-            <div class="max-w-5xl mx-auto text-center fade-in"><h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">Send Files to Anyone<br><span class="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">Using Receiver QR</span></h1><p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto">Receiver shows QR, sender scans it and sends the file directly.</p><div class="flex gap-4 justify-center"><button onclick="showPage('send')" class="btn-primary px-8 py-4 rounded-2xl font-bold">📤 Scan & Send File</button><button onclick="showPage('shops')" class="glass px-8 py-4 rounded-2xl font-bold">👤 My Dashboard</button></div></div>
+        <section class="desktop-slider-wrap">
+          <div class="home-slider desktop-slider" id="desktopHomeSlider" aria-label="DocSendGo highlights">
+            <div class="slider-track">
+              <article class="slider-slide is-active"><img src="banner-share.svg" alt="Secure QR document sharing"><div class="slider-copy"><span>🛡️ Secure • Fast • Easy</span><h1>Share Documents with QR Code</h1><p>Receiver shows a personal QR. Sender scans and sends files directly.</p><div><button onclick="showPage('send')">📤 Scan & Send</button><button class="secondary" onclick="showPage('shops')">👤 My Dashboard</button></div></div></article>
+              <article class="slider-slide"><img src="banner-tools.svg" alt="PDF and image tools"><div class="slider-copy"><span>🛠️ All-in-one Tools</span><h1>PDF, Image & Government Tools</h1><p>Use helpful document tools from one clean dashboard.</p><button onclick="showPage('tools')">Open Tools</button></div></article>
+              <article class="slider-slide"><img src="banner-profile.svg" alt="Personal profile and QR code"><div class="slider-copy"><span>👤 One User • One Profile</span><h1>Your Personal QR for Receiving Files</h1><p>Show your QR and receive documents directly in your dashboard.</p><button onclick="showPage('shops')">Open Profile</button></div></article>
+            </div>
+            <button class="slider-arrow prev" aria-label="Previous slide">‹</button><button class="slider-arrow next" aria-label="Next slide">›</button>
+            <div class="slider-dots"><button class="active" aria-label="Slide 1"></button><button aria-label="Slide 2"></button><button aria-label="Slide 3"></button></div>
+          </div>
         </section>
     </div>
 
@@ -1527,7 +1566,27 @@
 @media(min-width:768px){.mobile-home{display:none!important}}
 </style>
 
-</head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div></body></html>`);
+</head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div>
+<script id="docsend-home-slider-script">
+(function(){
+ function initSlider(root){
+  if(!root||root.dataset.ready==='1')return; root.dataset.ready='1';
+  const track=root.querySelector('.slider-track'),slides=[...root.querySelectorAll('.slider-slide')],dots=[...root.querySelectorAll('.slider-dots button')];
+  let index=0,timer=null,startX=0;
+  const show=(i)=>{index=(i+slides.length)%slides.length;track.style.transform=`translateX(-${index*100}%)`;slides.forEach((s,n)=>s.classList.toggle('is-active',n===index));dots.forEach((d,n)=>d.classList.toggle('active',n===index));};
+  const autoplay=()=>{clearInterval(timer);timer=setInterval(()=>show(index+1),4500)};
+  root.querySelector('.prev')?.addEventListener('click',()=>{show(index-1);autoplay()});
+  root.querySelector('.next')?.addEventListener('click',()=>{show(index+1);autoplay()});
+  dots.forEach((d,n)=>d.addEventListener('click',()=>{show(n);autoplay()}));
+  root.addEventListener('pointerdown',e=>{startX=e.clientX;clearInterval(timer)});
+  root.addEventListener('pointerup',e=>{const dx=e.clientX-startX;if(Math.abs(dx)>45)show(index+(dx<0?1:-1));autoplay()});
+  root.addEventListener('mouseenter',()=>clearInterval(timer));root.addEventListener('mouseleave',autoplay);
+  show(0);autoplay();
+ }
+ document.addEventListener('DOMContentLoaded',()=>{initSlider(document.getElementById('mobileHomeSlider'));initSlider(document.getElementById('desktopHomeSlider'))});
+})();
+</script>
+</body></html>`);
             tab.document.close();
         }
 
