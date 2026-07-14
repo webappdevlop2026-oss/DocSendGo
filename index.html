@@ -249,6 +249,38 @@
 @media(min-width:768px){.mobile-home{display:none!important}}
 </style>
 
+
+<style id="mobile-nav-back-final-fix">
+@media (max-width:767px){
+  body{padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}
+  .mobile-bottom-nav{
+    display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    position:fixed!important;top:auto!important;left:12px!important;right:12px!important;
+    bottom:max(8px,env(safe-area-inset-bottom))!important;height:72px!important;min-height:72px!important;max-height:72px!important;
+    padding:5px 4px!important;margin:0!important;border-radius:22px!important;overflow:visible!important;
+    background:rgba(255,255,255,.98)!important;border:1px solid #e1e8f5!important;
+    box-shadow:0 10px 32px rgba(26,52,98,.18)!important;z-index:10000!important;
+  }
+  .mobile-bottom-nav .mobile-nav-btn{
+    width:100%!important;min-width:0!important;height:60px!important;margin:0!important;padding:5px 1px!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+    gap:3px!important;border-radius:15px!important;background:transparent!important;color:#667085!important;
+    font-size:10px!important;font-weight:800!important;line-height:1!important;white-space:nowrap!important;
+    transform:none!important;overflow:hidden!important;
+  }
+  .mobile-bottom-nav .mobile-nav-btn .mobile-icon{display:block!important;font-size:21px!important;line-height:22px!important;width:auto!important}
+  .mobile-bottom-nav .mobile-nav-btn span:last-child{display:block!important;font-size:10px!important;line-height:12px!important;letter-spacing:0!important}
+  .mobile-bottom-nav .mobile-nav-btn.mobile-active{color:#1768f2!important;background:#edf4ff!important;transform:none!important}
+  .mobile-bottom-nav #mnav-send{width:58px!important;height:58px!important;justify-self:center!important;margin-top:-17px!important;border-radius:50%!important;background:linear-gradient(145deg,#278cff,#1558ea)!important;color:#fff!important;box-shadow:0 8px 20px rgba(23,104,242,.35)!important;border:4px solid #fff!important;overflow:visible!important}
+  .mobile-bottom-nav #mnav-send span:last-child{font-size:9px!important;color:#fff!important}
+  .mobile-bottom-nav #mnav-send .mobile-icon{font-size:20px!important}
+  .app-mobile-backbar{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);padding:10px 14px;border-bottom:1px solid #e8edf6;box-shadow:0 3px 12px rgba(25,54,99,.05)}
+  .app-mobile-backbar button{border:0;border-radius:11px;padding:9px 12px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:5px}
+  .app-back-btn{background:#eef4ff;color:#1768f2}.app-home-btn{background:#1768f2;color:#fff}
+  .page:not(#page-home){padding-top:0!important}
+}
+@media (min-width:768px){.app-mobile-backbar{display:none!important}}
+</style>
 </head>
 <body class="bg-slate-50 min-h-screen">
 
@@ -663,7 +695,7 @@
     <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
         <button id="mnav-home" class="mobile-nav-btn mobile-active" onclick="showPage('home')"><span class="mobile-icon">🏠</span><span>Home</span></button>
         <button id="mnav-tools" class="mobile-nav-btn" onclick="showPage('tools')"><span class="mobile-icon">🛠️</span><span>Tools</span></button>
-        <button id="mnav-send" class="mobile-nav-btn" onclick="showPage('send')"><span class="mobile-icon">📤</span><span>Send</span></button>
+        <button id="mnav-send" class="mobile-nav-btn mobile-send" onclick="showPage('send')"><span class="mobile-icon">📤</span><span>Send</span></button>
         <button id="mnav-receive" class="mobile-nav-btn" onclick="showPage('receive')"><span class="mobile-icon">📥</span><span>Receive</span></button>
         <button id="mnav-shops" class="mobile-nav-btn" onclick="showPage('shops')"><span class="mobile-icon">👤</span><span>Profile</span></button>
     </nav>
@@ -798,9 +830,48 @@
         }
 
         // ===== NAVIGATION =====
+        window.__appPageStack = window.__appPageStack || [];
+        window.__appBackNavigation = false;
+
+        function getCurrentAppPage() {
+            const visible = Array.from(document.querySelectorAll('.page')).find(p => !p.classList.contains('hidden'));
+            return visible ? visible.id.replace('page-', '') : 'home';
+        }
+
+        function appGoBack() {
+            const target = window.__appPageStack.pop() || 'home';
+            window.__appBackNavigation = true;
+            showPage(target);
+            window.__appBackNavigation = false;
+        }
+
+        function appGoHome() {
+            window.__appPageStack = [];
+            window.__appBackNavigation = true;
+            showPage('home');
+            window.__appBackNavigation = false;
+        }
+
+        function ensureMobileBackBar(page) {
+            document.querySelectorAll('.app-mobile-backbar').forEach(el => el.remove());
+            if (page === 'home' || window.innerWidth > 767) return;
+            const target = document.getElementById('page-' + page);
+            if (!target) return;
+            const bar = document.createElement('div');
+            bar.className = 'app-mobile-backbar';
+            bar.innerHTML = '<button class="app-back-btn" onclick="appGoBack()">← Back</button><button class="app-home-btn" onclick="appGoHome()">🏠 Back to Home</button>';
+            target.insertBefore(bar, target.firstChild);
+        }
+
         function showPage(page) {
+            const currentPage = getCurrentAppPage();
+            if (!window.__appBackNavigation && currentPage !== page) {
+                window.__appPageStack.push(currentPage);
+                if (window.__appPageStack.length > 20) window.__appPageStack.shift();
+            }
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             document.getElementById('page-' + page).classList.remove('hidden');
+            ensureMobileBackBar(page);
             
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('nav-active');
