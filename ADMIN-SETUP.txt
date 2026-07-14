@@ -1,0 +1,29 @@
+DOCSENDGO ADMIN PANEL SETUP
+===========================
+Admin URL after deployment:
+https://YOUR-VERCEL-DOMAIN/232admin.html
+
+IMPORTANT: 232admin.html is hidden from the normal website menu, but the URL itself is not a security boundary. Firebase Authentication + Firestore rules provide the security.
+
+1) Firebase Console > Authentication > Sign-in method > enable Email/Password.
+2) Authentication > Users > Add user. Use your Indus Appstore/developer email and a strong password.
+3) Copy that user's UID.
+4) Firestore Database > Start collection: admins
+   Document ID: paste the UID
+   Fields:
+     active = true (Boolean)
+     role = superadmin (String)
+     email = your email (String)
+5) Publish the included firestore.rules and storage.rules in Firebase Console.
+6) Deploy all project files to Vercel.
+7) Open /232admin.html and log in.
+
+Admin features included:
+- Dashboard counts
+- User search, block/unblock and delete
+- Receiver-file and share-code list/delete
+- Admin announcements
+- Maintenance mode, uploads and tools controls
+
+NOTE:
+The current user website does not yet read appConfig/adminNotifications for every feature. The Admin Panel stores these controls correctly in Firestore; the public app can be connected to them in a later update without changing the Admin Panel.

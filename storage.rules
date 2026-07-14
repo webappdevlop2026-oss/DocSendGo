@@ -1,0 +1,8 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Compatibility with the current public upload flow.
+    // Add normal-user Authentication before making this stricter.
+    match /{allPaths=**} { allow read, write: if true; }
+  }
+}
