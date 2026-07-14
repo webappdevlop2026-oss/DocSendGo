@@ -483,9 +483,14 @@
                                 <p class="text-sm text-slate-500" id="receiveFileSize">0 KB</p>
                             </div>
                         </div>
-                        <button onclick="downloadReceivedFile()" class="w-full btn-primary text-white py-3 rounded-xl font-bold text-lg hover:shadow-lg transition-all">
-                            ️ Download File
-                        </button>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="viewReceivedFile()" class="w-full bg-white border-2 border-primary text-primary py-3 rounded-xl font-bold hover:bg-blue-50 transition-all">
+                                👁️ View File
+                            </button>
+                            <button onclick="downloadReceivedFile()" class="w-full btn-primary text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all">
+                                ⬇️ Download File
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1079,12 +1084,64 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick='downloadShopDocument(${JSON.stringify(doc.files).replace(/'/g, "&#39;")})' class="w-full btn-primary text-white py-2 rounded-xl text-sm font-semibold">
-                            ⬇️ Download
-                        </button>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick='viewShopDocument(${JSON.stringify(doc.files).replace(/'/g, "&#39;")})' class="w-full bg-white border-2 border-primary text-primary py-2 rounded-xl text-sm font-semibold hover:bg-blue-50 transition-all">
+                                👁️ View
+                            </button>
+                            <button onclick='downloadShopDocument(${JSON.stringify(doc.files).replace(/'/g, "&#39;")})' class="w-full btn-primary text-white py-2 rounded-xl text-sm font-semibold">
+                                ⬇️ Download
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        async function viewShopDocument(files) {
+            if (!Array.isArray(files) || files.length === 0) {
+                showToast('No file found to view.', 'error');
+                return;
+            }
+
+            // Open tabs immediately so the browser does not block them after async Firebase requests.
+            const previewTabs = files.map(() => window.open('', '_blank'));
+            previewTabs.forEach(tab => {
+                if (tab) {
+                    tab.document.write('<div style="font-family:Arial,sans-serif;padding:30px;text-align:center"><h3>Opening document...</h3><p>Please wait.</p></div>');
+                }
+            });
+
+            showToast('Opening document...', 'info');
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const tab = previewTabs[i];
+                if (!tab) {
+                    showToast('Popup blocked. Please allow popups for this website.', 'error');
+                    continue;
+                }
+
+                try {
+                    let previewUrl = file.url;
+                    if (file.path && storageRef) {
+                        previewUrl = await storageRef.child(file.path).getDownloadURL();
+                    }
+
+                    const response = await fetch(previewUrl, { mode: 'cors' });
+                    if (!response.ok) throw new Error(`Preview failed (${response.status})`);
+                    const blob = await response.blob();
+                    const objectUrl = URL.createObjectURL(blob);
+                    tab.location.href = objectUrl;
+                    setTimeout(() => URL.revokeObjectURL(objectUrl), 10 * 60 * 1000);
+                } catch (error) {
+                    console.warn('Blob preview failed, opening Firebase URL:', error);
+                    if (file.url) {
+                        tab.location.href = file.url;
+                    } else {
+                        tab.document.body.innerHTML = '<div style="font-family:Arial,sans-serif;padding:30px;text-align:center"><h3>Unable to preview this file</h3><p>Please use the Download button.</p></div>';
+                    }
+                }
+            }
         }
 
         async function downloadShopDocument(files) {
@@ -1295,6 +1352,11 @@
             db.collection('shares').doc(code).update({
                 downloadCount: firebase.firestore.FieldValue.increment(1)
             }).catch(() => {});
+        }
+
+        async function viewReceivedFile() {
+            if (!receivedFileData || !receivedFileData.files) return;
+            await viewShopDocument(receivedFileData.files);
         }
 
         async function downloadReceivedFile() {
