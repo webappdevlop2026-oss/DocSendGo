@@ -1113,24 +1113,32 @@
             return mimeMap[ext] || 'application/octet-stream';
         }
 
-        function showPreviewInTab(tab, objectUrl, mimeType, fileName) {
-            const safeName = String(fileName || 'Document')
+        function escapePreviewText(value) {
+            return String(value || '')
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function showRemotePreviewInTab(tab, previewUrl, mimeType, fileName) {
+            const safeName = escapePreviewText(fileName || 'Document');
+            const safeUrl = escapePreviewText(previewUrl);
+            const lowerName = String(fileName || '').toLowerCase();
+            const isImage = mimeType.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(lowerName);
 
             let viewer;
-            if (mimeType.startsWith('image/')) {
-                viewer = `<img src="${objectUrl}" alt="${safeName}" style="max-width:100%;height:auto;display:block;margin:auto;">`;
-            } else if (mimeType === 'application/pdf') {
-                viewer = `<iframe src="${objectUrl}#toolbar=1&navpanes=0" style="width:100%;height:100%;border:0;"></iframe>`;
-            } else if (mimeType.startsWith('text/')) {
-                viewer = `<iframe src="${objectUrl}" style="width:100%;height:100%;border:0;background:white;"></iframe>`;
+            if (isImage) {
+                // Images can be displayed with <img> without a CORS fetch.
+                viewer = `<div class="image-wrap"><img src="${safeUrl}" alt="${safeName}"></div>`;
             } else {
-                viewer = `<div style="font-family:Arial,sans-serif;padding:30px;text-align:center"><h3>Preview is not supported for this file type</h3><p>Use the Download button to open it in the appropriate application.</p></div>`;
+                // Google Docs Viewer loads the public Firebase URL server-side, so
+                // Firebase browser CORS and attachment headers do not force a download.
+                const docsViewer = 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(previewUrl);
+                viewer = `<iframe src="${escapePreviewText(docsViewer)}" allow="fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
             }
 
             tab.document.open();
-            tab.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${safeName}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{height:100%;margin:0;background:#eef2f7}.top{height:52px;box-sizing:border-box;padding:14px 18px;background:#0f172a;color:#fff;font:600 15px Arial;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewer{height:calc(100% - 52px);overflow:auto;display:block}</style></head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div></body></html>`);
+            tab.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${safeName}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{height:100%;margin:0;background:#eef2f7;font-family:Arial,sans-serif}.top{height:54px;box-sizing:border-box;padding:15px 18px;background:#0f172a;color:#fff;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewer{height:calc(100% - 54px)}iframe{width:100%;height:100%;border:0;background:#fff}.image-wrap{height:100%;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:18px;box-sizing:border-box}.image-wrap img{max-width:100%;height:auto;display:block;background:white;box-shadow:0 4px 22px rgba(15,23,42,.14)}</style></head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div></body></html>`);
             tab.document.close();
         }
 
@@ -1140,10 +1148,13 @@
                 return;
             }
 
+            // Open tabs immediately from the click event to avoid popup blocking.
             const previewTabs = files.map(() => window.open('', '_blank'));
             previewTabs.forEach(tab => {
                 if (tab) {
+                    tab.document.open();
                     tab.document.write('<div style="font-family:Arial,sans-serif;padding:30px;text-align:center"><h3>Opening document...</h3><p>Please wait.</p></div>');
+                    tab.document.close();
                 }
             });
 
@@ -1164,21 +1175,13 @@
                     }
                     if (!previewUrl) throw new Error('File URL not found');
 
-                    const response = await fetch(previewUrl, { mode: 'cors' });
-                    if (!response.ok) throw new Error(`Preview failed (${response.status})`);
-
-                    const bytes = await response.arrayBuffer();
                     const mimeType = getPreviewMimeType(file);
-                    const previewBlob = new Blob([bytes], { type: mimeType });
-                    const objectUrl = URL.createObjectURL(previewBlob);
-
-                    // Keep the document inside our preview page instead of navigating
-                    // directly to Firebase's attachment URL, which can trigger download.
-                    showPreviewInTab(tab, objectUrl, mimeType, file.name);
-                    setTimeout(() => URL.revokeObjectURL(objectUrl), 30 * 60 * 1000);
+                    showRemotePreviewInTab(tab, previewUrl, mimeType, file.name);
                 } catch (error) {
                     console.error('Preview failed:', error);
-                    tab.document.body.innerHTML = '<div style="font-family:Arial,sans-serif;padding:30px;text-align:center"><h3>Unable to preview this file</h3><p>Please check Firebase Storage CORS, then try again.</p></div>';
+                    tab.document.open();
+                    tab.document.write('<div style="font-family:Arial,sans-serif;padding:30px;text-align:center"><h3>Unable to preview this file</h3><p>Please close this tab and try again.</p></div>');
+                    tab.document.close();
                     showToast('Could not preview document: ' + error.message, 'error');
                 }
             }
