@@ -652,8 +652,8 @@
     <div id="page-shops" class="page hidden">
         <div class="max-w-4xl mx-auto px-4 py-8 fade-in">
             <div class="flex items-center justify-between mb-8">
-                <div><h2 class="text-3xl font-extrabold text-slate-800 mb-2">👤 My Profile</h2><p class="text-slate-500">Every user gets one unique ID and one personal QR.</p></div>
-                <button onclick="openProfileEditor()" class="btn-primary text-white px-5 py-3 rounded-xl font-bold">✏️ Create / Edit Profile</button>
+                <div><h2 class="text-3xl font-extrabold text-slate-800 mb-2">👤 My Profile</h2><p class="text-slate-500">Each user has only one profile, one unique ID and one personal QR.</p></div>
+                <button onclick="openProfileEditor()" class="btn-primary text-white px-5 py-3 rounded-xl font-bold">✏️ Edit Profile</button>
             </div>
             <div id="shopsList"><div class="text-center py-12 text-slate-400">Loading profile...</div></div>
 
@@ -1248,9 +1248,24 @@
         }
 
         async function getMyProfile() {
+            // Strict singleton profile: this browser/device always reuses the same profile document.
+            const savedCode = localStorage.getItem('docsendgo_profile_code');
+            if(savedCode){
+                const savedDoc = await db.collection('shops').doc(savedCode).get();
+                if(savedDoc.exists && savedDoc.data()?.ownerToken === getOwnerToken()){
+                    const profile = { id: savedDoc.id, ...savedDoc.data() };
+                    localStorage.setItem('docsendgo_profile', JSON.stringify(profile));
+                    return profile;
+                }
+                localStorage.removeItem('docsendgo_profile_code');
+            }
+
             const snap = await db.collection('shops').where('ownerToken', '==', getOwnerToken()).limit(1).get();
             if(snap.empty) return null;
-            return { id: snap.docs[0].id, ...snap.docs[0].data() };
+            const profile = { id: snap.docs[0].id, ...snap.docs[0].data() };
+            localStorage.setItem('docsendgo_profile_code', profile.code || profile.id);
+            localStorage.setItem('docsendgo_profile', JSON.stringify(profile));
+            return profile;
         }
 
         async function openProfileEditor() {
@@ -1319,8 +1334,10 @@
                     course: document.getElementById('profileCourse').value.trim(),
                     createdAt: profile?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString(), ownerToken:getOwnerToken()
                 },{merge:true});
-                currentUserProfile={name,code,userId:code,userType,photoUrl};
-                closeProfileEditor(); await updateShopsList(); showToast('Profile saved! ✅');
+                currentUserProfile={name,code,userId:code,userType,photoUrl,ownerToken:getOwnerToken()};
+                localStorage.setItem('docsendgo_profile_code', code);
+                localStorage.setItem('docsendgo_profile', JSON.stringify(currentUserProfile));
+                closeProfileEditor(); await updateShopsList(); showToast(profile ? 'Profile updated! ✅' : 'Profile created! ✅');
             }catch(err){ showToast('Profile save error: '+err.message,'error'); }
             finally{ btn.disabled=false; btn.textContent='💾 Save Profile'; }
         }
