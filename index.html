@@ -133,7 +133,7 @@
                     <button onclick="showPage('send')" id="nav-send" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📤 Send</button>
                     <button onclick="showPage('receive')" id="nav-receive" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📥 Receive</button>
                     <button onclick="showPage('shops')" id="nav-shops" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all relative">
-                        👤 Receivers
+                        👤 Profile
                         <span id="shopNotification" class="notification-badge hidden">0</span>
                     </button>
                 </div>
@@ -146,7 +146,7 @@
                 <button onclick="showPage('tools');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">️ Tools</button>
                 <button onclick="showPage('send');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">📤 Send</button>
                 <button onclick="showPage('receive');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">📥 Receive</button>
-                <button onclick="showPage('shops');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">👤 Receivers</button>
+                <button onclick="showPage('shops');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">👤 Profile</button>
             </div>
         </div>
     </nav>
@@ -171,7 +171,7 @@
                         📤 Scan & Send File
                     </button>
                     <button onclick="showPage('shops')" class="glass px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/15 transition-all">
-                        👤 Receiver Dashboard
+                        👤 My Dashboard
                     </button>
                 </div>
             </div>
@@ -197,7 +197,7 @@
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 card-hover">
                     <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-xl mb-4">🏪</div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Receiver Dashboard</h3>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">My Dashboard</h3>
                     <p class="text-slate-500 text-sm">Anyone can receive files in real time</p>
                 </div>
             </div>
@@ -328,136 +328,28 @@
                 </div>
             </div>
 
-            <!-- Two Options -->
-            <div class="grid md:grid-cols-2 gap-6 mb-8" id="sendOptions">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 card-hover cursor-pointer" onclick="showRegularShare()">
-                    <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center text-2xl mb-4">🔗</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Share with File Code</h3>
-                    <p class="text-slate-500 text-sm mb-4">Fallback: generate a code that anyone can enter to receive</p>
-                    <button class="w-full btn-primary text-white py-2.5 rounded-xl font-semibold text-sm">
-                        Continue →
-                    </button>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4">📱</div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Scan Receiver QR Code</h3>
+                    <p class="text-slate-500">Point your camera at the receiver’s personal QR code</p>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow-sm border-2 border-primary p-6 card-hover cursor-pointer relative overflow-hidden" onclick="showQRScanner()">
-                    <div class="absolute top-0 right-0 bg-primary text-white text-xs px-3 py-1 rounded-bl-xl font-bold">NEW</div>
-                    <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center text-2xl mb-4">📱</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Scan Receiver QR</h3>
-                    <p class="text-slate-500 text-sm mb-4">Scan the receiver’s QR code and send files directly</p>
-                    <button class="w-full btn-primary text-white py-2.5 rounded-xl font-semibold text-sm">
-                        Scan QR →
-                    </button>
-                </div>
-            </div>
-
-            <!-- Regular Share Section -->
-            <div id="regularShareSection" class="hidden">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
-                    <button onclick="hideRegularShare()" class="text-slate-500 hover:text-slate-700 text-sm mb-4 inline-block">← Back to Options</button>
-                    
-                    <h3 class="text-xl font-bold text-slate-800 mb-4">🔗 Share with Code</h3>
-                    
-                    <div class="upload-zone rounded-2xl p-10 text-center mb-6 cursor-pointer" onclick="document.getElementById('shareInput').click()">
-                        <input type="file" id="shareInput" multiple class="hidden">
-                        <div class="text-6xl mb-4"></div>
-                        <p class="text-slate-700 font-bold text-lg">Select Files</p>
-                        <p class="text-slate-400 text-sm mt-1">Multiple files supported (Max 10MB total)</p>
-                    </div>
-
-                    <div id="shareFileInfo" class="hidden mb-6 space-y-2"></div>
-
-                    <div class="mb-6">
-                        <label class="text-sm font-semibold text-slate-600 mb-2 block"> Note (Optional)</label>
-                        <input type="text" id="shareNote" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none" placeholder="Add a message...">
-                    </div>
-
-                    <button onclick="generateShareLink()" class="w-full btn-primary text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all" id="shareBtn" disabled>
-                        🔗 Generate Share Code & QR
-                    </button>
-
-                    <div id="shareResult" class="hidden mt-8 fade-in">
-                        <div class="border-t border-slate-200 pt-8">
-                            <div class="text-center mb-6">
-                                <div class="inline-flex items-center bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold text-sm mb-4">
-                                    ✅ Files Ready to Share!
-                                </div>
-                                <h3 class="text-2xl font-extrabold text-slate-800 mb-1">Your Unique Code</h3>
-                            </div>
-
-                            <div class="bg-slate-900 text-white rounded-2xl p-6 text-center mb-6">
-                                <p class="text-sm text-slate-400 mb-2">SHARE CODE</p>
-                                <p class="text-3xl md:text-4xl font-black tracking-widest" id="shareCodeDisplay">XXXXXX</p>
-                                <button onclick="copyCode()" class="mt-4 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-xl text-sm font-semibold transition-all">
-                                    📋 Copy Code
-                                </button>
-                            </div>
-
-                            <div class="bg-white border-2 border-slate-100 rounded-2xl p-8 text-center mb-6">
-                                <p class="text-sm font-semibold text-slate-500 mb-4">📱 Scan QR Code</p>
-                                <div id="qrcode" class="flex justify-center mb-4"></div>
-                                <button onclick="downloadQR()" class="bg-slate-100 hover:bg-slate-200 px-6 py-2 rounded-xl text-sm font-semibold text-slate-700 transition-all">
-                                    ⬇️ Download QR Image
-                                </button>
-                            </div>
-                        </div>
+                <div class="scanner-wrapper mb-6" id="scannerContainer">
+                    <div id="reader"></div>
+                    <div class="scan-overlay hidden" id="scanOverlay"><div class="scan-box"><div class="scan-line"></div></div></div>
+                    <div id="scannerPlaceholder" class="bg-slate-900 text-white py-20 text-center">
+                        <div class="text-6xl mb-4">📷</div>
+                        <p class="text-slate-400">Camera not started yet</p>
+                        <p class="text-slate-500 text-sm mt-2">Click “Start Camera” below</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- QR Scanner Section (FIXED) -->
-            <div id="qrScannerSection" class="hidden">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
-                    <button onclick="hideQRScanner()" class="text-slate-500 hover:text-slate-700 text-sm mb-4 inline-block">← Back to Options</button>
-                    
-                    <div class="text-center mb-6">
-                        <div class="text-6xl mb-4"></div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Scan Receiver QR Code</h3>
-                        <p class="text-slate-500">Point your camera at the receiver’s QR code</p>
-                    </div>
-
-                    <!-- Scanner Container -->
-                    <div class="scanner-wrapper mb-6" id="scannerContainer">
-                        <div id="reader"></div>
-                        <div class="scan-overlay hidden" id="scanOverlay">
-                            <div class="scan-box">
-                                <div class="scan-line"></div>
-                            </div>
-                        </div>
-                        <!-- Placeholder when scanner not active -->
-                        <div id="scannerPlaceholder" class="bg-slate-900 text-white py-20 text-center">
-                            <div class="text-6xl mb-4"></div>
-                            <p class="text-slate-400">Camera not started yet</p>
-                            <p class="text-slate-500 text-sm mt-2">Click "Start Camera" button below</p>
-                        </div>
-                    </div>
-
-                    <!-- Scanner Status -->
-                    <div id="scannerStatus" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 text-center mb-4">
-                        <p class="text-sm text-blue-700">💡 Camera access allow korun QR code scan korar jonno</p>
-                    </div>
-
-                    <!-- Scanner Controls -->
-                    <div class="space-y-3">
-                        <button onclick="startScanner()" id="startScanBtn" class="w-full btn-primary text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all">
-                            📷 Start Camera
-                        </button>
-
-                        <button onclick="stopScanner()" id="stopScanBtn" class="w-full bg-red-500 text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all hidden">
-                            ⏹️ Stop Scanner
-                        </button>
-                    </div>
-
-                    <!-- Manual Code Entry Fallback -->
-                    <div class="mt-8 pt-6 border-t border-slate-200">
-                        <p class="text-center text-sm text-slate-500 mb-4">— OR —</p>
-                        <p class="text-center text-sm font-semibold text-slate-700 mb-3">Enter Receiver Code Manually</p>
-                        <div class="flex gap-2 max-w-md mx-auto">
-                            <input type="text" id="manualShopCode" class="flex-1 border-2 border-slate-200 rounded-xl px-4 py-3 text-center text-lg font-bold tracking-widest focus:ring-2 focus:ring-primary outline-none uppercase" placeholder="RECV1234">
-                            <button onclick="manualShopEntry()" class="btn-primary text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg transition-all">
-                                Go
-                            </button>
-                        </div>
-                    </div>
+                <div id="scannerStatus" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 text-center mb-4">
+                    <p class="text-sm text-blue-700">Camera permission allow করুন QR scan করার জন্য</p>
+                </div>
+                <div class="space-y-3">
+                    <button onclick="startScanner()" id="startScanBtn" class="w-full btn-primary text-white py-4 rounded-xl font-bold text-lg">📷 Start Camera</button>
+                    <button onclick="stopScanner()" id="stopScanBtn" class="w-full bg-red-500 text-white py-4 rounded-xl font-bold text-lg hidden">⏹️ Stop Scanner</button>
                 </div>
             </div>
         </div>
@@ -508,25 +400,28 @@
         </div>
     </div>
 
-    <!-- ==================== SHOPS PAGE ==================== -->
+    <!-- ==================== USER PROFILE PAGE ==================== -->
     <div id="page-shops" class="page hidden">
-        <div class="max-w-6xl mx-auto px-4 py-8 fade-in">
+        <div class="max-w-4xl mx-auto px-4 py-8 fade-in">
             <div class="flex items-center justify-between mb-8">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-slate-800 mb-2"> Receiver Profiles</h2>
-                    <p class="text-slate-500">Create your receiver identity and receive files from anyone</p>
-                </div>
-                <button onclick="createShop()" class="btn-primary text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg transition-all">
-                    + Create Receiver
-                </button>
+                <div><h2 class="text-3xl font-extrabold text-slate-800 mb-2">👤 My Profile</h2><p class="text-slate-500">Every user gets one unique ID and one personal QR.</p></div>
+                <button onclick="openProfileEditor()" class="btn-primary text-white px-5 py-3 rounded-xl font-bold">✏️ Create / Edit Profile</button>
             </div>
+            <div id="shopsList"><div class="text-center py-12 text-slate-400">Loading profile...</div></div>
 
-            <div id="shopsList" class="grid md:grid-cols-2 gap-6">
-                <div class="col-span-full text-center py-12">
-                    <div class="text-6xl mb-4">👤</div>
-                    <p class="text-slate-500 text-lg">No receiver profile created yet</p>
-                    <p class="text-slate-400 text-sm mt-2">Click “Create Receiver” to get started</p>
+            <div id="profileEditor" class="hidden mt-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
+                <h3 class="text-xl font-bold text-slate-800 mb-5">Profile Details</h3>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="md:col-span-2 flex items-center gap-4">
+                        <img id="profilePhotoPreview" src="" class="w-20 h-20 rounded-full object-cover bg-slate-100 border-2 border-slate-200" alt="Profile">
+                        <div><label class="text-sm font-semibold text-slate-600 block mb-2">Profile Photo</label><input type="file" id="profilePhotoInput" accept="image/*" class="text-sm"></div>
+                    </div>
+                    <div><label class="text-sm font-semibold text-slate-600 block mb-2">Full Name *</label><input id="profileName" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="Your full name"></div>
+                    <div><label class="text-sm font-semibold text-slate-600 block mb-2">Mobile Number</label><input id="profileMobile" type="tel" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="Mobile number"></div>
+                    <div><label class="text-sm font-semibold text-slate-600 block mb-2">City</label><input id="profileCity" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="City"></div>
+                    <div><label class="text-sm font-semibold text-slate-600 block mb-2">User ID</label><input id="profileUserId" readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 font-mono" placeholder="Generated automatically"></div>
                 </div>
+                <div class="flex gap-3 mt-6"><button onclick="saveUserProfile()" id="saveProfileBtn" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">💾 Save Profile</button><button onclick="closeProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Cancel</button></div>
             </div>
         </div>
     </div>
@@ -537,7 +432,7 @@
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <button onclick="showPage('shops')" class="text-slate-500 hover:text-slate-700 text-sm mb-2 inline-block">← Back</button>
-                    <h2 class="text-3xl font-extrabold text-slate-800 mb-1" id="shopDashboardName">Receiver Name</h2>
+                    <div class="flex items-center gap-4"><img id="shopDashboardPhoto" class="w-16 h-16 rounded-full object-cover bg-slate-100 border-2 border-white shadow" alt="Profile"><div><h2 class="text-3xl font-extrabold text-slate-800 mb-1" id="shopDashboardName">User Name</h2><p class="text-sm text-slate-500">User ID: <span id="dashboardUserId" class="font-mono font-bold"></span></p></div></div>
                     <p class="text-slate-500"><span class="live-indicator">Live</span> Real-time dashboard</p>
                 </div>
                 <button onclick="downloadShopQR()" class="btn-primary text-white px-4 py-2 rounded-xl font-semibold">
@@ -547,13 +442,13 @@
 
             <div class="grid md:grid-cols-3 gap-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">📱 Your Receiver QR</h3>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">📱 Your Personal QR</h3>
                     <p class="text-xs text-slate-500 mb-4">Show this QR to the sender. After scanning, they can upload files directly to you.</p>
                     <div class="shop-qr bg-slate-50 rounded-xl p-6 mb-4 flex items-center justify-center">
                         <div id="shopQRCode"></div>
                     </div>
                     <div class="bg-slate-900 text-white rounded-xl p-4 text-center">
-                        <p class="text-xs text-slate-400 mb-1">RECEIVER CODE</p>
+                        <p class="text-xs text-slate-400 mb-1">USER ID</p>
                         <p class="text-xl font-black tracking-widest" id="shopCodeDisplay">RECV0000</p>
                     </div>
                 </div>
@@ -573,8 +468,9 @@
         <div class="max-w-2xl mx-auto px-4 py-8 fade-in">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
                 <div class="text-center mb-6">
-                    <div class="text-6xl mb-4">👤</div>
-                    <h2 class="text-2xl font-extrabold text-slate-800 mb-2" id="customerShopName">Receiver Name</h2>
+                    <img id="customerReceiverPhoto" class="w-24 h-24 rounded-full object-cover bg-slate-100 border-4 border-white shadow mx-auto mb-4" alt="Receiver">
+                    <h2 class="text-2xl font-extrabold text-slate-800 mb-1" id="customerShopName">Receiver Name</h2>
+                    <p class="text-sm text-slate-500 mb-2">User ID: <span id="customerReceiverId" class="font-mono font-bold"></span></p>
                     <p class="text-slate-500">You scanned this receiver. Select files to send directly.</p>
                 </div>
 
@@ -646,7 +542,12 @@
             db = firebase.firestore();
             storageRef = firebase.storage().ref();
         } else {
-            document.addEventListener('DOMContentLoaded', () => {
+    
+        document.getElementById('profilePhotoInput').addEventListener('change', function(e){
+            selectedProfilePhotoFile=e.target.files[0]||null;
+            if(selectedProfilePhotoFile) document.getElementById('profilePhotoPreview').src=URL.createObjectURL(selectedProfilePhotoFile);
+        });
+        document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('setupBanner').classList.remove('hidden');
             });
         }
@@ -660,6 +561,8 @@
         let html5QrcodeScanner = null;
         let scannerStarted = false;
         let shopDashboardUnsub = null; // live listener unsubscribe
+        let currentUserProfile = null;
+        let selectedProfilePhotoFile = null;
 
         // Blocks any storage action until Firebase config is filled in
         function requireFirebase() {
@@ -870,7 +773,10 @@
                     
                     if(shopSnap.exists) {
                         customerShopId = shopCode;
-                        document.getElementById('customerShopName').textContent = shopSnap.data().name;
+                        const receiverData = shopSnap.data();
+                        document.getElementById('customerShopName').textContent = receiverData.name;
+                        document.getElementById('customerReceiverId').textContent = receiverData.code || shopCode;
+                        document.getElementById('customerReceiverPhoto').src = receiverData.photoUrl || defaultAvatar(receiverData.name);
                         showPage('customerUpload');
                         showToast('Receiver found! Upload files now ✅');
                     } else {
@@ -939,84 +845,82 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // ===== RECEIVER PROFILE MANAGEMENT (Firestore; legacy collection name kept) =====
-        async function createShop() {
-            if(!requireFirebase()) return;
-            const shopName = prompt('Enter receiver name:');
-            if(!shopName || shopName.trim() === '') return;
-
-            let shopCode = 'RECV' + generateCode(4);
-            // ensure uniqueness
-            while((await db.collection('shops').doc(shopCode).get()).exists) {
-                shopCode = 'RECV' + generateCode(4);
-            }
-
-            await db.collection('shops').doc(shopCode).set({
-                name: shopName.trim(),
-                code: shopCode,
-                createdAt: new Date().toISOString(),
-                ownerToken: getOwnerToken()
-            });
-
-            showToast('Receiver profile created! ✅');
-            updateShopsList();
-        }
-
-        // Simple local marker so "My Shops" list only shows shops created on this device/browser.
-        // (Anyone with the code/QR can still open the dashboard directly if you share it.)
+        // ===== ONE USER PROFILE PER DEVICE =====
         function getOwnerToken() {
             let t = localStorage.getItem('docsendgo_owner_token');
-            if(!t) {
-                t = generateCode(10);
-                localStorage.setItem('docsendgo_owner_token', t);
-            }
+            if(!t) { t = generateCode(10); localStorage.setItem('docsendgo_owner_token', t); }
             return t;
         }
 
+        async function getMyProfile() {
+            const snap = await db.collection('shops').where('ownerToken', '==', getOwnerToken()).limit(1).get();
+            if(snap.empty) return null;
+            return { id: snap.docs[0].id, ...snap.docs[0].data() };
+        }
+
+        async function openProfileEditor() {
+            if(!requireFirebase()) return;
+            const profile = await getMyProfile();
+            currentUserProfile = profile;
+            document.getElementById('profileEditor').classList.remove('hidden');
+            document.getElementById('profileName').value = profile?.name || '';
+            document.getElementById('profileMobile').value = profile?.mobile || '';
+            document.getElementById('profileCity').value = profile?.city || '';
+            document.getElementById('profileUserId').value = profile?.code || 'Will be generated';
+            document.getElementById('profilePhotoPreview').src = profile?.photoUrl || defaultAvatar(profile?.name || 'User');
+            window.scrollTo({top: document.getElementById('profileEditor').offsetTop - 80, behavior:'smooth'});
+        }
+        function closeProfileEditor(){ document.getElementById('profileEditor').classList.add('hidden'); selectedProfilePhotoFile=null; }
+        function defaultAvatar(name){
+            const letter = encodeURIComponent((name || 'U').trim().charAt(0).toUpperCase());
+            return `https://ui-avatars.com/api/?name=${letter}&background=0ea5e9&color=fff&size=256`;
+        }
+
+        async function saveUserProfile() {
+            if(!requireFirebase()) return;
+            const name = document.getElementById('profileName').value.trim();
+            if(!name){ showToast('Full name দিন', 'error'); return; }
+            const btn=document.getElementById('saveProfileBtn'); btn.disabled=true; btn.textContent='Saving...';
+            try{
+                let profile = await getMyProfile();
+                let code = profile?.code;
+                if(!code){
+                    code = 'DSG' + generateCode(6);
+                    while((await db.collection('shops').doc(code).get()).exists) code='DSG'+generateCode(6);
+                }
+                let photoUrl = profile?.photoUrl || defaultAvatar(name);
+                if(selectedProfilePhotoFile){
+                    const safeName=selectedProfilePhotoFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+                    const ref=storageRef.child(`profiles/${code}/${Date.now()}_${safeName}`);
+                    await ref.put(selectedProfilePhotoFile,{contentType:selectedProfilePhotoFile.type});
+                    photoUrl=await ref.getDownloadURL();
+                }
+                await db.collection('shops').doc(code).set({
+                    name, code, userId: code, mobile: document.getElementById('profileMobile').value.trim(),
+                    city: document.getElementById('profileCity').value.trim(), photoUrl,
+                    createdAt: profile?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString(), ownerToken:getOwnerToken()
+                },{merge:true});
+                currentUserProfile={name,code,userId:code,photoUrl};
+                closeProfileEditor(); await updateShopsList(); showToast('Profile saved! ✅');
+            }catch(err){ showToast('Profile save error: '+err.message,'error'); }
+            finally{ btn.disabled=false; btn.textContent='💾 Save Profile'; }
+        }
+
+        async function createShop(){ openProfileEditor(); }
+
         async function updateShopsList() {
             if(!requireFirebase()) return;
-            const shopsList = document.getElementById('shopsList');
-            shopsList.innerHTML = '<div class="col-span-full text-center py-12 text-slate-400">Loading...</div>';
-
-            const snapshot = await db.collection('shops').where('ownerToken', '==', getOwnerToken()).get();
-
-            if(snapshot.empty) {
-                shopsList.innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <div class="text-6xl mb-4">👤</div>
-                        <p class="text-slate-500 text-lg">No receiver profile created yet</p>
-                    </div>
-                `;
+            const box=document.getElementById('shopsList'); box.innerHTML='<div class="text-center py-12 text-slate-400">Loading...</div>';
+            const profile=await getMyProfile(); currentUserProfile=profile;
+            if(!profile){
+                box.innerHTML=`<div class="bg-white rounded-2xl border border-slate-100 p-10 text-center"><div class="text-6xl mb-4">👤</div><h3 class="text-xl font-bold text-slate-800 mb-2">Create your profile</h3><p class="text-slate-500 mb-5">You will receive a unique User ID and personal QR.</p><button onclick="openProfileEditor()" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Create Profile</button></div>`;
                 return;
             }
-
-            const cards = await Promise.all(snapshot.docs.map(async (docSnap) => {
-                const shop = docSnap.data();
-                const docsSnap = await db.collection('shops').doc(shop.code).collection('documents').get();
-                const docCount = docsSnap.size;
-
-                return `
-                    <div class="shop-card rounded-2xl p-6 card-hover cursor-pointer" onclick="openShopDashboard('${shop.code}')">
-                        <div class="flex items-start justify-between mb-4">
-                            <div>
-                                <h3 class="text-xl font-bold text-slate-800 mb-1">${shop.name}</h3>
-                                <p class="text-sm text-slate-500">Code: <span class="font-mono font-bold">${shop.code}</span></p>
-                            </div>
-                            <button onclick="event.stopPropagation(); deleteShop('${shop.code}')" class="text-red-400 hover:text-red-600 text-sm">🗑️</button>
-                        </div>
-                        <div class="bg-white rounded-xl p-3 mb-4">
-                            <p class="text-xs text-slate-500 mb-1">Total Docs</p>
-                            <p class="text-2xl font-black text-slate-800">${docCount}</p>
-                        </div>
-                        <button class="w-full btn-primary text-white py-2.5 rounded-xl font-semibold text-sm">
-                            Open Dashboard →
-                        </button>
-                    </div>
-                `;
-            }));
-
-            shopsList.innerHTML = cards.join('');
+            const docsSnap=await db.collection('shops').doc(profile.code).collection('documents').get();
+            box.innerHTML=`<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"><div class="flex flex-col sm:flex-row items-center gap-5"><img src="${profile.photoUrl||defaultAvatar(profile.name)}" class="w-28 h-28 rounded-full object-cover border-4 border-sky-100"><div class="flex-1 text-center sm:text-left"><h3 class="text-2xl font-extrabold text-slate-800">${escapeHtml(profile.name)}</h3><p class="text-slate-500 mt-1">User ID: <span class="font-mono font-bold">${profile.code}</span></p><p class="text-slate-400 text-sm mt-1">${escapeHtml(profile.city||'')} ${profile.createdAt?'• Joined '+new Date(profile.createdAt).toLocaleDateString():''}</p><p class="mt-3 font-semibold text-sky-600">📥 ${docsSnap.size} received file(s)</p></div><div class="flex flex-col gap-2 w-full sm:w-auto"><button onclick="openShopDashboard('${profile.code}')" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Dashboard</button><button onclick="openProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Edit Profile</button></div></div></div>`;
         }
+
+        function escapeHtml(v){ return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 
         async function deleteShop(shopCode) {
             if(!confirm('Delete this receiver profile?')) return;
@@ -1045,6 +949,8 @@
 
             document.getElementById('shopDashboardName').textContent = shopData.name;
             document.getElementById('shopCodeDisplay').textContent = shopData.code;
+            document.getElementById('dashboardUserId').textContent = shopData.code;
+            document.getElementById('shopDashboardPhoto').src = shopData.photoUrl || defaultAvatar(shopData.name);
 
             const qrContainer = document.getElementById('shopQRCode');
             qrContainer.innerHTML = '';
@@ -1757,7 +1663,10 @@
                 const shopSnap = await db.collection('shops').doc(shop).get();
                 if(shopSnap.exists) {
                     customerShopId = shop;
-                    document.getElementById('customerShopName').textContent = shopSnap.data().name;
+                    const receiverData = shopSnap.data();
+                    document.getElementById('customerShopName').textContent = receiverData.name;
+                    document.getElementById('customerReceiverId').textContent = receiverData.code || shop;
+                    document.getElementById('customerReceiverPhoto').src = receiverData.photoUrl || defaultAvatar(receiverData.name);
                     showPage('customerUpload');
                 } else {
                     showToast('Receiver not found!', 'error');
