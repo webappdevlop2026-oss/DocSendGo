@@ -653,29 +653,74 @@
             return true;
         }
 
-        // Upload files to Firebase Storage, return metadata array (without base64 payload)
+        // Upload files to Firebase Storage with attachment metadata.
+        // contentDisposition forces the browser to download instead of only opening the file.
         async function uploadFilesToStorage(files, pathPrefix) {
             const results = [];
             for (const file of files) {
-                const path = `${pathPrefix}/${Date.now()}_${file.name}`;
+                const safeName = file.name.replace(/[\r\n"]/g, '_');
+                const path = `${pathPrefix}/${Date.now()}_${safeName}`;
                 const ref = storageRef.child(path);
-                await ref.put(file);
+                const metadata = {
+                    contentType: file.type || 'application/octet-stream',
+                    contentDisposition: `attachment; filename="${safeName}"`
+                };
+                await ref.put(file, metadata);
                 const url = await ref.getDownloadURL();
                 results.push({ name: file.name, size: file.size, type: file.type, url, path });
             }
             return results;
         }
 
-        // Download files given metadata (fetches from Storage URL)
+        function triggerBrowserDownload(url, fileName) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName || 'download';
+            link.target = '_blank';
+            link.rel = 'noopener';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        }
+
+        // Download files from Firebase Storage.
+        // First update attachment metadata (also fixes previously uploaded files),
+        // then try Blob download; if browser/CORS blocks it, use the Storage URL directly.
         async function downloadFilesFromMeta(files) {
+            if (!Array.isArray(files) || files.length === 0) {
+                throw new Error('No downloadable file found');
+            }
+
             for (const file of files) {
-                const res = await fetch(file.url);
-                const blob = await res.blob();
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = file.name;
-                link.click();
-                await new Promise(r => setTimeout(r, 300));
+                let downloadUrl = file.url;
+                const safeName = (file.name || 'download').replace(/[\r\n"]/g, '_');
+
+                try {
+                    if (file.path && storageRef) {
+                        const ref = storageRef.child(file.path);
+                        await ref.updateMetadata({
+                            contentType: file.type || 'application/octet-stream',
+                            contentDisposition: `attachment; filename="${safeName}"`
+                        });
+                        downloadUrl = await ref.getDownloadURL();
+                    }
+                } catch (metadataError) {
+                    console.warn('Could not update download metadata:', metadataError);
+                }
+
+                try {
+                    const res = await fetch(downloadUrl, { mode: 'cors' });
+                    if (!res.ok) throw new Error(`Download failed (${res.status})`);
+                    const blob = await res.blob();
+                    const objectUrl = URL.createObjectURL(blob);
+                    triggerBrowserDownload(objectUrl, safeName);
+                    setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
+                } catch (fetchError) {
+                    console.warn('Blob download blocked; using direct Firebase URL:', fetchError);
+                    triggerBrowserDownload(downloadUrl, safeName);
+                }
+
+                await new Promise(r => setTimeout(r, 700));
             }
         }
 
@@ -1044,8 +1089,13 @@
 
         async function downloadShopDocument(files) {
             showToast('Downloading...', 'info');
-            await downloadFilesFromMeta(files);
-            showToast('Files downloading! ⬇️');
+            try {
+                await downloadFilesFromMeta(files);
+                showToast('Download started! ⬇️');
+            } catch (error) {
+                console.error(error);
+                showToast('Download failed. Please try again.', 'error');
+            }
         }
 
         function downloadShopQR() {
@@ -1250,8 +1300,13 @@
         async function downloadReceivedFile() {
             if(!receivedFileData) return;
             showToast('Downloading...', 'info');
-            await downloadFilesFromMeta(receivedFileData.files);
-            showToast('Files downloading! ⬇️');
+            try {
+                await downloadFilesFromMeta(receivedFileData.files);
+                showToast('Download started! ⬇️');
+            } catch (error) {
+                console.error(error);
+                showToast('Download failed. Please try again.', 'error');
+            }
         }
 
         // ===== IMAGE CROP =====
