@@ -419,7 +419,18 @@
                     <div><label class="text-sm font-semibold text-slate-600 block mb-2">Full Name *</label><input id="profileName" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="Your full name"></div>
                     <div><label class="text-sm font-semibold text-slate-600 block mb-2">Mobile Number</label><input id="profileMobile" type="tel" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="Mobile number"></div>
                     <div><label class="text-sm font-semibold text-slate-600 block mb-2">City</label><input id="profileCity" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="City"></div>
+                    <div><label class="text-sm font-semibold text-slate-600 block mb-2">User Type *</label><select id="profileUserType" onchange="toggleUserTypeFields()" class="w-full border border-slate-200 rounded-xl px-4 py-3 bg-white"><option value="">Select user type</option><option value="General User">General User</option><option value="Customer">Customer</option><option value="Student">Student</option><option value="Teacher">Teacher</option><option value="Office Employee">Office Employee</option><option value="Government Office">Government Office</option><option value="Company">Company</option><option value="Shop Owner">Shop Owner</option><option value="Xerox / Print Shop">Xerox / Print Shop</option><option value="CSC Center">CSC Center</option><option value="Online Service Center">Online Service Center</option><option value="Banking / CSP">Banking / CSP</option><option value="Document Service Center">Document Service Center</option><option value="School">School</option><option value="College / University">College / University</option><option value="Coaching Center">Coaching Center</option><option value="Hospital / Clinic">Hospital / Clinic</option><option value="Pharmacy / Medical Store">Pharmacy / Medical Store</option><option value="Advocate / Lawyer">Advocate / Lawyer</option><option value="Chartered Accountant (CA)">Chartered Accountant (CA)</option><option value="Courier Service">Courier Service</option><option value="Photographer / Studio">Photographer / Studio</option><option value="Freelancer">Freelancer</option><option value="Business">Business</option><option value="Factory / Industry">Factory / Industry</option><option value="Service Provider">Service Provider</option><option value="NGO / Trust">NGO / Trust</option><option value="Other">Other</option></select></div>
                     <div><label class="text-sm font-semibold text-slate-600 block mb-2">User ID</label><input id="profileUserId" readonly class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 font-mono" placeholder="Generated automatically"></div>
+                    <div id="businessTypeFields" class="hidden md:col-span-2 grid md:grid-cols-2 gap-5 bg-sky-50 border border-sky-100 rounded-2xl p-5">
+                        <div><label class="text-sm font-semibold text-slate-600 block mb-2">Shop / Center / Organization Name</label><input id="profileOrganizationName" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="Business or center name"></div>
+                        <div><label class="text-sm font-semibold text-slate-600 block mb-2">Address</label><input id="profileAddress" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="Full address"></div>
+                        <div><label class="text-sm font-semibold text-slate-600 block mb-2">GST Number (Optional)</label><input id="profileGst" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="GSTIN"></div>
+                        <div><label class="text-sm font-semibold text-slate-600 block mb-2">Opening Time</label><input id="profileOpeningTime" type="time" class="w-full border border-slate-200 rounded-xl px-4 py-3"></div>
+                    </div>
+                    <div id="studentTypeFields" class="hidden md:col-span-2 grid md:grid-cols-2 gap-5 bg-amber-50 border border-amber-100 rounded-2xl p-5">
+                        <div><label class="text-sm font-semibold text-slate-600 block mb-2">School / College Name</label><input id="profileInstituteName" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="School or college name"></div>
+                        <div><label class="text-sm font-semibold text-slate-600 block mb-2">Class / Course</label><input id="profileCourse" class="w-full border border-slate-200 rounded-xl px-4 py-3" placeholder="Class or course"></div>
+                    </div>
                 </div>
                 <div class="flex gap-3 mt-6"><button onclick="saveUserProfile()" id="saveProfileBtn" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">💾 Save Profile</button><button onclick="closeProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Cancel</button></div>
             </div>
@@ -432,7 +443,7 @@
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <button onclick="showPage('shops')" class="text-slate-500 hover:text-slate-700 text-sm mb-2 inline-block">← Back</button>
-                    <div class="flex items-center gap-4"><img id="shopDashboardPhoto" class="w-16 h-16 rounded-full object-cover bg-slate-100 border-2 border-white shadow" alt="Profile"><div><h2 class="text-3xl font-extrabold text-slate-800 mb-1" id="shopDashboardName">User Name</h2><p class="text-sm text-slate-500">User ID: <span id="dashboardUserId" class="font-mono font-bold"></span></p></div></div>
+                    <div class="flex items-center gap-4"><img id="shopDashboardPhoto" class="w-16 h-16 rounded-full object-cover bg-slate-100 border-2 border-white shadow" alt="Profile"><div><h2 class="text-3xl font-extrabold text-slate-800 mb-1" id="shopDashboardName">User Name</h2><p class="text-sm text-slate-500">User ID: <span id="dashboardUserId" class="font-mono font-bold"></span></p><p id="dashboardUserType" class="mt-1 inline-flex items-center px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">User</p></div></div>
                     <p class="text-slate-500"><span class="live-indicator">Live</span> Real-time dashboard</p>
                 </div>
                 <button onclick="downloadShopQR()" class="btn-primary text-white px-4 py-2 rounded-xl font-semibold">
@@ -866,6 +877,14 @@
             document.getElementById('profileName').value = profile?.name || '';
             document.getElementById('profileMobile').value = profile?.mobile || '';
             document.getElementById('profileCity').value = profile?.city || '';
+            document.getElementById('profileUserType').value = profile?.userType || '';
+            document.getElementById('profileOrganizationName').value = profile?.organizationName || '';
+            document.getElementById('profileAddress').value = profile?.address || '';
+            document.getElementById('profileGst').value = profile?.gst || '';
+            document.getElementById('profileOpeningTime').value = profile?.openingTime || '';
+            document.getElementById('profileInstituteName').value = profile?.instituteName || '';
+            document.getElementById('profileCourse').value = profile?.course || '';
+            toggleUserTypeFields();
             document.getElementById('profileUserId').value = profile?.code || 'Will be generated';
             document.getElementById('profilePhotoPreview').src = profile?.photoUrl || defaultAvatar(profile?.name || 'User');
             window.scrollTo({top: document.getElementById('profileEditor').offsetTop - 80, behavior:'smooth'});
@@ -876,10 +895,20 @@
             return `https://ui-avatars.com/api/?name=${letter}&background=0ea5e9&color=fff&size=256`;
         }
 
+        function toggleUserTypeFields(){
+            const type = document.getElementById('profileUserType')?.value || '';
+            const businessTypes = ['Government Office','Company','Shop Owner','Xerox / Print Shop','CSC Center','Online Service Center','Banking / CSP','Document Service Center','School','College / University','Coaching Center','Hospital / Clinic','Pharmacy / Medical Store','Advocate / Lawyer','Chartered Accountant (CA)','Courier Service','Photographer / Studio','Business','Factory / Industry','Service Provider','NGO / Trust'];
+            const studentTypes = ['Student'];
+            document.getElementById('businessTypeFields')?.classList.toggle('hidden', !businessTypes.includes(type));
+            document.getElementById('studentTypeFields')?.classList.toggle('hidden', !studentTypes.includes(type));
+        }
+
         async function saveUserProfile() {
             if(!requireFirebase()) return;
             const name = document.getElementById('profileName').value.trim();
             if(!name){ showToast('Full name দিন', 'error'); return; }
+            const userType = document.getElementById('profileUserType').value;
+            if(!userType){ showToast('User type select করুন', 'error'); return; }
             const btn=document.getElementById('saveProfileBtn'); btn.disabled=true; btn.textContent='Saving...';
             try{
                 let profile = await getMyProfile();
@@ -897,10 +926,16 @@
                 }
                 await db.collection('shops').doc(code).set({
                     name, code, userId: code, mobile: document.getElementById('profileMobile').value.trim(),
-                    city: document.getElementById('profileCity').value.trim(), photoUrl,
+                    city: document.getElementById('profileCity').value.trim(), userType, photoUrl,
+                    organizationName: document.getElementById('profileOrganizationName').value.trim(),
+                    address: document.getElementById('profileAddress').value.trim(),
+                    gst: document.getElementById('profileGst').value.trim(),
+                    openingTime: document.getElementById('profileOpeningTime').value,
+                    instituteName: document.getElementById('profileInstituteName').value.trim(),
+                    course: document.getElementById('profileCourse').value.trim(),
                     createdAt: profile?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString(), ownerToken:getOwnerToken()
                 },{merge:true});
-                currentUserProfile={name,code,userId:code,photoUrl};
+                currentUserProfile={name,code,userId:code,userType,photoUrl};
                 closeProfileEditor(); await updateShopsList(); showToast('Profile saved! ✅');
             }catch(err){ showToast('Profile save error: '+err.message,'error'); }
             finally{ btn.disabled=false; btn.textContent='💾 Save Profile'; }
@@ -917,7 +952,7 @@
                 return;
             }
             const docsSnap=await db.collection('shops').doc(profile.code).collection('documents').get();
-            box.innerHTML=`<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"><div class="flex flex-col sm:flex-row items-center gap-5"><img src="${profile.photoUrl||defaultAvatar(profile.name)}" class="w-28 h-28 rounded-full object-cover border-4 border-sky-100"><div class="flex-1 text-center sm:text-left"><h3 class="text-2xl font-extrabold text-slate-800">${escapeHtml(profile.name)}</h3><p class="text-slate-500 mt-1">User ID: <span class="font-mono font-bold">${profile.code}</span></p><p class="text-slate-400 text-sm mt-1">${escapeHtml(profile.city||'')} ${profile.createdAt?'• Joined '+new Date(profile.createdAt).toLocaleDateString():''}</p><p class="mt-3 font-semibold text-sky-600">📥 ${docsSnap.size} received file(s)</p></div><div class="flex flex-col gap-2 w-full sm:w-auto"><button onclick="openShopDashboard('${profile.code}')" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Dashboard</button><button onclick="openProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Edit Profile</button></div></div></div>`;
+            box.innerHTML=`<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"><div class="flex flex-col sm:flex-row items-center gap-5"><img src="${profile.photoUrl||defaultAvatar(profile.name)}" class="w-28 h-28 rounded-full object-cover border-4 border-sky-100"><div class="flex-1 text-center sm:text-left"><h3 class="text-2xl font-extrabold text-slate-800">${escapeHtml(profile.name)}</h3><div class="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">${escapeHtml(profile.userType||'User')}</div><p class="text-slate-500 mt-2">User ID: <span class="font-mono font-bold">${profile.code}</span></p><p class="text-slate-400 text-sm mt-1">${escapeHtml(profile.city||'')} ${profile.createdAt?'• Joined '+new Date(profile.createdAt).toLocaleDateString():''}</p>${profile.organizationName?`<p class="text-slate-600 text-sm mt-2">🏢 ${escapeHtml(profile.organizationName)}</p>`:''}${profile.instituteName?`<p class="text-slate-600 text-sm mt-2">🎓 ${escapeHtml(profile.instituteName)}${profile.course?' • '+escapeHtml(profile.course):''}</p>`:''}<p class="mt-3 font-semibold text-sky-600">📥 ${docsSnap.size} received file(s)</p></div><div class="flex flex-col gap-2 w-full sm:w-auto"><button onclick="openShopDashboard('${profile.code}')" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Dashboard</button><button onclick="openProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Edit Profile</button></div></div></div>`;
         }
 
         function escapeHtml(v){ return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
@@ -950,6 +985,7 @@
             document.getElementById('shopDashboardName').textContent = shopData.name;
             document.getElementById('shopCodeDisplay').textContent = shopData.code;
             document.getElementById('dashboardUserId').textContent = shopData.code;
+            document.getElementById('dashboardUserType').textContent = shopData.userType || 'User';
             document.getElementById('shopDashboardPhoto').src = shopData.photoUrl || defaultAvatar(shopData.name);
 
             const qrContainer = document.getElementById('shopQRCode');
