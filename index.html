@@ -496,8 +496,21 @@
 }
 </style>
 
+
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="DocSendGo">
+    <meta name="format-detection" content="telephone=no">
+
+<style id="pwa-install-styles">
+#pwaInstallButton{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:9998;border:0;border-radius:999px;padding:12px 17px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-weight:800;box-shadow:0 12px 30px rgba(37,99,235,.32);display:none;align-items:center;gap:8px}#pwaInstallButton.show{display:flex}#pwaInstallToast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:9999;background:#0f172a;color:#fff;border-radius:14px;padding:11px 16px;font-size:13px;font-weight:700;display:none;max-width:calc(100vw - 32px);text-align:center}@media(min-width:769px){#pwaInstallButton{bottom:24px}}@media(display-mode:standalone){#pwaInstallButton{display:none!important}}
+</style>
 </head>
 <body class="bg-slate-50 min-h-screen">
+<button id="pwaInstallButton" type="button" aria-label="Install DocSendGo app">⬇️ Install App</button>
+<div id="pwaInstallToast" role="status" aria-live="polite"></div>
+
 
     <!-- ==================== SETUP BANNER ==================== -->
     <div id="setupBanner" class="hidden bg-amber-500 text-white text-sm text-center py-2 px-4 font-semibold">
@@ -1720,7 +1733,34 @@
 @media(min-width:768px){.mobile-home{display:none!important}}
 </style>
 
-</head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div></body></html>`);
+</head><body><div class="top">👁️ ${safeName}</div><div class="viewer">${viewer}</div>
+<script id="pwa-install-script">
+(() => {
+  let deferredPrompt = null;
+  const installBtn = document.getElementById('pwaInstallButton');
+  const toast = document.getElementById('pwaInstallToast');
+  const say = message => { if(!toast) return; toast.textContent=message; toast.style.display='block'; setTimeout(()=>toast.style.display='none',3200); };
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js', {scope:'/'}).catch(console.warn));
+  }
+  window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault(); deferredPrompt=event; if(installBtn && !isStandalone) installBtn.classList.add('show');
+  });
+  installBtn?.addEventListener('click', async () => {
+    if (!deferredPrompt) { say('Chrome menu থেকে “Install app” বা “Add to Home screen” নির্বাচন করুন।'); return; }
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    deferredPrompt=null; installBtn.classList.remove('show');
+    say(choice.outcome === 'accepted' ? 'DocSendGo installation started ✅' : 'Installation cancelled');
+  });
+  window.addEventListener('appinstalled', () => { deferredPrompt=null; installBtn?.classList.remove('show'); say('DocSendGo installed successfully ✅'); });
+  const params=new URLSearchParams(location.search);
+  const page=params.get('page');
+  if(page && typeof window.showPage==='function') setTimeout(()=>window.showPage(page),350);
+})();
+</script>
+</body></html>`);
             tab.document.close();
         }
 
