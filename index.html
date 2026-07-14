@@ -290,6 +290,20 @@
 .new-badge{display:inline-flex;align-items:center;justify-content:center;margin-top:6px;padding:2px 7px;border-radius:999px;background:#ef4444;color:#fff;font-size:9px;font-style:normal;font-weight:800;line-height:1.4;letter-spacing:.3px}
 @media(max-width:767px){.popular-tools-card{margin-bottom:16px!important}.popular-tools-card .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
+
+<style id="mobile-menu-notification-fix">
+@media(max-width:767px){
+ .app-overlay{position:fixed;inset:0;background:rgba(15,23,42,.48);backdrop-filter:blur(2px);z-index:9997}.app-overlay.hidden{display:none}
+ .mobile-side-drawer{position:fixed;top:0;left:0;bottom:0;width:min(86vw,340px);background:#fff;z-index:9999;transform:translateX(-105%);transition:transform .28s ease;box-shadow:20px 0 50px rgba(15,23,42,.2);padding:20px 16px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+ .mobile-side-drawer.open{transform:translateX(0)}
+ .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 18px;border-bottom:1px solid #eef2f7}.drawer-close,.notification-head button{width:38px;height:38px;border-radius:12px;background:#f1f5f9;font-size:18px}
+ .drawer-profile{margin:18px 0 10px;padding:14px;border-radius:18px;background:linear-gradient(135deg,#eef6ff,#f5f1ff);display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;cursor:pointer}.drawer-avatar{width:48px;height:48px;border-radius:15px;background:#fff;display:grid;place-items:center;font-size:24px;box-shadow:0 6px 18px rgba(38,99,235,.12)}.drawer-profile b,.drawer-profile small{display:block}.drawer-profile small{font-size:11px;color:#64748b;margin-top:3px}
+ .drawer-links{display:grid;gap:7px}.drawer-links button{display:flex!important;align-items:center;gap:13px;width:100%;padding:13px 14px;border-radius:14px;text-align:left;color:#334155;font-weight:700;background:transparent}.drawer-links button:hover,.drawer-links button:active{background:#eef6ff;color:#1768f2}.drawer-links button span{font-size:14px}.drawer-foot{margin-top:auto;text-align:center;color:#94a3b8;font-size:11px;padding-top:16px}
+ .mobile-notification-panel{position:fixed;top:72px;right:12px;left:12px;max-height:70vh;background:#fff;z-index:9999;border-radius:22px;box-shadow:0 20px 55px rgba(15,23,42,.24);transform:translateY(-18px) scale(.97);opacity:0;pointer-events:none;transition:.22s ease;overflow:hidden}.mobile-notification-panel.open{transform:none;opacity:1;pointer-events:auto}
+ .notification-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;border-bottom:1px solid #eef2f7}.notification-head b,.notification-head small{display:block}.notification-head small{font-size:11px;color:#94a3b8;margin-top:2px}.notification-list{padding:10px;max-height:48vh;overflow:auto}.notification-item{display:grid;grid-template-columns:42px 1fr;gap:11px;padding:11px;border-radius:14px}.notification-item+.notification-item{border-top:1px solid #f1f5f9}.notification-icon{width:42px;height:42px;border-radius:13px;background:#eef6ff;display:grid;place-items:center}.notification-item b,.notification-item small{display:block}.notification-item b{font-size:13px;color:#1e293b}.notification-item small{font-size:11px;color:#64748b;margin-top:3px}.empty-notification{padding:28px 12px;text-align:center;color:#64748b;display:grid;gap:5px;font-size:27px}.empty-notification b{font-size:14px;color:#334155}.empty-notification small{font-size:11px}.notification-view-all{width:calc(100% - 24px);margin:0 12px 12px;padding:12px;border-radius:13px;background:#1768f2;color:white;font-weight:800;font-size:13px}
+ body.panel-open{overflow:hidden}
+}
+</style>
 </head>
 <body class="bg-slate-50 min-h-screen">
 
@@ -333,13 +347,42 @@
         </div>
     </nav>
 
+    <!-- Mobile Side Menu -->
+    <div id="mobileDrawerOverlay" class="app-overlay hidden" onclick="closeMobilePanels()"></div>
+    <aside id="mobileSideDrawer" class="mobile-side-drawer" aria-hidden="true">
+      <div class="drawer-head">
+        <div class="mh-logo"><div class="mh-logo-mark">D</div><div><strong>DocSend<span>Go</span></strong><small>Share • View • Print</small></div></div>
+        <button onclick="closeMobilePanels()" class="drawer-close">✕</button>
+      </div>
+      <div class="drawer-profile" onclick="showPage('shops');closeMobilePanels()">
+        <div class="drawer-avatar">👤</div><div><b id="drawerUserName">Create Profile</b><small id="drawerUserId">Tap to setup profile</small></div><span>›</span>
+      </div>
+      <nav class="drawer-links">
+        <button onclick="showPage('home');closeMobilePanels()">🏠 <span>Home</span></button>
+        <button onclick="showPage('send');closeMobilePanels()">📤 <span>Send File</span></button>
+        <button onclick="showPage('receive');closeMobilePanels()">📥 <span>Receive File</span></button>
+        <button onclick="showPage('tools');closeMobilePanels()">🛠️ <span>Document Tools</span></button>
+        <button onclick="showPage('shops');closeMobilePanels()">👤 <span>My Profile & Files</span></button>
+      </nav>
+      <div class="drawer-foot">DocSendGo • Secure file sharing</div>
+    </aside>
+
+    <!-- Mobile Notification Panel -->
+    <section id="mobileNotificationPanel" class="mobile-notification-panel" aria-hidden="true">
+      <div class="notification-head"><div><b>Notifications</b><small>Recent file activity</small></div><button onclick="closeMobilePanels()">✕</button></div>
+      <div id="notificationList" class="notification-list">
+        <div class="empty-notification">🔔<b>No notifications yet</b><small>New received files will appear here.</small></div>
+      </div>
+      <button class="notification-view-all" onclick="showPage('shops');closeMobilePanels()">View received files</button>
+    </section>
+
     <!-- ==================== HOME PAGE ==================== -->
     <div id="page-home" class="page">
         <div class="mobile-home">
           <header class="mh-header">
             <button class="mh-menu" onclick="toggleMobile()">☰</button>
             <div class="mh-logo"><div class="mh-logo-mark">D</div><div><strong>DocSend<span>Go</span></strong><small>Send • Share • Print</small></div></div>
-            <button class="mh-bell">♧<span class="mh-badge">3</span></button>
+            <button class="mh-bell" onclick="toggleNotificationPanel()" aria-label="Notifications">🔔<span id="mobileNotificationBadge" class="mh-badge">0</span></button>
           </header>
           <section class="mh-hero">
             <div class="mh-hero-copy"><div class="mh-secure">🛡️ Secure • Fast • Easy</div><h1>Share Documents<br>with QR Code</h1><p>Send, Receive, Print<br>anytime, anywhere</p></div>
@@ -953,7 +996,63 @@
         }
 
         function toggleMobile() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
+            const drawer = document.getElementById('mobileSideDrawer');
+            const overlay = document.getElementById('mobileDrawerOverlay');
+            const notification = document.getElementById('mobileNotificationPanel');
+            if (!drawer || !overlay) return;
+            notification?.classList.remove('open');
+            const opening = !drawer.classList.contains('open');
+            drawer.classList.toggle('open', opening);
+            drawer.setAttribute('aria-hidden', opening ? 'false' : 'true');
+            overlay.classList.toggle('hidden', !opening);
+            document.body.classList.toggle('panel-open', opening);
+            if (opening) refreshMobilePanelData();
+        }
+
+        function toggleNotificationPanel() {
+            const panel = document.getElementById('mobileNotificationPanel');
+            const overlay = document.getElementById('mobileDrawerOverlay');
+            const drawer = document.getElementById('mobileSideDrawer');
+            if (!panel || !overlay) return;
+            drawer?.classList.remove('open');
+            const opening = !panel.classList.contains('open');
+            panel.classList.toggle('open', opening);
+            panel.setAttribute('aria-hidden', opening ? 'false' : 'true');
+            overlay.classList.toggle('hidden', !opening);
+            document.body.classList.toggle('panel-open', opening);
+            if (opening) refreshMobilePanelData();
+        }
+
+        function closeMobilePanels() {
+            document.getElementById('mobileSideDrawer')?.classList.remove('open');
+            document.getElementById('mobileNotificationPanel')?.classList.remove('open');
+            document.getElementById('mobileDrawerOverlay')?.classList.add('hidden');
+            document.body.classList.remove('panel-open');
+        }
+
+        async function refreshMobilePanelData() {
+            try {
+                const profile = JSON.parse(localStorage.getItem('docsendgo_profile') || localStorage.getItem('docsendgo_receiver_profile') || 'null');
+                const name = profile?.name || profile?.fullName || 'Create Profile';
+                const code = profile?.code || profile?.userId || 'Tap to setup profile';
+                const nameEl = document.getElementById('drawerUserName');
+                const idEl = document.getElementById('drawerUserId');
+                if (nameEl) nameEl.textContent = name;
+                if (idEl) idEl.textContent = code;
+                const list = document.getElementById('notificationList');
+                const badge = document.getElementById('mobileNotificationBadge');
+                if (!list || !badge) return;
+                if (!profile?.code || !db) {
+                    badge.textContent = '0'; badge.style.display = 'none';
+                    list.innerHTML = '<div class="empty-notification">🔔<b>No notifications yet</b><small>Create a profile to receive files.</small></div>';
+                    return;
+                }
+                const snap = await db.collection('shops').doc(profile.code).collection('documents').orderBy('createdAt','desc').limit(5).get().catch(async()=>db.collection('shops').doc(profile.code).collection('documents').limit(5).get());
+                const docs=[]; snap.forEach(d=>docs.push({id:d.id,...d.data()}));
+                badge.textContent=String(Math.min(docs.length,99)); badge.style.display=docs.length?'flex':'none';
+                if(!docs.length){ list.innerHTML='<div class="empty-notification">🔔<b>No notifications yet</b><small>New received files will appear here.</small></div>'; return; }
+                list.innerHTML=docs.map(d=>{ const file=(d.files&&d.files[0])||{}; const title=file.name||d.fileName||'New document received'; const sender=d.senderName||d.customerName||'Someone'; const when=d.createdAt?.toDate?d.createdAt.toDate().toLocaleString('en-IN'):''; return `<div class="notification-item" onclick="showPage('shops');closeMobilePanels()"><div class="notification-icon">📥</div><div><b>${escapeHtml(title)}</b><small>From ${escapeHtml(sender)}${when?' • '+escapeHtml(when):''}</small></div></div>`; }).join('');
+            } catch(e) { console.warn('Notification panel:', e); }
         }
 
         function showTool(tool) {
@@ -2021,6 +2120,7 @@
 
         // ===== INIT =====
         window.addEventListener('load', async function() {
+            setTimeout(refreshMobilePanelData, 1200);
             if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(() => {}); }
             const params = new URLSearchParams(window.location.search);
             const code = params.get('code');
