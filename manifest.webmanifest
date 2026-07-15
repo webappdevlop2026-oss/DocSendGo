@@ -56,6 +56,30 @@
           "type": "image/png"
         }
       ]
+    },
+    {
+      "name": "Order Slip",
+      "short_name": "Order",
+      "url": "grocery.html",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Store Panel",
+      "short_name": "Store",
+      "url": "store.html",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

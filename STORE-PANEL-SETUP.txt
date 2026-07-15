@@ -1,0 +1,19 @@
+DocSendGo Universal Store Panel v1.3
+
+Pages:
+- grocery.html = Customer order slip for any shop type
+- store.html = Store registration, PIN login, order loading and billing
+
+Firestore collections:
+- stores
+- storeOrders
+- storeBills
+
+IMPORTANT:
+1. Upload all project files to GitHub/Vercel.
+2. Firebase Console > Firestore Database > Rules.
+3. Copy the included firestore.rules and Publish.
+4. Test registration, Store Code, customer order, billing and bill receipt.
+
+Security note:
+This is a public MVP using Store Code + client-side PIN hash. Before a large public launch, migrate store owners and customers to Firebase Authentication and owner-only Firestore rules.
