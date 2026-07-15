@@ -1,0 +1,12 @@
+DocSendGo Universal Store Panel v2.0
+
+New flow:
+1. Customer opens Store Panel > Customer Slip.
+2. Enters registered Store Code and items.
+3. Add Slip creates a unique code like DOC1545.
+4. Store owner logs in using Store Code + PIN.
+5. Store loads by Slip Code or customer number, adds rates and sends bill.
+6. Dashboard title/features change based on store type.
+
+Firestore collections used: stores, storeOrders, storeBills.
+Publish the included firestore.rules before testing.
