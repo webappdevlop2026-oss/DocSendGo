@@ -1,0 +1,20 @@
+Create/update Firestore admins/{FirebaseAuthUID} documents:
+
+Super Admin:
+active: true (boolean)
+role: "superadmin" (string)
+
+Manager:
+active: true
+role: "manager"
+
+Support Admin:
+active: true
+role: "support"
+
+Permissions:
+- superadmin: all sections and app settings
+- manager: dashboard, users, stores, orders, referrals, reports
+- support: dashboard, reports, help desk
+
+Replace the existing root 232admin.html with this file.
