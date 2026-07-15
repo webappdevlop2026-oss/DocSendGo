@@ -1,0 +1,9 @@
+DocSendGo Referral + Early Access System
+
+1. Every profile User ID is also its Referral ID.
+2. A new user may enter an optional Referral ID while creating the profile.
+3. A referral is saved only when the Referral ID exists.
+4. The user profile shows Referral ID and referral count.
+5. The only visible reward wording is: Early Access to New Features.
+6. Admin may enable Early Access for selected User IDs from 232admin.html.
+7. Publish the included firestore.rules in Firebase Console.
