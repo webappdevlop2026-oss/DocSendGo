@@ -521,7 +521,7 @@
                 <div class="hidden md:flex items-center space-x-1 bg-slate-100 rounded-xl p-1">
                     <button onclick="showPage('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all"> Home</button>
                     <button onclick="location.href='store.html'" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-indigo-700 hover:bg-indigo-50 transition-all">🏪 Store Panel</button>
-                    <button onclick="showPage('referral')" id="nav-referral" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50 transition-all">🎁 Refer & Early Access</button>
+                    <button onclick="showPage('referral')" id="nav-referral" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50 transition-all">🎁 Refer & Earn</button>
                     <button onclick="showPage('tools')" id="nav-tools" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">🛠️ Tools</button>
                     <button onclick="showPage('send')" id="nav-send" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📤 Send</button>
                     <button onclick="showPage('receive')" id="nav-receive" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📥 Receive</button>
@@ -540,7 +540,7 @@
                 <button onclick="showPage('send');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">📤 Send</button>
                 <button onclick="showPage('receive');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">📥 Receive</button>
                 <button onclick="showPage('shops');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">👤 Profile</button>
-                <button onclick="showPage('referral');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50">🎁 Refer & Early Access</button>
+                <button onclick="showPage('referral');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50">🎁 Refer & Earn</button>
             </div>
         </div>
     </nav>
@@ -562,7 +562,7 @@
         <button onclick="location.href='store.html'">🏪 <span>Store Panel</span></button>
         <button onclick="showPage('tools');closeMobilePanels()">🛠️ <span>Document Tools</span></button>
         <button onclick="showPage('shops');closeMobilePanels()">👤 <span>My Profile & Files</span></button>
-        <button onclick="showPage('referral');closeMobilePanels()">🎁 <span>Refer & Early Access</span></button>
+        <button onclick="showPage('referral');closeMobilePanels()">🎁 <span>Refer & Earn</span></button>
       </nav>
       <div class="drawer-foot">DocSendGo • Secure file sharing</div>
     </aside>
@@ -856,8 +856,8 @@
       <div class="max-w-4xl mx-auto px-4 py-8 fade-in">
         <div class="rounded-3xl p-6 md:p-8 text-white mb-6" style="background:linear-gradient(135deg,#4c1d95,#7c3aed)">
           <div class="text-sm font-bold uppercase tracking-widest opacity-80">DocSendGo Rewards</div>
-          <h2 class="text-3xl font-extrabold mt-2">🎁 Refer & Early Access</h2>
-          <p class="mt-2 opacity-90">Invite users with your User ID. Selected users can receive early access to new features.</p>
+          <h2 class="text-3xl font-extrabold mt-2">🎁 Refer & Earn</h2>
+          <p class="mt-2 opacity-90">Invite new users with your User ID. Every successful referral earns 1 Coin.</p>
         </div>
         <div id="referralPageContent" class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8">
           <div class="text-center py-10 text-slate-400">Loading referral details...</div>
@@ -980,7 +980,7 @@
 
     <!-- ==================== FOOTER ==================== -->
     
-<div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="showPage('referral')" style="width:100%;border:1px solid #ddd6fe;border-radius:22px;padding:20px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(124,58,237,.22)">🎁 Refer & Early Access <span style="display:block;font-size:12px;font-weight:600;opacity:.9;margin-top:5px">Share your User ID • Get early access to selected new features</span></button></div>
+<div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="showPage('referral')" style="width:100%;border:1px solid #ddd6fe;border-radius:22px;padding:20px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(124,58,237,.22)">🎁 Refer & Earn <span style="display:block;font-size:12px;font-weight:600;opacity:.9;margin-top:5px">Invite friends • Earn Coins • Unlock new features</span></button></div>
 <div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="location.href='store.html'" style="width:100%;border:0;border-radius:22px;padding:22px;background:linear-gradient(135deg,#064e3b,#16a34a);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(22,163,74,.2)">🏪 Universal Store Panel & Order Slip <span style="display:block;font-size:12px;font-weight:600;opacity:.85;margin-top:5px">Any shop → Customer list → Automatic bill</span></button></div>
 <footer class="bg-slate-900 text-slate-400 py-8 px-4 mt-16">
         <div class="max-w-5xl mx-auto text-center">
@@ -1575,6 +1575,12 @@
                         status:'registered',
                         createdAt:new Date().toISOString()
                     });
+                    try{
+                        await db.collection('shops').doc(referredBy).set({
+                            referralCount: firebase.firestore.FieldValue.increment(1),
+                            referralUpdatedAt: new Date().toISOString()
+                        },{merge:true});
+                    }catch(refCountError){ console.warn('Referral counter update:',refCountError); }
                 }
                 currentUserProfile={name,code,userId:code,userType,photoUrl,ownerToken:getOwnerToken(),referredBy};
                 localStorage.setItem('docsendgo_profile_code', code);
@@ -1587,44 +1593,105 @@
         async function createShop(){ openProfileEditor(); }
 
 
+        function referralRewardState(coins){
+            const n=Math.max(0,Number(coins)||0);
+            let featureSlots=0;
+            if(n>=30) featureSlots=6;
+            else if(n>=20) featureSlots=3;
+            else if(n>=10) featureSlots=1;
+            return {
+                coins:n,
+                featureSlots,
+                superPremium:n>=50,
+                nextTarget:n<10?10:n<20?20:n<30?30:n<50?50:null,
+                nextLabel:n<10?'1 New Feature':n<20?'2 More New Features':n<30?'3 More New Features':n<50?'Super Premium Feature':'All current rewards unlocked'
+            };
+        }
+
         async function renderReferralPage(){
             const box=document.getElementById('referralPageContent');
             if(!box) return;
-            box.innerHTML='<div class="text-center py-10 text-slate-400">Loading referral details...</div>';
-            let profile=currentUserProfile || await loadUserProfile();
-            if(!profile){
-                box.innerHTML=`<div class="text-center py-10"><div class="text-6xl mb-4">🎁</div><h3 class="text-2xl font-extrabold text-slate-800">Create your profile first</h3><p class="text-slate-500 mt-2 mb-5">Your User ID will also be your Referral ID.</p><button onclick="showPage('shops');setTimeout(openProfileEditor,250)" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Create Profile</button></div>`;
-                return;
+            box.innerHTML='<div class="text-center py-10 text-slate-400"><div class="text-4xl mb-3">🎁</div>Loading Refer & Earn details...</div>';
+            try{
+                let profile=currentUserProfile || await Promise.race([
+                    loadUserProfile(),
+                    new Promise(resolve=>setTimeout(()=>resolve(null),7000))
+                ]);
+                if(!profile){
+                    box.innerHTML=`<div class="text-center py-10"><div class="text-6xl mb-4">🎁</div><h3 class="text-2xl font-extrabold text-slate-800">Create your profile first</h3><p class="text-slate-500 mt-2 mb-5">Your User ID will also be your Referral ID.</p><button onclick="showPage('shops');setTimeout(openProfileEditor,250)" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Create Profile</button></div>`;
+                    return;
+                }
+                const count=await getReferralCount(profile.code, profile.referralCount);
+                const reward=referralRewardState(count);
+                let early={enabled:false,features:[]};
+                try{
+                    const d=await Promise.race([
+                        db.collection('earlyAccess').doc(profile.code).get(),
+                        new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),5000))
+                    ]);
+                    if(d.exists) early=d.data()||early;
+                }catch(e){ console.warn('Early access check:',e); }
+                const featureLabels={store_beta:'Universal Store Beta',smart_tools:'New Smart Tools',ui_beta:'New App Experience'};
+                const unlocked=(early.features||[]).map(x=>featureLabels[x]||x);
+                const percent=reward.nextTarget?Math.min(100,Math.round((reward.coins/reward.nextTarget)*100)):100;
+                box.innerHTML=`
+                  <div class="grid lg:grid-cols-3 gap-5">
+                    <div class="rounded-2xl border border-violet-100 bg-violet-50 p-5 lg:col-span-2">
+                      <div class="text-xs font-extrabold uppercase tracking-widest text-violet-500">Your Referral ID</div>
+                      <div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(profile.code)}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy ID</button></div>
+                      <p class="mt-3 text-sm text-violet-700">A new user can enter this ID while creating their profile.</p>
+                    </div>
+                    <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                      <div class="text-xs font-extrabold uppercase tracking-widest text-amber-600">Your Coins</div>
+                      <div class="mt-2 text-5xl font-black text-amber-700">${reward.coins}</div>
+                      <p class="text-sm font-bold text-amber-700">${reward.coins} successful referral${reward.coins===1?'':'s'}</p>
+                      <p class="mt-1 text-xs text-amber-600">1 Referral = 1 Coin</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+                    <div class="flex flex-wrap justify-between gap-3"><div><h3 class="text-xl font-extrabold text-slate-800">🎯 Reward Progress</h3><p class="text-sm text-slate-500">Features start unlocking after 10 successful referrals.</p></div><span class="rounded-full bg-indigo-100 px-4 py-2 text-sm font-extrabold text-indigo-700">${reward.featureSlots} Feature${reward.featureSlots===1?'':'s'} Unlocked</span></div>
+                    <div class="mt-4 h-3 overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-violet-600" style="width:${percent}%"></div></div>
+                    <p class="mt-2 text-sm font-semibold text-slate-600">${reward.nextTarget?`${Math.max(0,reward.nextTarget-reward.coins)} more Coin${Math.max(0,reward.nextTarget-reward.coins)===1?'':'s'} for ${reward.nextLabel}`:'All listed rewards achieved 🎉'}</p>
+                  </div>
+
+                  <div class="mt-6 grid md:grid-cols-4 gap-4">
+                    ${[
+                      {coin:10,title:'1 New Feature',total:'Total unlocked: 1',ok:reward.coins>=10},
+                      {coin:20,title:'2 More Features',total:'Total unlocked: 3',ok:reward.coins>=20},
+                      {coin:30,title:'3 More Features',total:'Total unlocked: 6',ok:reward.coins>=30},
+                      {coin:50,title:'Super Premium Feature',total:'Special member access',ok:reward.coins>=50}
+                    ].map(x=>`<div class="rounded-2xl border p-5 ${x.ok?'border-emerald-200 bg-emerald-50':'border-slate-200 bg-slate-50'}"><div class="text-3xl">${x.ok?'✅':'🔒'}</div><div class="mt-2 text-sm font-black ${x.ok?'text-emerald-700':'text-slate-700'}">${x.coin} Coins</div><div class="mt-1 font-extrabold text-slate-800">${x.title}</div><div class="mt-1 text-xs text-slate-500">${x.total}</div></div>`).join('')}
+                  </div>
+
+                  <div class="mt-6 rounded-2xl border p-5 ${early.enabled?'border-emerald-200 bg-emerald-50':'border-slate-200 bg-slate-50'}">
+                    <div class="flex items-center justify-between gap-4"><div><div class="font-extrabold text-slate-800">🚀 Early Access to New Features</div><p class="text-sm text-slate-500 mt-1">Unlocked features are assigned to your User ID.</p></div><span class="px-3 py-1 rounded-full text-xs font-extrabold ${early.enabled?'bg-emerald-600 text-white':'bg-slate-200 text-slate-600'}">${early.enabled?'ACTIVE':'NOT ACTIVE'}</span></div>
+                    ${early.enabled?`<div class="mt-4"><div class="text-xs font-bold uppercase tracking-wide text-emerald-600">Available Features</div><div class="mt-2 flex flex-wrap gap-2">${unlocked.length?unlocked.map(f=>`<span class="rounded-full bg-white border border-emerald-200 px-3 py-1 text-sm font-bold text-emerald-700">${escapeHtml(f)}</span>`).join(''):'<span class="text-sm text-emerald-700">Your feature slots are active. New features will appear here.</span>'}</div></div>`:''}
+                  </div>`;
+            }catch(err){
+                console.error('Refer & Earn:',err);
+                box.innerHTML=`<div class="text-center py-10"><div class="text-5xl mb-3">⚠️</div><h3 class="text-xl font-extrabold text-slate-800">Could not load Refer & Earn</h3><p class="mt-2 text-slate-500">Please check your internet connection and try again.</p><button onclick="renderReferralPage()" class="mt-5 rounded-xl bg-indigo-600 px-5 py-3 font-bold text-white">Retry</button></div>`;
             }
-            const count=await getReferralCount(profile.code);
-            let early={enabled:false,features:[]};
-            try{ const d=await db.collection('earlyAccess').doc(profile.code).get(); if(d.exists) early=d.data()||early; }catch(e){ console.warn(e); }
-            const featureLabels={storeBeta:'Universal Store Beta',smartTools:'New Smart Tools',newExperience:'New App Experience'};
-            const unlocked=(early.features||[]).map(x=>featureLabels[x]||x);
-            box.innerHTML=`
-              <div class="grid md:grid-cols-2 gap-6">
-                <div class="rounded-2xl border border-violet-100 bg-violet-50 p-5">
-                  <div class="text-xs font-extrabold uppercase tracking-widest text-violet-500">Your Referral ID</div>
-                  <div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(profile.code)}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy ID</button></div>
-                  <p class="mt-3 text-sm text-violet-700">Share this ID with a new user. They can enter it while creating their profile.</p>
-                </div>
-                <div class="rounded-2xl border border-sky-100 bg-sky-50 p-5">
-                  <div class="text-xs font-extrabold uppercase tracking-widest text-sky-500">Referral Summary</div>
-                  <div class="mt-2 text-4xl font-black text-sky-800">${count}</div><p class="text-sm text-sky-700">Successful referral${count===1?'':'s'}</p>
-                </div>
-              </div>
-              <div class="mt-6 rounded-2xl border p-5 ${early.enabled?'border-emerald-200 bg-emerald-50':'border-slate-200 bg-slate-50'}">
-                <div class="flex items-center justify-between gap-4"><div><div class="font-extrabold text-slate-800">🚀 Early Access to New Features</div><p class="text-sm text-slate-500 mt-1">Early access is enabled by Admin for selected User IDs.</p></div><span class="px-3 py-1 rounded-full text-xs font-extrabold ${early.enabled?'bg-emerald-600 text-white':'bg-slate-200 text-slate-600'}">${early.enabled?'ACTIVE':'NOT ACTIVE'}</span></div>
-                ${early.enabled?`<div class="mt-4"><div class="text-xs font-bold uppercase tracking-wide text-emerald-600">Available Features</div><div class="mt-2 flex flex-wrap gap-2">${unlocked.length?unlocked.map(f=>`<span class="rounded-full bg-white border border-emerald-200 px-3 py-1 text-sm font-bold text-emerald-700">${escapeHtml(f)}</span>`).join(''):'<span class="text-sm text-emerald-700">Early access is active. New features will appear here.</span>'}</div></div>`:''}
-              </div>`;
         }
 
-        async function getReferralCount(userId){
-            if(!db || !userId) return 0;
+        async function getReferralCount(userId, savedCount){
+            const cached=Math.max(0,Number(savedCount)||0);
+            if(!db || !userId) return cached;
             try{
-                const snap=await db.collection('referrals').where('referrerId','==',userId).get();
-                return snap.size;
-            }catch(err){ console.warn('Referral count:',err); return 0; }
+                const snap=await Promise.race([
+                    db.collection('referrals').where('referrerId','==',userId).get(),
+                    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Referral query timeout')),6000))
+                ]);
+                const actual=snap.size;
+                if(actual!==cached){
+                    db.collection('shops').doc(userId).set({referralCount:actual},{merge:true}).catch(()=>{});
+                    if(currentUserProfile && currentUserProfile.code===userId){
+                        currentUserProfile.referralCount=actual;
+                        localStorage.setItem('docsendgo_profile',JSON.stringify(currentUserProfile));
+                    }
+                }
+                return actual;
+            }catch(err){ console.warn('Referral count:',err); return cached; }
         }
         function copyReferralId(userId){
             if(!userId) return;
@@ -1643,7 +1710,7 @@
             }
             const docsSnap=await db.collection('shops').doc(profile.code).collection('documents').get();
             const referralCount=await getReferralCount(profile.code);
-            box.innerHTML=`<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"><div class="flex flex-col sm:flex-row items-center gap-5"><img src="${profile.photoUrl||defaultAvatar(profile.name)}" class="w-28 h-28 rounded-full object-cover border-4 border-sky-100"><div class="flex-1 text-center sm:text-left"><h3 class="text-2xl font-extrabold text-slate-800">${escapeHtml(profile.name)}</h3><div class="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">${escapeHtml(profile.userType||'User')}</div><p class="text-slate-500 mt-2">User ID: <span class="font-mono font-bold">${profile.code}</span></p><p class="text-slate-400 text-sm mt-1">${escapeHtml(profile.city||'')} ${profile.createdAt?'• Joined '+new Date(profile.createdAt).toLocaleDateString():''}</p>${profile.organizationName?`<p class="text-slate-600 text-sm mt-2">🏢 ${escapeHtml(profile.organizationName)}</p>`:''}${profile.instituteName?`<p class="text-slate-600 text-sm mt-2">🎓 ${escapeHtml(profile.instituteName)}${profile.course?' • '+escapeHtml(profile.course):''}</p>`:''}<p class="mt-3 font-semibold text-sky-600">📥 ${docsSnap.size} received file(s)</p><div class="mt-4 rounded-xl border border-indigo-100 bg-indigo-50 p-3 text-left"><div class="text-xs font-bold uppercase tracking-wide text-indigo-500">Early Access Referral</div><div class="mt-1 flex flex-wrap items-center gap-2"><span class="font-mono font-extrabold text-indigo-800">${profile.code}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-lg bg-white px-3 py-1 text-xs font-bold text-indigo-700 shadow-sm">Copy ID</button></div><p class="mt-2 text-xs text-indigo-700">Referrals: <b>${referralCount}</b> • Rewards show only as Early Access to New Features.</p></div></div><div class="flex flex-col gap-2 w-full sm:w-auto"><button onclick="openShopDashboard('${profile.code}')" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Dashboard</button><button onclick="openProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Edit Profile</button></div></div></div>`;
+            box.innerHTML=`<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"><div class="flex flex-col sm:flex-row items-center gap-5"><img src="${profile.photoUrl||defaultAvatar(profile.name)}" class="w-28 h-28 rounded-full object-cover border-4 border-sky-100"><div class="flex-1 text-center sm:text-left"><h3 class="text-2xl font-extrabold text-slate-800">${escapeHtml(profile.name)}</h3><div class="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">${escapeHtml(profile.userType||'User')}</div><p class="text-slate-500 mt-2">User ID: <span class="font-mono font-bold">${profile.code}</span></p><p class="text-slate-400 text-sm mt-1">${escapeHtml(profile.city||'')} ${profile.createdAt?'• Joined '+new Date(profile.createdAt).toLocaleDateString():''}</p>${profile.organizationName?`<p class="text-slate-600 text-sm mt-2">🏢 ${escapeHtml(profile.organizationName)}</p>`:''}${profile.instituteName?`<p class="text-slate-600 text-sm mt-2">🎓 ${escapeHtml(profile.instituteName)}${profile.course?' • '+escapeHtml(profile.course):''}</p>`:''}<p class="mt-3 font-semibold text-sky-600">📥 ${docsSnap.size} received file(s)</p><div class="mt-4 rounded-xl border border-indigo-100 bg-indigo-50 p-3 text-left"><div class="text-xs font-bold uppercase tracking-wide text-indigo-500">Refer & Earn</div><div class="mt-1 flex flex-wrap items-center gap-2"><span class="font-mono font-extrabold text-indigo-800">${profile.code}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-lg bg-white px-3 py-1 text-xs font-bold text-indigo-700 shadow-sm">Copy ID</button></div><p class="mt-2 text-xs text-indigo-700">Referrals: <b>${referralCount}</b> • 1 Referral = 1 Coin • Features start unlocking at 10 Coins.</p></div></div><div class="flex flex-col gap-2 w-full sm:w-auto"><button onclick="openShopDashboard('${profile.code}')" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Dashboard</button><button onclick="openProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Edit Profile</button></div></div></div>`;
         }
 
         function escapeHtml(v){ return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }

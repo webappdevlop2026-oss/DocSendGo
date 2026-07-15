@@ -1,0 +1,19 @@
+DocSendGo Refer & Earn v3.3
+
+Reward rules:
+- 1 successful referral = 1 Coin.
+- 1-9 Coins: coins accumulate; no feature unlock yet.
+- 10 Coins: 1 new-feature slot.
+- 20 Coins: 2 additional slots (3 total).
+- 30 Coins: 3 additional slots (6 total).
+- 50 Coins: Super Premium Feature eligibility.
+
+A referral counts when a new user creates a profile using an existing User ID.
+The same referred profile cannot be counted twice because the referral document ID is the new User ID.
+Early Access features continue to be assigned to specific User IDs from 232admin.html.
+
+After upload:
+1. Replace the website files on GitHub.
+2. Wait for Vercel deployment.
+3. Publish firestore.rules in Firebase if not already published.
+4. Clear browser/PWA cache or reinstall the PWA if an older screen remains.
