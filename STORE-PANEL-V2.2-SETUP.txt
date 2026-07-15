@@ -1,0 +1,11 @@
+DocSendGo Store Panel v2.2
+
+Customer Slip rules:
+1. Customer Name, Mobile/User Number and Store Type are required.
+2. Store Code is optional.
+3. With Store Code: slip goes directly to that store and also gets a unique DOC code.
+4. Without Store Code: slip gets a unique DOC code and can be opened only by a registered store of the selected Store Type.
+5. A different store type sees an invalid message showing the correct slip type.
+6. A direct slip cannot be opened by another store, even if the store type matches.
+
+After deployment, publish firestore.rules in Firebase Console.
