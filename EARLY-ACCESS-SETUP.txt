@@ -1,0 +1,14 @@
+DocSendGo Early Access Feature Flag System
+
+1. Upload all files to GitHub/Vercel.
+2. Publish the included firestore.rules in Firebase Console.
+3. Open: https://YOUR-DOMAIN/232admin.html
+4. Login with the Firebase admin email/password.
+5. Search a user's exact DocSendGo User ID.
+6. Turn Early Access ON, select feature(s), and Save.
+7. The selected user will see an Early Access button after reloading the website.
+
+Firestore collection: earlyAccess/{USER_ID}
+Fields: enabled, features, userName, updatedAt, updatedBy
+
+Security: Only authenticated active admins can write feature flags.
