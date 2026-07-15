@@ -1,0 +1,69 @@
+:root{
+  --dsg-blue:#1768f2;--dsg-cyan:#0ea5e9;--dsg-indigo:#4f46e5;
+  --dsg-ink:#0f172a;--dsg-muted:#64748b;--dsg-line:#e6edf7;
+  --dsg-surface:#ffffff;--dsg-bg:#f4f7fc;
+  --dsg-shadow:0 14px 40px rgba(25,55,105,.10);
+}
+html{scroll-behavior:smooth}body{background:radial-gradient(circle at 10% 0%,#eaf5ff 0,transparent 30%),var(--dsg-bg)!important;color:var(--dsg-ink)}
+button,a,input,select,textarea{transition:box-shadow .2s ease,transform .2s ease,border-color .2s ease,background .2s ease}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(23,104,242,.22);outline-offset:2px}
+.btn-primary{background:linear-gradient(135deg,var(--dsg-cyan),var(--dsg-indigo))!important;box-shadow:0 10px 24px rgba(23,104,242,.22)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(23,104,242,.28)}
+input:not([type=checkbox]):not([type=radio]),select,textarea{background:#fff;border-color:#dce6f3!important;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+input:not([type=checkbox]):not([type=radio]):focus,select:focus,textarea:focus{border-color:#60a5fa!important;box-shadow:0 0 0 4px rgba(59,130,246,.10)!important}
+.upload-zone{background:linear-gradient(180deg,#fbfdff,#f5f9ff);border-color:#a9c8ee!important}
+.upload-zone:hover{transform:translateY(-2px);border-color:#3182f6!important;box-shadow:0 12px 28px rgba(23,104,242,.10)}
+.tool-category-card,.page .bg-white.rounded-2xl,.shop-card{border:1px solid var(--dsg-line)!important;box-shadow:0 10px 30px rgba(28,56,102,.07)!important}
+.tool-tile{border:1px solid #e7edf6!important;background:linear-gradient(180deg,#fff,#f9fbff)!important}
+.tool-tile:hover{transform:translateY(-3px)!important;box-shadow:0 10px 22px rgba(23,104,242,.11);border-color:#9cc3ff!important}
+.card-hover{border:1px solid var(--dsg-line)}
+
+@media(min-width:768px){
+ body>nav:first-of-type{background:rgba(255,255,255,.88)!important;border-color:rgba(218,228,242,.9)!important;box-shadow:0 8px 30px rgba(15,23,42,.05)}
+ body>nav:first-of-type .max-w-7xl{max-width:1180px}
+ .nav-btn{padding:10px 17px!important;border-radius:12px!important}
+ .nav-btn:hover{background:#fff!important;box-shadow:0 4px 14px rgba(15,23,42,.08)}
+ .nav-btn.nav-active{box-shadow:0 8px 20px rgba(23,104,242,.22)}
+ #page-home>.gradient-bg{position:relative;overflow:hidden;background:linear-gradient(125deg,#0b1739 0%,#123c79 48%,#0ea5e9 100%)!important}
+ #page-home>.gradient-bg:before,#page-home>.gradient-bg:after{content:"";position:absolute;border-radius:999px;filter:blur(2px);pointer-events:none}
+ #page-home>.gradient-bg:before{width:430px;height:430px;right:-120px;top:-170px;background:rgba(255,255,255,.10)}
+ #page-home>.gradient-bg:after{width:250px;height:250px;left:-70px;bottom:-130px;background:rgba(99,102,241,.28)}
+ #page-home>.gradient-bg>*{position:relative;z-index:1}
+ #page-home section.max-w-6xl .grid>div{background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid var(--dsg-line);box-shadow:0 12px 32px rgba(28,56,102,.07)}
+ .page>.max-w-5xl,.page>.max-w-4xl,.page>.max-w-6xl,.page>.max-w-7xl{max-width:1100px}
+}
+
+@media(max-width:767px){
+ body{background:#f4f7fc!important}
+ .mobile-home{background:linear-gradient(180deg,#f9fbff 0,#f1f6ff 55%,#edf3fc 100%)!important;padding-left:12px!important;padding-right:12px!important}
+ .mh-header{position:sticky;top:0;z-index:50;margin:0 -12px 10px;padding:10px 14px;background:rgba(249,251,255,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(220,230,243,.75)}
+ .mh-menu,.mh-bell{background:#fff!important;border:1px solid #e2eaf5!important;box-shadow:0 5px 15px rgba(30,64,120,.08)!important}
+ .home-slider{border-radius:24px!important;box-shadow:0 18px 38px rgba(26,72,146,.17)!important;border:1px solid rgba(255,255,255,.72)}
+ .slider-slide{min-height:210px!important}
+ .slider-copy h1{letter-spacing:-.7px}
+ .mh-actions{gap:9px!important}
+ .mh-action{background:#fff!important;border:1px solid #e4ebf5!important;box-shadow:0 8px 20px rgba(33,67,125,.08)!important;border-radius:18px!important}
+ .mh-action:active,.mh-q:active{transform:scale(.97)}
+ .mh-action .ico{box-shadow:0 7px 15px rgba(20,80,180,.14)}
+ .mh-section{margin-top:18px!important}
+ .mh-title{padding:0 2px 8px}
+ .mh-profile,.mh-q{border:1px solid #e1e9f5!important;box-shadow:0 9px 22px rgba(33,67,125,.07)!important}
+ .mh-profile{background:linear-gradient(135deg,#fff,#f7faff)!important}
+ .mh-quick{gap:9px!important}
+ .mobile-bottom-nav{border:1px solid rgba(219,229,242,.95)!important;box-shadow:0 14px 36px rgba(18,44,90,.20)!important}
+ .mobile-side-drawer,.mobile-notification-panel{box-shadow:0 0 50px rgba(15,23,42,.24)!important}
+ .page:not(#page-home){padding-bottom:110px}
+ .page:not(#page-home)>.max-w-5xl,.page:not(#page-home)>.max-w-4xl,.page:not(#page-home)>.max-w-6xl,.page:not(#page-home)>.max-w-7xl{padding-top:18px!important}
+ .page h2.text-3xl{letter-spacing:-.5px}
+ .tool-category-card{border-radius:20px!important;background:rgba(255,255,255,.94)!important}
+ .tool-tile{border-radius:15px!important}
+}
+
+/* Legal and informational pages */
+body.legal-page{min-height:100vh;background:radial-gradient(circle at top right,#dff3ff,transparent 36%),#f4f7fc!important}
+.legal-top{background:linear-gradient(125deg,#0b1739,#1768f2 62%,#0ea5e9);color:#fff;padding:24px 18px;box-shadow:0 10px 28px rgba(15,23,42,.12)}
+.legal-wrap{max-width:900px;margin:auto}.legal-brand{font-size:25px;font-weight:900;letter-spacing:-.6px}.legal-tag{opacity:.85;margin-top:3px;font-size:14px}
+.legal-card{background:rgba(255,255,255,.96);margin:28px auto;padding:32px;border:1px solid #e4ebf5;border-radius:24px;box-shadow:var(--dsg-shadow);line-height:1.75}
+.legal-card h1{font-size:32px;line-height:1.15;margin:0 0 12px;letter-spacing:-.7px}.legal-card h2{font-size:20px;margin:28px 0 8px}.legal-card p,.legal-card li{color:#334155}.legal-card ul{padding-left:22px}.legal-card a:not(.legal-back){color:#1768f2}
+.legal-back{display:inline-flex;align-items:center;margin-top:22px;background:linear-gradient(135deg,#0ea5e9,#4f46e5);color:#fff!important;padding:11px 18px;border-radius:12px;text-decoration:none;font-weight:800;box-shadow:0 9px 22px rgba(23,104,242,.22)}
+@media(max-width:640px){.legal-top{padding:18px 16px}.legal-card{margin:14px;padding:22px;border-radius:19px}.legal-card h1{font-size:27px}}
