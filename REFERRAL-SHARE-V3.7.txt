@@ -1,0 +1,1 @@
+Copy Invite now includes Referral Code, DocSendGo app details and website/download link. Referral links auto-fill the referral code in profile creation.

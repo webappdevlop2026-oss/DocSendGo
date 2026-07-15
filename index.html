@@ -1546,7 +1546,11 @@
             toggleUserTypeFields();
             document.getElementById('profileUserId').value = profile?.code || 'Will be generated';
             const referralInput=document.getElementById('profileReferralCode');
-            if(referralInput){ referralInput.value=profile?.referredBy || ''; referralInput.disabled=Boolean(profile?.referredBy); }
+            if(referralInput){
+                const urlReferral=(new URLSearchParams(location.search).get('ref')||'').trim().toUpperCase();
+                referralInput.value=profile?.referredBy || urlReferral || '';
+                referralInput.disabled=Boolean(profile?.referredBy);
+            }
             document.getElementById('profilePhotoPreview').src = profile?.photoUrl || defaultAvatar(profile?.name || 'User');
             window.scrollTo({top: document.getElementById('profileEditor').offsetTop - 80, behavior:'smooth'});
         }
@@ -1676,8 +1680,8 @@
                   <div class="grid lg:grid-cols-3 gap-5">
                     <div class="rounded-2xl border border-violet-100 bg-violet-50 p-5 lg:col-span-2">
                       <div class="text-xs font-extrabold uppercase tracking-widest text-violet-500">Your Referral ID</div>
-                      <div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(profile.code)}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy ID</button></div>
-                      <p class="mt-3 text-sm text-violet-700">A new user can enter this ID while creating their profile.</p>
+                      <div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(profile.code)}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy Invite</button></div>
+                      <p class="mt-3 text-sm text-violet-700">Tap Copy Invite to copy your Referral Code, app details and download link together.</p>
                     </div>
                     <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
                       <div class="text-xs font-extrabold uppercase tracking-widest text-amber-600">Your Coins</div>
@@ -1711,7 +1715,7 @@
                 const cachedProfile = currentUserProfile || (()=>{try{return JSON.parse(localStorage.getItem('docsendgo_profile')||'null')}catch(e){return null}})();
                 if(cachedProfile?.code){
                     const reward=referralRewardState(cachedProfile.referralCount||0);
-                    box.innerHTML=`<div class="grid md:grid-cols-2 gap-5"><div class="rounded-2xl border border-violet-100 bg-violet-50 p-5"><div class="text-xs font-extrabold uppercase tracking-widest text-violet-500">Your Referral ID</div><div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(cachedProfile.code)}</span><button onclick="copyReferralId('${cachedProfile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy ID</button></div></div><div class="rounded-2xl border border-amber-200 bg-amber-50 p-5"><div class="text-xs font-extrabold uppercase tracking-widest text-amber-600">Your Coins</div><div class="mt-2 text-5xl font-black text-amber-700">${reward.coins}</div><p class="text-xs text-amber-600">1 Referral = 1 Coin</p></div></div><div class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">Referral ID is available. Live coin sync could not load. Publish the latest <b>firestore.rules</b>, then press Retry.</div><button onclick="renderReferralPage()" class="mt-5 rounded-xl bg-indigo-600 px-5 py-3 font-bold text-white">Retry Live Sync</button>`;
+                    box.innerHTML=`<div class="grid md:grid-cols-2 gap-5"><div class="rounded-2xl border border-violet-100 bg-violet-50 p-5"><div class="text-xs font-extrabold uppercase tracking-widest text-violet-500">Your Referral ID</div><div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(cachedProfile.code)}</span><button onclick="copyReferralId('${cachedProfile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy Invite</button></div></div><div class="rounded-2xl border border-amber-200 bg-amber-50 p-5"><div class="text-xs font-extrabold uppercase tracking-widest text-amber-600">Your Coins</div><div class="mt-2 text-5xl font-black text-amber-700">${reward.coins}</div><p class="text-xs text-amber-600">1 Referral = 1 Coin</p></div></div><div class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">Referral ID is available. Live coin sync could not load. Publish the latest <b>firestore.rules</b>, then press Retry.</div><button onclick="renderReferralPage()" class="mt-5 rounded-xl bg-indigo-600 px-5 py-3 font-bold text-white">Retry Live Sync</button>`;
                 }else{
                     box.innerHTML=`<div class="text-center py-10"><div class="text-5xl mb-3">⚠️</div><h3 class="text-xl font-extrabold text-slate-800">Could not load Refer & Earn</h3><p class="mt-2 text-slate-500">Create your profile first, or publish the latest Firestore rules.</p><button onclick="showPage('shops');setTimeout(openProfileEditor,250)" class="mt-5 rounded-xl bg-indigo-600 px-5 py-3 font-bold text-white">Open Profile</button></div>`;
                 }
@@ -1739,8 +1743,20 @@
         }
         function copyReferralId(userId){
             if(!userId) return;
-            navigator.clipboard?.writeText(userId).then(()=>showToast('Referral ID copied! ✅')).catch(()=>{
-                const t=document.createElement('textarea');t.value=userId;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();showToast('Referral ID copied! ✅');
+            const appLink='https://doc-send-go.vercel.app/?ref='+encodeURIComponent(userId);
+            const inviteText=`🎁 Join DocSendGo
+
+Scan • Send • Receive • Print documents easily. You can also use Store Panel, Order Slip and Billing features.
+
+My Referral Code: ${userId}
+
+Open / Download DocSendGo:
+${appLink}
+
+Create your profile and enter my Referral Code.`;
+            const done=()=>showToast('Referral message copied! Share it anywhere ✅');
+            navigator.clipboard?.writeText(inviteText).then(done).catch(()=>{
+                const t=document.createElement('textarea');t.value=inviteText;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();done();
             });
         }
 
@@ -1754,7 +1770,7 @@
             }
             const docsSnap=await db.collection('shops').doc(profile.code).collection('documents').get();
             const referralCount=await getReferralCount(profile.code);
-            box.innerHTML=`<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"><div class="flex flex-col sm:flex-row items-center gap-5"><img src="${profile.photoUrl||defaultAvatar(profile.name)}" class="w-28 h-28 rounded-full object-cover border-4 border-sky-100"><div class="flex-1 text-center sm:text-left"><h3 class="text-2xl font-extrabold text-slate-800">${escapeHtml(profile.name)}</h3><div class="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">${escapeHtml(profile.userType||'User')}</div><p class="text-slate-500 mt-2">User ID: <span class="font-mono font-bold">${profile.code}</span></p><p class="text-slate-400 text-sm mt-1">${escapeHtml(profile.city||'')} ${profile.createdAt?'• Joined '+new Date(profile.createdAt).toLocaleDateString():''}</p>${profile.organizationName?`<p class="text-slate-600 text-sm mt-2">🏢 ${escapeHtml(profile.organizationName)}</p>`:''}${profile.instituteName?`<p class="text-slate-600 text-sm mt-2">🎓 ${escapeHtml(profile.instituteName)}${profile.course?' • '+escapeHtml(profile.course):''}</p>`:''}<p class="mt-3 font-semibold text-sky-600">📥 ${docsSnap.size} received file(s)</p><div class="mt-4 rounded-xl border border-indigo-100 bg-indigo-50 p-3 text-left"><div class="text-xs font-bold uppercase tracking-wide text-indigo-500">Refer & Earn</div><div class="mt-1 flex flex-wrap items-center gap-2"><span class="font-mono font-extrabold text-indigo-800">${profile.code}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-lg bg-white px-3 py-1 text-xs font-bold text-indigo-700 shadow-sm">Copy ID</button></div><p class="mt-2 text-xs text-indigo-700">Referrals: <b>${referralCount}</b> • 1 Referral = 1 Coin • Features start unlocking at 10 Coins.</p></div></div><div class="flex flex-col gap-2 w-full sm:w-auto"><button onclick="openShopDashboard('${profile.code}')" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Dashboard</button><button onclick="openProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Edit Profile</button></div></div></div>`;
+            box.innerHTML=`<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6"><div class="flex flex-col sm:flex-row items-center gap-5"><img src="${profile.photoUrl||defaultAvatar(profile.name)}" class="w-28 h-28 rounded-full object-cover border-4 border-sky-100"><div class="flex-1 text-center sm:text-left"><h3 class="text-2xl font-extrabold text-slate-800">${escapeHtml(profile.name)}</h3><div class="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-bold">${escapeHtml(profile.userType||'User')}</div><p class="text-slate-500 mt-2">User ID: <span class="font-mono font-bold">${profile.code}</span></p><p class="text-slate-400 text-sm mt-1">${escapeHtml(profile.city||'')} ${profile.createdAt?'• Joined '+new Date(profile.createdAt).toLocaleDateString():''}</p>${profile.organizationName?`<p class="text-slate-600 text-sm mt-2">🏢 ${escapeHtml(profile.organizationName)}</p>`:''}${profile.instituteName?`<p class="text-slate-600 text-sm mt-2">🎓 ${escapeHtml(profile.instituteName)}${profile.course?' • '+escapeHtml(profile.course):''}</p>`:''}<p class="mt-3 font-semibold text-sky-600">📥 ${docsSnap.size} received file(s)</p><div class="mt-4 rounded-xl border border-indigo-100 bg-indigo-50 p-3 text-left"><div class="text-xs font-bold uppercase tracking-wide text-indigo-500">Refer & Earn</div><div class="mt-1 flex flex-wrap items-center gap-2"><span class="font-mono font-extrabold text-indigo-800">${profile.code}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-lg bg-white px-3 py-1 text-xs font-bold text-indigo-700 shadow-sm">Copy Invite</button></div><p class="mt-2 text-xs text-indigo-700">Referrals: <b>${referralCount}</b> • 1 Referral = 1 Coin • Features start unlocking at 10 Coins.</p></div></div><div class="flex flex-col gap-2 w-full sm:w-auto"><button onclick="openShopDashboard('${profile.code}')" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Dashboard</button><button onclick="openProfileEditor()" class="bg-slate-100 px-6 py-3 rounded-xl font-bold text-slate-700">Edit Profile</button></div></div></div>`;
         }
 
         function escapeHtml(v){ return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
