@@ -33,5 +33,7 @@
     "productivity",
     "utilities"
   ],
-  "lang": "en"
+  "lang": "en",
+  "prefer_related_applications": false,
+  "related_applications": []
 }
