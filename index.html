@@ -980,8 +980,10 @@
 
     <!-- ==================== FOOTER ==================== -->
     
-<div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="openReferralPage(event)" style="width:100%;border:1px solid #ddd6fe;border-radius:22px;padding:20px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(124,58,237,.22)">🎁 Refer & Earn <span style="display:block;font-size:12px;font-weight:600;opacity:.9;margin-top:5px">Invite friends • Earn Coins • Unlock new features</span></button></div>
-<div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="location.href='store.html'" style="width:100%;border:0;border-radius:22px;padding:22px;background:linear-gradient(135deg,#064e3b,#16a34a);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(22,163,74,.2)">🏪 Universal Store Panel & Order Slip <span style="display:block;font-size:12px;font-weight:600;opacity:.85;margin-top:5px">Any shop → Customer list → Automatic bill</span></button></div>
+<div id="homeOnlyPromos" class="no-print">
+<div style="max-width:1180px;margin:22px auto;padding:0 20px"><button type="button" onclick="openReferralPage(event)" style="width:100%;border:1px solid #ddd6fe;border-radius:22px;padding:20px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(124,58,237,.22)">🎁 Refer & Earn <span style="display:block;font-size:12px;font-weight:600;opacity:.9;margin-top:5px">Invite friends • Earn Coins • Unlock new features</span></button></div>
+<div style="max-width:1180px;margin:22px auto;padding:0 20px"><button type="button" onclick="location.href='store.html'" style="width:100%;border:0;border-radius:22px;padding:22px;background:linear-gradient(135deg,#064e3b,#16a34a);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(22,163,74,.2)">🏪 Universal Store Panel & Order Slip <span style="display:block;font-size:12px;font-weight:600;opacity:.85;margin-top:5px">Any shop → Customer list → Automatic bill</span></button></div>
+</div>
 <footer class="bg-slate-900 text-slate-400 py-8 px-4 mt-16">
         <div class="max-w-5xl mx-auto text-center">
             <div class="flex items-center justify-center space-x-2 mb-4">
@@ -1171,13 +1173,18 @@
         function openReferralPage(event) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
             try {
+                if (window.location.hash !== '#referral') {
+                    history.pushState({page:'referral'}, '', '#referral');
+                }
                 showPage('referral');
-                if (window.location.hash !== '#referral') history.pushState({page:'referral'}, '', '#referral');
-                const target = document.getElementById('page-referral');
-                if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+                window.scrollTo(0, 0);
+                setTimeout(() => {
+                    const target = document.getElementById('page-referral');
+                    if (target) target.scrollIntoView({behavior:'auto', block:'start'});
+                }, 0);
             } catch (err) {
                 console.error('Referral navigation:', err);
-                window.location.href = 'index.html#referral';
+                window.location.assign('./index.html#referral');
             }
             return false;
         }
@@ -1189,6 +1196,9 @@
             }
         }
 
+        window.addEventListener('hashchange', handleAppHashRoute);
+        window.addEventListener('popstate', handleAppHashRoute);
+
         function showPage(page) {
             const currentPage = getCurrentAppPage();
             if (!window.__appBackNavigation && currentPage !== page) {
@@ -1196,7 +1206,14 @@
                 if (window.__appPageStack.length > 20) window.__appPageStack.shift();
             }
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            const requestedPage = document.getElementById('page-' + page);
+            if (!requestedPage) {
+                console.error('Unknown page:', page);
+                page = 'home';
+            }
             document.getElementById('page-' + page).classList.remove('hidden');
+            const homePromos = document.getElementById('homeOnlyPromos');
+            if (homePromos) homePromos.style.display = page === 'home' ? '' : 'none';
             ensureMobileBackBar(page);
             
             document.querySelectorAll('.nav-btn').forEach(btn => {

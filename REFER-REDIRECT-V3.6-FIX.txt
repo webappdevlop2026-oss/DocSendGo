@@ -1,0 +1,5 @@
+Refer & Earn redirect fix v3.6
+- Home promotional cards now show only on Home.
+- Refer & Earn opens a clean dedicated app page.
+- Hash/back/forward navigation supported.
+- Service worker cache version updated.
