@@ -6,4 +6,5 @@
   <url><loc>https://doc-send-go.vercel.app/terms.html</loc><priority>0.5</priority></url>
   <url><loc>https://doc-send-go.vercel.app/contact.html</loc><priority>0.5</priority></url>
   <url><loc>https://doc-send-go.vercel.app/faq.html</loc><priority>0.5</priority></url>
+  <url><loc>https://doc-send-go.vercel.app/grocery.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>

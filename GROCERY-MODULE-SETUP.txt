@@ -1,0 +1,11 @@
+DOCSENDGO SMART GROCERY MODULE
+
+Page: /grocery.html
+Collections: groceryOrders, groceryBills
+
+IMPORTANT FIREBASE STEP:
+Open Firebase Console > Firestore Database > Rules. Replace with the included firestore.rules and click Publish.
+Without publishing the updated rules, grocery list and bill save/load will show permission errors.
+
+Current v1 privacy model:
+The module uses the customer mobile/user number to find orders and bills. This is easy for local shops but is not private enough for high-scale use. Before large public rollout, add Firebase Authentication and shop/customer ownership rules.

@@ -520,6 +520,7 @@
                 </div>
                 <div class="hidden md:flex items-center space-x-1 bg-slate-100 rounded-xl p-1">
                     <button onclick="showPage('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all"> Home</button>
+                    <button onclick="location.href='grocery.html'" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-emerald-700 hover:bg-emerald-50 transition-all">🛒 Grocery</button>
                     <button onclick="showPage('tools')" id="nav-tools" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">🛠️ Tools</button>
                     <button onclick="showPage('send')" id="nav-send" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📤 Send</button>
                     <button onclick="showPage('receive')" id="nav-receive" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📥 Receive</button>
@@ -556,6 +557,7 @@
         <button onclick="showPage('home');closeMobilePanels()">🏠 <span>Home</span></button>
         <button onclick="showPage('send');closeMobilePanels()">📤 <span>Send File</span></button>
         <button onclick="showPage('receive');closeMobilePanels()">📥 <span>Receive File</span></button>
+        <button onclick="location.href='grocery.html'">🛒 <span>Grocery Order</span></button>
         <button onclick="showPage('tools');closeMobilePanels()">🛠️ <span>Document Tools</span></button>
         <button onclick="showPage('shops');closeMobilePanels()">👤 <span>My Profile & Files</span></button>
       </nav>
@@ -605,6 +607,7 @@
             <div class="mh-quick">
               <button class="mh-q" onclick="showPage('shops')"><span id="mhReceivedBadge" class="mh-count">0</span><div class="qico">📥</div>Received<br>Files</button>
               <button class="mh-q" onclick="showPage('send')"><div class="qico">📤</div>Send<br>File</button>
+              <button class="mh-q" onclick="location.href='grocery.html'"><div class="qico">🛒</div>Grocery<br>Order</button>
               <button class="mh-q" onclick="showPage('tools')"><div class="qico">📕</div>PDF<br>Tools</button>
               <button class="mh-q" onclick="showPage('shops')"><div class="qico">🖨️</div>Print<br>History</button>
               <button class="mh-q" onclick="showToast('Favourites coming soon')"><div class="qico">⭐</div>Favourites</button>
@@ -957,7 +960,9 @@
     </div>
 
     <!-- ==================== FOOTER ==================== -->
-    <footer class="bg-slate-900 text-slate-400 py-8 px-4 mt-16">
+    
+<div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="location.href='grocery.html'" style="width:100%;border:0;border-radius:22px;padding:22px;background:linear-gradient(135deg,#064e3b,#16a34a);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(22,163,74,.2)">🛒 Smart Grocery Order & Billing <span style="display:block;font-size:12px;font-weight:600;opacity:.85;margin-top:5px">Customer list → Shop billing → Bill sent back</span></button></div>
+<footer class="bg-slate-900 text-slate-400 py-8 px-4 mt-16">
         <div class="max-w-5xl mx-auto text-center">
             <div class="flex items-center justify-center space-x-2 mb-4">
                 <div class="w-8 h-8 btn-primary rounded-lg flex items-center justify-center">
