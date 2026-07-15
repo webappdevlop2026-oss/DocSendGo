@@ -1,3 +1,14 @@
-<!doctype html><html lang="en"><head><!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q261G92C2J"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-Q261G92C2J');</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1768f2"><link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="stylesheet" href="ui-v2.css"><title>Help & FAQ | DocSendGo</title><meta name="description" content="Frequently asked questions about DocSendGo"></head><body class="legal-page"><header class="legal-top"><div class="legal-wrap"><div class="legal-brand">DocSendGo</div><div class="legal-tag">Scan • Send • Receive • Print</div></div></header><main class="legal-wrap"><article class="legal-card"><h1>Help & FAQ</h1><h2>How do I send a file?</h2><p>Open Send, scan the receiver’s personal QR code, confirm the receiver and upload your file.</p><h2>How do I receive a file?</h2><p>Create your profile and show your personal QR code to the sender. Received files appear in your profile dashboard.</p><h2>Can I view or print without downloading?</h2><p>Supported PDF and image files can be opened with View and printed with Print. Download is available separately.</p><h2>Why is the camera not opening?</h2><p>Allow camera permission in your browser or installed PWA, then reload the page.</p><h2>Is DocSendGo an app?</h2><p>DocSendGo is a Progressive Web App. It can be installed from a supported browser and opens like an app.</p><a class="legal-back" href="./">← Back to DocSendGo</a></article></main></body></html>
+DocSendGo Early Access Feature Flag System
+
+1. Upload all files to GitHub/Vercel.
+2. Publish the included firestore.rules in Firebase Console.
+3. Open: https://YOUR-DOMAIN/232admin.html
+4. Login with the Firebase admin email/password.
+5. Search a user's exact DocSendGo User ID.
+6. Turn Early Access ON, select feature(s), and Save.
+7. The selected user will see an Early Access button after reloading the website.
+
+Firestore collection: earlyAccess/{USER_ID}
+Fields: enabled, features, userName, updatedAt, updatedBy
+
+Security: Only authenticated active admins can write feature flags.

@@ -1,0 +1,18 @@
+DocSendGo Referral System v3.8
+
+User side:
+- 1 referral = 1 DocCoin
+- Reward progress at 10, 20, 30 and 50 coins
+- Copy Invite, WhatsApp, Facebook and native Share
+- Referral history
+- Admin bonus coins and feature flags
+
+Admin side (232admin.html):
+- Search by User ID
+- See actual referrals and total DocCoins
+- Add/remove bonus coins
+- Turn Early Access on/off
+- Assign Feature #1-#6 and Super Premium
+- Reset rewards
+
+Publish firestore.rules after deployment.

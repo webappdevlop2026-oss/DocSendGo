@@ -1664,15 +1664,17 @@
                     return;
                 }
                 const count=await getReferralCount(profile.code, profile.referralCount);
-                const reward=referralRewardState(count);
-                let early={enabled:false,features:[]};
+                let early={enabled:false,features:[],bonusCoins:0};
                 try{
                     const d=await Promise.race([
                         db.collection('earlyAccess').doc(profile.code).get(),
                         new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),5000))
                     ]);
-                    if(d.exists) early=d.data()||early;
+                    if(d.exists) early={...early,...(d.data()||{})};
                 }catch(e){ console.warn('Early access check:',e); }
+                const totalCoins=count + Math.max(0,Number(early.bonusCoins)||0);
+                const reward=referralRewardState(totalCoins);
+                const referralHistory=await getReferralHistory(profile.code);
                 const featureLabels={store_beta:'Universal Store Beta',smart_tools:'New Smart Tools',ui_beta:'New App Experience'};
                 const unlocked=(early.features||[]).map(x=>featureLabels[x]||x);
                 const percent=reward.nextTarget?Math.min(100,Math.round((reward.coins/reward.nextTarget)*100)):100;
@@ -1680,14 +1682,14 @@
                   <div class="grid lg:grid-cols-3 gap-5">
                     <div class="rounded-2xl border border-violet-100 bg-violet-50 p-5 lg:col-span-2">
                       <div class="text-xs font-extrabold uppercase tracking-widest text-violet-500">Your Referral ID</div>
-                      <div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(profile.code)}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy Invite</button></div>
-                      <p class="mt-3 text-sm text-violet-700">Tap Copy Invite to copy your Referral Code, app details and download link together.</p>
+                      <div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(profile.code)}</span><button onclick="copyReferralId('${profile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">📋 Copy Invite</button><button onclick="shareReferral('${profile.code}','whatsapp')" class="rounded-xl bg-emerald-600 px-4 py-2 font-bold text-white shadow-sm">WhatsApp</button><button onclick="shareReferral('${profile.code}','facebook')" class="rounded-xl bg-blue-600 px-4 py-2 font-bold text-white shadow-sm">Facebook</button><button onclick="shareReferral('${profile.code}','native')" class="rounded-xl bg-slate-800 px-4 py-2 font-bold text-white shadow-sm">Share</button></div>
+                      <p class="mt-3 text-sm text-violet-700">Share your code with the DocSendGo link. The code auto-fills when your friend opens it.</p>
                     </div>
                     <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
                       <div class="text-xs font-extrabold uppercase tracking-widest text-amber-600">Your Coins</div>
                       <div class="mt-2 text-5xl font-black text-amber-700">${reward.coins}</div>
-                      <p class="text-sm font-bold text-amber-700">${reward.coins} successful referral${reward.coins===1?'':'s'}</p>
-                      <p class="mt-1 text-xs text-amber-600">1 Referral = 1 Coin</p>
+                      <p class="text-sm font-bold text-amber-700">${count} successful referral${count===1?'':'s'}</p>
+                      <p class="mt-1 text-xs text-amber-600">1 Referral = 1 Coin${Number(early.bonusCoins)>0?` • Admin Bonus: ${Number(early.bonusCoins)} Coin`:''}</p>
                     </div>
                   </div>
 
@@ -1709,6 +1711,11 @@
                   <div class="mt-6 rounded-2xl border p-5 ${early.enabled?'border-emerald-200 bg-emerald-50':'border-slate-200 bg-slate-50'}">
                     <div class="flex items-center justify-between gap-4"><div><div class="font-extrabold text-slate-800">🚀 Early Access to New Features</div><p class="text-sm text-slate-500 mt-1">Unlocked features are assigned to your User ID.</p></div><span class="px-3 py-1 rounded-full text-xs font-extrabold ${early.enabled?'bg-emerald-600 text-white':'bg-slate-200 text-slate-600'}">${early.enabled?'ACTIVE':'NOT ACTIVE'}</span></div>
                     ${early.enabled?`<div class="mt-4"><div class="text-xs font-bold uppercase tracking-wide text-emerald-600">Available Features</div><div class="mt-2 flex flex-wrap gap-2">${unlocked.length?unlocked.map(f=>`<span class="rounded-full bg-white border border-emerald-200 px-3 py-1 text-sm font-bold text-emerald-700">${escapeHtml(f)}</span>`).join(''):'<span class="text-sm text-emerald-700">Your feature slots are active. New features will appear here.</span>'}</div></div>`:''}
+                  </div>
+
+                  <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+                    <div class="flex items-center justify-between gap-3"><div><h3 class="text-xl font-extrabold text-slate-800">📜 Referral History</h3><p class="text-sm text-slate-500">People who created a profile using your Referral ID.</p></div><span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-extrabold text-violet-700">${referralHistory.length} Total</span></div>
+                    <div class="mt-4 divide-y divide-slate-100">${referralHistory.length?referralHistory.map((r,i)=>`<div class="flex items-center justify-between gap-4 py-3"><div><div class="font-bold text-slate-800">Referral #${referralHistory.length-i}</div><div class="text-xs text-slate-500">${r.createdAt?new Date(r.createdAt).toLocaleString():'Date unavailable'}</div></div><span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-extrabold text-amber-700">+1 Coin</span></div>`).join(''):'<div class="py-8 text-center text-slate-400">No successful referrals yet.</div>'}</div>
                   </div>`;
             }catch(err){
                 console.error('Refer & Earn:',err);
@@ -1741,19 +1748,30 @@
                 return actual;
             }catch(err){ console.warn('Referral count:',err); return cached; }
         }
+        async function getReferralHistory(userId){
+            if(!db || !userId) return [];
+            try{
+                const snap=await Promise.race([
+                    db.collection('referrals').where('referrerId','==',userId).get(),
+                    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Referral history timeout')),6000))
+                ]);
+                return snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+            }catch(err){ console.warn('Referral history:',err); return []; }
+        }
+        function buildReferralMessage(userId){
+            const appLink='https://doc-send-go.vercel.app/?ref='+encodeURIComponent(userId);
+            return {appLink, text:`🎁 Join DocSendGo\n\nScan • Send • Receive • Print documents easily. Use Store Panel, Order Slip and Billing features too.\n\nMy Referral Code: ${userId}\n\nOpen / Download DocSendGo:\n${appLink}\n\nCreate your profile and enter my Referral Code.`};
+        }
+        async function shareReferral(userId,platform){
+            const {appLink,text}=buildReferralMessage(userId);
+            if(platform==='whatsapp'){ window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener'); return; }
+            if(platform==='facebook'){ window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(appLink),'_blank','noopener'); return; }
+            if(platform==='native' && navigator.share){ try{ await navigator.share({title:'Join DocSendGo',text,url:appLink}); return; }catch(e){ if(e.name==='AbortError') return; } }
+            copyReferralId(userId);
+        }
         function copyReferralId(userId){
             if(!userId) return;
-            const appLink='https://doc-send-go.vercel.app/?ref='+encodeURIComponent(userId);
-            const inviteText=`🎁 Join DocSendGo
-
-Scan • Send • Receive • Print documents easily. You can also use Store Panel, Order Slip and Billing features.
-
-My Referral Code: ${userId}
-
-Open / Download DocSendGo:
-${appLink}
-
-Create your profile and enter my Referral Code.`;
+            const {text:inviteText}=buildReferralMessage(userId);
             const done=()=>showToast('Referral message copied! Share it anywhere ✅');
             navigator.clipboard?.writeText(inviteText).then(done).catch(()=>{
                 const t=document.createElement('textarea');t.value=inviteText;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();done();
