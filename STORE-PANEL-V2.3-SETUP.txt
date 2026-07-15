@@ -1,0 +1,13 @@
+DocSendGo Store Panel v2.3 - Privacy & Bill Header
+
+1. Customer mobile number is stored only for routing the returned bill.
+2. Store dashboard and billing screen do not display the customer mobile number.
+3. Store staff see only Customer Name, Slip Code, Store Type, and item list.
+4. Customer bill heading includes:
+   - Store Name
+   - Store Mobile Number
+   - Store Address / City
+   - Store ID / Store Code
+   - Bill Number and Slip Code
+5. Existing stores should have mobile, address, and city saved in their store registration document.
+6. Publish the included firestore.rules after deployment.
