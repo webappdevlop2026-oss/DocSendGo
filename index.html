@@ -521,7 +521,7 @@
                 <div class="hidden md:flex items-center space-x-1 bg-slate-100 rounded-xl p-1">
                     <button onclick="showPage('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all"> Home</button>
                     <button onclick="location.href='store.html'" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-indigo-700 hover:bg-indigo-50 transition-all">🏪 Store Panel</button>
-                    <button onclick="showPage('referral')" id="nav-referral" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50 transition-all">🎁 Refer & Earn</button>
+                    <button onclick="openReferralPage(event)" id="nav-referral" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50 transition-all">🎁 Refer & Earn</button>
                     <button onclick="showPage('tools')" id="nav-tools" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">🛠️ Tools</button>
                     <button onclick="showPage('send')" id="nav-send" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📤 Send</button>
                     <button onclick="showPage('receive')" id="nav-receive" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-white transition-all">📥 Receive</button>
@@ -540,7 +540,7 @@
                 <button onclick="showPage('send');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">📤 Send</button>
                 <button onclick="showPage('receive');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">📥 Receive</button>
                 <button onclick="showPage('shops');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">👤 Profile</button>
-                <button onclick="showPage('referral');toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50">🎁 Refer & Earn</button>
+                <button onclick="openReferralPage(event);toggleMobile()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-semibold text-violet-700 hover:bg-violet-50">🎁 Refer & Earn</button>
             </div>
         </div>
     </nav>
@@ -562,7 +562,7 @@
         <button onclick="location.href='store.html'">🏪 <span>Store Panel</span></button>
         <button onclick="showPage('tools');closeMobilePanels()">🛠️ <span>Document Tools</span></button>
         <button onclick="showPage('shops');closeMobilePanels()">👤 <span>My Profile & Files</span></button>
-        <button onclick="showPage('referral');closeMobilePanels()">🎁 <span>Refer & Earn</span></button>
+        <button onclick="openReferralPage(event);closeMobilePanels()">🎁 <span>Refer & Earn</span></button>
       </nav>
       <div class="drawer-foot">DocSendGo • Secure file sharing</div>
     </aside>
@@ -980,7 +980,7 @@
 
     <!-- ==================== FOOTER ==================== -->
     
-<div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="showPage('referral')" style="width:100%;border:1px solid #ddd6fe;border-radius:22px;padding:20px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(124,58,237,.22)">🎁 Refer & Earn <span style="display:block;font-size:12px;font-weight:600;opacity:.9;margin-top:5px">Invite friends • Earn Coins • Unlock new features</span></button></div>
+<div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="openReferralPage(event)" style="width:100%;border:1px solid #ddd6fe;border-radius:22px;padding:20px;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(124,58,237,.22)">🎁 Refer & Earn <span style="display:block;font-size:12px;font-weight:600;opacity:.9;margin-top:5px">Invite friends • Earn Coins • Unlock new features</span></button></div>
 <div style="max-width:1180px;margin:22px auto;padding:0 20px" class="no-print"><button onclick="location.href='store.html'" style="width:100%;border:0;border-radius:22px;padding:22px;background:linear-gradient(135deg,#064e3b,#16a34a);color:white;font-weight:900;font-size:18px;box-shadow:0 15px 35px rgba(22,163,74,.2)">🏪 Universal Store Panel & Order Slip <span style="display:block;font-size:12px;font-weight:600;opacity:.85;margin-top:5px">Any shop → Customer list → Automatic bill</span></button></div>
 <footer class="bg-slate-900 text-slate-400 py-8 px-4 mt-16">
         <div class="max-w-5xl mx-auto text-center">
@@ -1166,6 +1166,27 @@
             bar.className = 'app-mobile-backbar';
             bar.innerHTML = '<button class="app-back-btn" onclick="appGoBack()">← Back</button><button class="app-home-btn" onclick="appGoHome()">🏠 Back to Home</button>';
             target.insertBefore(bar, target.firstChild);
+        }
+
+        function openReferralPage(event) {
+            if (event) { event.preventDefault(); event.stopPropagation(); }
+            try {
+                showPage('referral');
+                if (window.location.hash !== '#referral') history.pushState({page:'referral'}, '', '#referral');
+                const target = document.getElementById('page-referral');
+                if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+            } catch (err) {
+                console.error('Referral navigation:', err);
+                window.location.href = 'index.html#referral';
+            }
+            return false;
+        }
+
+        function handleAppHashRoute() {
+            const route = (window.location.hash || '').replace('#','').trim();
+            if (route === 'referral') {
+                setTimeout(() => { try { showPage('referral'); } catch(e) { console.error(e); } }, 50);
+            }
         }
 
         function showPage(page) {
@@ -2573,6 +2594,9 @@
  });
 })();
 </script>
-<script src="early-access.js"></script>
+<script src="early-access.js">
+        window.addEventListener('hashchange', handleAppHashRoute);
+        window.addEventListener('DOMContentLoaded', handleAppHashRoute);
+</script>
 </body>
 </html>
