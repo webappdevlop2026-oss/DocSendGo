@@ -1,0 +1,11 @@
+DocSendGo Refer & Earn v3.4 Fix
+
+Fixed:
+- Referral page called a missing function (loadUserProfile), causing the page to fail.
+- It now uses getMyProfile and can show the locally saved Referral ID even if live Firestore sync temporarily fails.
+
+Required after upload:
+1. Replace all website files on GitHub.
+2. Redeploy on Vercel.
+3. Copy firestore.rules from this package into Firebase Console > Firestore Database > Rules and click Publish.
+4. Hard refresh the browser (Ctrl+Shift+R) or clear the installed PWA cache.

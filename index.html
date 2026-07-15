@@ -1614,7 +1614,7 @@
             box.innerHTML='<div class="text-center py-10 text-slate-400"><div class="text-4xl mb-3">🎁</div>Loading Refer & Earn details...</div>';
             try{
                 let profile=currentUserProfile || await Promise.race([
-                    loadUserProfile(),
+                    getMyProfile(),
                     new Promise(resolve=>setTimeout(()=>resolve(null),7000))
                 ]);
                 if(!profile){
@@ -1670,7 +1670,13 @@
                   </div>`;
             }catch(err){
                 console.error('Refer & Earn:',err);
-                box.innerHTML=`<div class="text-center py-10"><div class="text-5xl mb-3">⚠️</div><h3 class="text-xl font-extrabold text-slate-800">Could not load Refer & Earn</h3><p class="mt-2 text-slate-500">Please check your internet connection and try again.</p><button onclick="renderReferralPage()" class="mt-5 rounded-xl bg-indigo-600 px-5 py-3 font-bold text-white">Retry</button></div>`;
+                const cachedProfile = currentUserProfile || (()=>{try{return JSON.parse(localStorage.getItem('docsendgo_profile')||'null')}catch(e){return null}})();
+                if(cachedProfile?.code){
+                    const reward=referralRewardState(cachedProfile.referralCount||0);
+                    box.innerHTML=`<div class="grid md:grid-cols-2 gap-5"><div class="rounded-2xl border border-violet-100 bg-violet-50 p-5"><div class="text-xs font-extrabold uppercase tracking-widest text-violet-500">Your Referral ID</div><div class="mt-3 flex flex-wrap items-center gap-3"><span class="text-2xl font-mono font-black text-violet-900">${escapeHtml(cachedProfile.code)}</span><button onclick="copyReferralId('${cachedProfile.code}')" class="rounded-xl bg-white px-4 py-2 font-bold text-violet-700 shadow-sm">Copy ID</button></div></div><div class="rounded-2xl border border-amber-200 bg-amber-50 p-5"><div class="text-xs font-extrabold uppercase tracking-widest text-amber-600">Your Coins</div><div class="mt-2 text-5xl font-black text-amber-700">${reward.coins}</div><p class="text-xs text-amber-600">1 Referral = 1 Coin</p></div></div><div class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">Referral ID is available. Live coin sync could not load. Publish the latest <b>firestore.rules</b>, then press Retry.</div><button onclick="renderReferralPage()" class="mt-5 rounded-xl bg-indigo-600 px-5 py-3 font-bold text-white">Retry Live Sync</button>`;
+                }else{
+                    box.innerHTML=`<div class="text-center py-10"><div class="text-5xl mb-3">⚠️</div><h3 class="text-xl font-extrabold text-slate-800">Could not load Refer & Earn</h3><p class="mt-2 text-slate-500">Create your profile first, or publish the latest Firestore rules.</p><button onclick="showPage('shops');setTimeout(openProfileEditor,250)" class="mt-5 rounded-xl bg-indigo-600 px-5 py-3 font-bold text-white">Open Profile</button></div>`;
+                }
             }
         }
 
