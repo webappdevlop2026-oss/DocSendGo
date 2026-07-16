@@ -1,30 +1,3 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    function isAdmin() {
-      return request.auth != null &&
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
-    }
-    function isSuperAdmin() {
-      return isAdmin() && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superadmin';
-    }
-    match /admins/{uid} { allow read: if request.auth != null && request.auth.uid == uid; allow write: if isSuperAdmin(); }
-    match /adminLogs/{id} { allow create, read: if isAdmin(); allow update, delete: if isSuperAdmin(); }
-    match /appSettings/{id} { allow read: if true; allow write: if isSuperAdmin(); }
-    match /appConfig/{id} { allow read: if true; allow write: if isAdmin(); }
-    match /profiles/{userId} { allow read, create, update: if true; allow delete: if isSuperAdmin(); }
-    match /earlyAccess/{userId} { allow read: if true; allow write: if isAdmin(); }
-    match /referrals/{id} { allow read, create: if true; allow update, delete: if isAdmin(); }
-    match /reports/{id} { allow create, read: if true; allow update, delete: if isAdmin(); }
-    match /supportTickets/{id} { allow create, read: if true; allow update, delete: if isAdmin(); }
-    match /adminNotifications/{id} { allow read: if true; allow write: if isAdmin(); }
-    match /shops/{shopId} { allow read, create, update: if true; allow delete: if isAdmin(); match /documents/{docId} { allow read, create, update: if true; allow delete: if isAdmin(); } }
-    match /shares/{shareId} { allow read, create, update: if true; allow delete: if isAdmin(); }
-    match /groceryOrders/{orderId} { allow read, create, update: if true; allow delete: if isAdmin(); }
-    match /groceryBills/{billId} { allow read, create, update: if true; allow delete: if isAdmin(); }
-    match /stores/{storeCode} { allow read, create, update: if true; allow delete: if isAdmin(); }
-    match /storeOrders/{orderId} { allow read, create, update: if true; allow delete: if isAdmin(); }
-    match /storeBills/{billId} { allow read, create, update: if true; allow delete: if isAdmin(); }
-  }
-}
+<!doctype html><html lang="en"><head><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q261G92C2J"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-Q261G92C2J');</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1768f2"><link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="stylesheet" href="ui-v2.css"><title>Help & FAQ | DocSendGo</title><meta name="description" content="Frequently asked questions about DocSendGo"></head><body class="legal-page"><header class="legal-top"><div class="legal-wrap"><div class="legal-brand">DocSendGo</div><div class="legal-tag">Scan • Send • Receive • Print</div></div></header><main class="legal-wrap"><article class="legal-card"><h1>Help & FAQ</h1><h2>How do I send a file?</h2><p>Open Send, scan the receiver’s personal QR code, confirm the receiver and upload your file.</p><h2>How do I receive a file?</h2><p>Create your profile and show your personal QR code to the sender. Received files appear in your profile dashboard.</p><h2>Can I view or print without downloading?</h2><p>Supported PDF and image files can be opened with View and printed with Print. Download is available separately.</p><h2>Why is the camera not opening?</h2><p>Allow camera permission in your browser or installed PWA, then reload the page.</p><h2>Is DocSendGo an app?</h2><p>DocSendGo is a Progressive Web App. It can be installed from a supported browser and opens like an app.</p><a class="legal-back" href="./">← Back to DocSendGo</a></article></main></body></html>
