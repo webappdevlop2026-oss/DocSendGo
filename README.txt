@@ -1,8 +1,8 @@
-DocSendGo Tools v5.3
+DocSendGo Admin Fix
 
-Upload only these two files to GitHub root:
-1. index.html
-2. tools.html
-
-Do not replace admin, store, .well-known, Firebase rules or any other file.
-After Vercel deploy, open https://doc-send-go.vercel.app/tools.html and hard refresh.
+Safest method:
+1. Delete the current GitHub root file: 232admin.html
+2. Upload the 232admin.html from this ZIP.
+3. Do not edit or replace .well-known/assetlinks.json.
+4. Commit and wait for Vercel deployment.
+5. Open: https://doc-send-go.vercel.app/232admin.html?v=fix2
