@@ -19,12 +19,48 @@
 <section id="app" class="app hidden">
 <header class="top"><div><button class="btn small secondary mobile-menu" onclick="toggleMenu()">☰</button> <span class="brand">🛡️ DocSendGo v5.0 Super Admin</span> <span id="adminRoleBadge" class="badge" style="margin-left:8px"></span></div><button class="btn danger" onclick="logoutAdmin()">Logout</button></header>
 <div class="layout"><aside id="side" class="side"><nav class="nav" id="nav">
-<button class="active" data-page="dashboard">📊 Dashboard</button><button data-page="users">👥 Users</button><button data-page="stores">🏪 Stores</button><button data-page="orders">🧾 Orders & Bills</button><button data-page="rewards">🎁 Referral & Coins</button><button data-page="reports">🚩 Reports</button><button data-page="helpdesk">🎫 Help Desk</button><button data-page="settings">⚙️ Settings</button>
+<button class="active" data-page="dashboard">📊 Dashboard</button><button data-page="users">👥 Users</button><button data-page="stores">🏪 Stores</button><button data-page="orders">🧾 Orders & Bills</button><button data-page="documents">📄 Document History</button><button data-page="rewards">🎁 Referral & Coins</button><button data-page="reports">🚩 Reports</button><button data-page="helpdesk">🎫 Help Desk</button><button data-page="settings">⚙️ Settings</button>
 </nav></aside><main class="main">
-<section id="dashboard" class="page active"><div class="head"><h2>Dashboard</h2><button class="btn secondary" onclick="loadDashboard()">Refresh</button></div><div class="grid"><div class="stat">Users<b id="sUsers">0</b></div><div class="stat">Stores<b id="sStores">0</b></div><div class="stat">Orders<b id="sOrders">0</b></div><div class="stat">Bills<b id="sBills">0</b></div><div class="stat">Pending Orders<b id="sPending">0</b></div><div class="stat">Open Reports<b id="sReports">0</b></div><div class="stat">Open Tickets<b id="sTickets">0</b></div><div class="stat">Total Referrals<b id="sReferrals">0</b></div></div><div class="two" style="margin-top:18px"><div class="card"><h3>Recent Stores</h3><div id="recentStores" class="muted">Loading…</div></div><div class="card"><h3>Recent Reward Updates</h3><div id="recentRewards" class="muted">Loading…</div></div></div></section>
+<section id="dashboard" class="page active"><div class="head"><h2>Dashboard</h2><button class="btn secondary" onclick="loadDashboard()">Refresh</button></div><div class="grid"><div class="stat">Users<b id="sUsers">0</b></div><div class="stat">Stores<b id="sStores">0</b></div><div class="stat">Orders<b id="sOrders">0</b></div><div class="stat">Bills<b id="sBills">0</b></div><div class="stat">Pending Orders<b id="sPending">0</b></div><div class="stat">Open Reports<b id="sReports">0</b></div><div class="stat">Open Tickets<b id="sTickets">0</b></div><div class="stat">Total Referrals<b id="sReferrals">0</b></div><div class="stat">Document Sends<b id="sDocHistory">0</b></div></div><div class="two" style="margin-top:18px"><div class="card"><h3>Recent Stores</h3><div id="recentStores" class="muted">Loading…</div></div><div class="card"><h3>Recent Reward Updates</h3><div id="recentRewards" class="muted">Loading…</div></div></div></section>
 <section id="users" class="page"><div class="head"><h2>User Management</h2></div><div class="card"><div class="toolbar"><input id="userSearch" placeholder="User ID / name / mobile"><button class="btn" onclick="findUserFull()">Find User</button></div><div id="userResult" style="margin-top:16px"></div></div></section>
 <section id="stores" class="page"><div class="head"><h2>Store Management</h2><button class="btn secondary" onclick="loadStores()">Refresh</button></div><div class="card"><div class="toolbar"><input id="storeSearch" placeholder="Store name / code / owner"><select id="storeTypeFilter"><option value="">All store types</option><option>Grocery / General Store</option><option>Pharmacy / Medical Store</option><option>Xerox / Print Shop</option><option>Mobile Shop</option><option>Electronics Store</option><option>Restaurant / Food Shop</option><option>Hardware Store</option><option>Stationery / Book Shop</option><option>Other</option></select><select id="storeStatusFilter"><option value="">All status</option><option value="active">Active</option><option value="suspended">Suspended</option></select><button class="btn" onclick="filterStoreRows()">Filter</button></div></div><div class="card table-wrap"><table class="table"><thead><tr><th>Store</th><th>Type</th><th>Owner</th><th>Mobile</th><th>Code</th><th>City</th><th>Status</th><th>Actions</th></tr></thead><tbody id="storeRows"></tbody></table></div></section>
 <section id="orders" class="page"><div class="head"><h2>Orders & Bills</h2><button class="btn secondary" onclick="loadOrdersBills()">Refresh</button></div><div class="card"><div class="toolbar"><input id="orderSearch" placeholder="Slip code / bill number / store code"><select id="orderStatusFilter"><option value="">All order status</option><option value="pending">Pending</option><option value="accepted">Accepted</option><option value="processing">Processing</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select><button class="btn" onclick="loadOrdersBills()">Search</button></div></div><div class="two"><div class="card"><h3>Recent Orders</h3><div id="orderList"></div></div><div class="card"><h3>Recent Bills</h3><div id="billList"></div></div></div></section>
+
+<section id="documents" class="page">
+  <div class="head"><h2>Document Send History</h2><button class="btn secondary" onclick="loadDocumentHistory()">Refresh</button></div>
+  <div class="card">
+    <div class="toolbar">
+      <input id="docHistorySearch" placeholder="Code / sender / receiver / filename">
+      <select id="docHistoryType">
+        <option value="">All types</option>
+        <option value="receiver_send">Direct receiver send</option>
+        <option value="share_code">Share code</option>
+      </select>
+      <select id="docHistoryStatus">
+        <option value="">All status</option>
+        <option value="sent">Sent</option>
+        <option value="code_created">Code created</option>
+        <option value="viewed">Viewed</option>
+        <option value="downloaded">Downloaded</option>
+        <option value="blocked">Blocked</option>
+      </select>
+      <button class="btn" onclick="filterDocumentHistory()">Filter</button>
+    </div>
+  </div>
+  <div class="grid" style="margin-bottom:18px">
+    <div class="stat">Total History<b id="dhTotal">0</b></div>
+    <div class="stat">Viewed<b id="dhViewed">0</b></div>
+    <div class="stat">Downloaded<b id="dhDownloaded">0</b></div>
+    <div class="stat">Flagged/Blocked<b id="dhBlocked">0</b></div>
+  </div>
+  <div class="card table-wrap">
+    <table class="table" style="min-width:1150px">
+      <thead><tr><th>Code</th><th>Sender</th><th>Receiver</th><th>Files</th><th>Sent</th><th>Views</th><th>Downloads</th><th>Status</th><th>Control</th></tr></thead>
+      <tbody id="documentHistoryRows"></tbody>
+    </table>
+  </div>
+</section>
+
 <section id="rewards" class="page"><div class="head"><h2>Referral, DocCoins & Feature Manager</h2></div><div class="two"><div class="card"><div class="field"><label>User ID / Referral ID</label><input id="rewardUserId"></div><button class="btn" onclick="findRewardUser()">Find</button><div id="rewardEditor"></div></div><div class="card"><h3>Reward Rules</h3><p><b>10 Coins</b><br><span class="muted">1 new feature</span></p><p><b>20 Coins</b><br><span class="muted">+2 features (total 3)</span></p><p><b>30 Coins</b><br><span class="muted">+3 features (total 6)</span></p><p><b>50 Coins</b><br><span class="muted">Super Premium</span></p></div></div></section>
 <section id="reports" class="page"><div class="head"><h2>Reports</h2><button class="btn secondary" onclick="loadReports()">Refresh</button></div><div class="card" id="reportList">No reports yet.</div></section>
 <section id="helpdesk" class="page"><div class="head"><h2>Help Desk</h2><button class="btn secondary" onclick="loadTickets()">Refresh</button></div><div class="card" id="ticketList">No tickets yet.</div></section>
@@ -33,17 +69,18 @@
 <script>
 const firebaseConfig={apiKey:'AIzaSyDR0higGBdiwGGduTLwLpjIaQ8rtuhLayI',authDomain:'docsendgo.firebaseapp.com',projectId:'docsendgo',storageBucket:'docsendgo.appspot.com',messagingSenderId:'75254478254',appId:'1:75254478254:web:0000000000000000000000'};
 firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),db=firebase.firestore();let selectedReward=null,currentAdminRole='support',currentAdminUid=null;
-const ROLE_PERMS={superadmin:['dashboard','users','stores','orders','rewards','reports','helpdesk','settings'],manager:['dashboard','users','stores','orders','rewards','reports'],support:['dashboard','reports','helpdesk']};
+const ROLE_PERMS={superadmin:['dashboard','users','stores','orders','documents','rewards','reports','helpdesk','settings'],manager:['dashboard','users','stores','orders','documents','rewards','reports'],support:['dashboard','documents','reports','helpdesk']};
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function getAdminInfo(u){if(!u)return null;const d=await db.collection('admins').doc(u.uid).get();if(!d.exists||d.data().active!==true)return null;return {id:u.uid,...d.data()}}
 function applyRoleUI(){document.querySelectorAll('#nav button').forEach(b=>{b.classList.toggle('hidden',!ROLE_PERMS[currentAdminRole]?.includes(b.dataset.page))});const role=document.getElementById('adminRoleBadge');if(role)role.textContent=currentAdminRole.toUpperCase()}
 async function logAction(action,details=''){try{await db.collection('adminLogs').add({adminUid:currentAdminUid,adminEmail:auth.currentUser?.email||'',role:currentAdminRole,action,details,createdAt:firebase.firestore.FieldValue.serverTimestamp()})}catch{}}
 auth.onAuthStateChanged(async u=>{const info=u?await getAdminInfo(u):null;if(u&&info){currentAdminUid=u.uid;currentAdminRole=info.role||'support';login.classList.add('hidden');app.classList.remove('hidden');adminEmail.textContent=u.email;applyRoleUI();loadDashboard();logAction('login')}else{app.classList.add('hidden');login.classList.remove('hidden')}});
 async function loginAdmin(){loginMsg.textContent='';try{const c=await auth.signInWithEmailAndPassword(email.value.trim(),password.value);if(!(await getAdminInfo(c.user))){await auth.signOut();throw Error('This account is not an active admin.')}}catch(e){loginMsg.textContent=e.message;loginMsg.style.color='#b91c1c'}}function logoutAdmin(){auth.signOut()}function toggleMenu(){side.classList.toggle('open')}
-document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{if(!ROLE_PERMS[currentAdminRole]?.includes(b.dataset.page))return alert('Permission denied');document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(b.dataset.page).classList.add('active');side.classList.remove('open');({dashboard:loadDashboard,stores:loadStores,orders:loadOrdersBills,reports:loadReports,helpdesk:loadTickets,settings:loadSettings}[b.dataset.page]||(()=>{}))()});
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{if(!ROLE_PERMS[currentAdminRole]?.includes(b.dataset.page))return alert('Permission denied');document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(b.dataset.page).classList.add('active');side.classList.remove('open');({dashboard:loadDashboard,stores:loadStores,orders:loadOrdersBills,documents:loadDocumentHistory,reports:loadReports,helpdesk:loadTickets,settings:loadSettings}[b.dataset.page]||(()=>{}))()});
 async function countCol(n){try{const s=await db.collection(n).get();return s.size}catch{return 0}}
 async function countWhere(col,field,value){try{const s=await db.collection(col).where(field,'==',value).get();return s.size}catch{return 0}}
 async function loadDashboard(){
+try{const dh=await db.collection('documentHistory').get();if(window.sDocHistory)sDocHistory.textContent=dh.size}catch(_){if(window.sDocHistory)sDocHistory.textContent='0'}
  const [u,s,o,b,p,r,t,rf]=await Promise.all([countCol('profiles'),countCol('stores'),countCol('storeOrders'),countCol('storeBills'),countWhere('storeOrders','status','pending'),countWhere('reports','status','open'),countWhere('supportTickets','status','open'),countCol('referrals')]);
  sUsers.textContent=u;sStores.textContent=s;sOrders.textContent=o;sBills.textContent=b;sPending.textContent=p;sReports.textContent=r;sTickets.textContent=t;sReferrals.textContent=rf;
  try{const x=await db.collection('stores').orderBy('createdAt','desc').limit(5).get();recentStores.innerHTML=x.empty?'No stores yet.':x.docs.map(d=>`<p><b>${esc(d.data().storeName||d.id)}</b><br><span class="muted">${esc(d.data().storeType||'Store')} • ${esc(d.data().storeCode||d.id)}</span></p>`).join('')}catch{recentStores.textContent='Unable to load.'}

@@ -1,8 +1,19 @@
-DocSendGo Admin Fix
+DocSendGo Admin Document History v5.3
 
-Safest method:
-1. Delete the current GitHub root file: 232admin.html
-2. Upload the 232admin.html from this ZIP.
-3. Do not edit or replace .well-known/assetlinks.json.
-4. Commit and wait for Vercel deployment.
-5. Open: https://doc-send-go.vercel.app/232admin.html?v=fix2
+Replace only these files in GitHub root:
+1. index.html
+2. 232admin.html
+
+Firebase:
+3. Copy firestore.rules to Firebase Console > Firestore Database > Rules and Publish.
+
+New Admin feature:
+- Document Send History
+- Sender, receiver/store, code, files, time, views and downloads
+- Search and filters
+- Block/unblock record
+- Delete history log (Super Admin only)
+
+Important:
+Old document records may show limited sender/receiver details because they were created before history logging existed.
+New sends will save complete history automatically.

@@ -2177,11 +2177,32 @@
 
                 const filesData = await uploadFilesToStorage(customerFiles, `shops/${customerShopId}`);
 
-                await db.collection('shops').doc(customerShopId).collection('documents').add({
+                const sentAt = new Date().toISOString();
+                const senderInfo = getCurrentSenderInfo();
+                const sentDocRef = await db.collection('shops').doc(customerShopId).collection('documents').add({
                     files: filesData,
                     customerName: document.getElementById('customerName').value,
-                    submittedAt: new Date().toISOString(),
-                    status: 'pending'
+                    senderId: senderInfo.senderId,
+                    senderName: senderInfo.senderName,
+                    submittedAt: sentAt,
+                    status: 'pending',
+                    viewCount: 0,
+                    downloadCount: 0
+                });
+                await writeDocumentHistory('SHOP-' + sentDocRef.id, {
+                    historyType: 'receiver_send',
+                    sourcePath: `shops/${customerShopId}/documents/${sentDocRef.id}`,
+                    receiverType: 'profile',
+                    receiverId: customerShopId,
+                    receiverName: (shopSnap.data() || {}).name || customerShopId,
+                    senderId: senderInfo.senderId,
+                    senderName: senderInfo.senderName,
+                    files: filesData.map(f => ({name:f.name || '', type:f.type || '', size:f.size || 0, url:f.url || ''})),
+                    fileCount: filesData.length,
+                    sentAt,
+                    status: 'sent',
+                    viewCount: 0,
+                    downloadCount: 0
                 });
 
                 document.getElementById('customerSuccess').classList.remove('hidden');
@@ -2201,6 +2222,32 @@
                 showToast('Error: ' + err.message, 'error');
                 document.getElementById('customerSubmitBtn').disabled = false;
                 document.getElementById('customerSubmitBtn').textContent = '📤 Send to Receiver';
+            }
+        }
+
+
+        function getCurrentSenderInfo() {
+            try {
+                const p = JSON.parse(localStorage.getItem('docsendgo_profile') || localStorage.getItem('docsendgo_receiver_profile') || 'null');
+                return {
+                    senderId: p?.code || p?.userId || '',
+                    senderName: p?.name || document.getElementById('customerName')?.value || 'Guest User',
+                    senderMobile: p?.mobile || ''
+                };
+            } catch (_) {
+                return { senderId:'', senderName: document.getElementById('customerName')?.value || 'Guest User', senderMobile:'' };
+            }
+        }
+
+        async function writeDocumentHistory(id, data) {
+            if(!db || !id) return;
+            try {
+                await db.collection('documentHistory').doc(id).set({
+                    ...data,
+                    updatedAt: new Date().toISOString()
+                }, { merge:true });
+            } catch (e) {
+                console.warn('Document history log failed:', e);
             }
         }
 
@@ -2238,14 +2285,37 @@
 
                 const filesData = await uploadFilesToStorage(currentShareFiles, `shares/${code}`);
 
+                const createdAt = new Date().toISOString();
+                const senderInfo = getCurrentSenderInfo();
                 const shareData = {
                     files: filesData,
                     note: document.getElementById('shareNote').value,
+                    senderId: senderInfo.senderId,
+                    senderName: senderInfo.senderName,
+                    receiverId: '',
+                    receiverName: '',
+                    viewCount: 0,
                     downloadCount: 0,
-                    createdAt: new Date().toISOString()
+                    createdAt
                 };
 
                 await db.collection('shares').doc(code).set(shareData);
+                await writeDocumentHistory('SHARE-' + code, {
+                    historyType: 'share_code',
+                    shareCode: code,
+                    sourcePath: `shares/${code}`,
+                    senderId: senderInfo.senderId,
+                    senderName: senderInfo.senderName,
+                    receiverType: 'code',
+                    receiverId: '',
+                    receiverName: '',
+                    files: filesData.map(f => ({name:f.name || '', type:f.type || '', size:f.size || 0, url:f.url || ''})),
+                    fileCount: filesData.length,
+                    sentAt: createdAt,
+                    status: 'code_created',
+                    viewCount: 0,
+                    downloadCount: 0
+                });
 
                 document.getElementById('shareCodeDisplay').textContent = code;
                 document.getElementById('shareResult').classList.remove('hidden');
@@ -2324,9 +2394,20 @@
             
             document.getElementById('receiveFileInfo').classList.remove('hidden');
 
+            const receiverInfo = getCurrentSenderInfo();
             db.collection('shares').doc(code).update({
-                downloadCount: firebase.firestore.FieldValue.increment(1)
+                receiverId: receiverInfo.senderId || '',
+                receiverName: receiverInfo.senderName || 'Code Receiver',
+                viewCount: firebase.firestore.FieldValue.increment(1),
+                lastViewedAt: new Date().toISOString()
             }).catch(() => {});
+            writeDocumentHistory('SHARE-' + code, {
+                receiverId: receiverInfo.senderId || '',
+                receiverName: receiverInfo.senderName || 'Code Receiver',
+                status: 'viewed',
+                lastViewedAt: new Date().toISOString(),
+                viewCount: firebase.firestore.FieldValue.increment(1)
+            });
         }
 
         async function viewReceivedFile() {
@@ -2341,6 +2422,17 @@
 
         async function downloadReceivedFile() {
             if(!receivedFileData) return;
+            if(receivedFileData.code) {
+                db.collection('shares').doc(receivedFileData.code).update({
+                    downloadCount: firebase.firestore.FieldValue.increment(1),
+                    lastDownloadedAt: new Date().toISOString()
+                }).catch(() => {});
+                writeDocumentHistory('SHARE-' + receivedFileData.code, {
+                    status: 'downloaded',
+                    lastDownloadedAt: new Date().toISOString(),
+                    downloadCount: firebase.firestore.FieldValue.increment(1)
+                });
+            }
             showToast('Downloading...', 'info');
             try {
                 await downloadFilesFromMeta(receivedFileData.files);
