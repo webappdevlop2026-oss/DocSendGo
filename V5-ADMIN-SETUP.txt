@@ -1,0 +1,8 @@
+DocSendGo v5.0 Setup
+
+1. Upload all files to GitHub root.
+2. Firebase Console > Firestore Database > Rules: paste firestore.rules and Publish.
+3. Keep admins/{ADMIN_UID}: active=true, role="superadmin".
+4. Open https://doc-send-go.vercel.app/232admin.html
+
+New v5 controls: live dashboard, user block/delete, store filters/status/delete, order status, bill print/delete, referral coins/features, reports, help desk, settings and admin logs.

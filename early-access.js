@@ -1,25 +1,3 @@
-(function(){
-  const FEATURES={
-    store_beta:{title:'Universal Store Beta',icon:'🏪',desc:'Try the latest Store Panel and billing improvements.',url:'store.html'},
-    smart_tools:{title:'New Smart Tools',icon:'✨',desc:'Preview selected new document tools before public release.',url:'index.html#tools'},
-    ui_beta:{title:'New App Experience',icon:'🚀',desc:'Preview experimental interface updates.',url:'index.html'}
-  };
-  function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-  function getProfile(){try{return JSON.parse(localStorage.getItem('docsendgo_profile')||'null')}catch(e){return null}}
-  async function loadFlag(){
-    if(!window.firebase || !firebase.apps || !firebase.apps.length) return null;
-    const p=getProfile(); const id=p?.code||p?.userId||localStorage.getItem('docsendgo_profile_code');
-    if(!id) return null;
-    try{const d=await firebase.firestore().collection('earlyAccess').doc(id).get();return d.exists?{id,...d.data()}:null}catch(e){console.warn('Early access:',e);return null}
-  }
-  function renderBadge(flag){
-    if(!flag?.enabled) return;
-    const wrap=document.createElement('div');
-    wrap.id='earlyAccessBadge';
-    wrap.innerHTML=`<button aria-label="Open Early Access" style="position:fixed;right:16px;bottom:88px;z-index:9997;border:0;border-radius:18px;padding:11px 14px;background:linear-gradient(135deg,#6d28d9,#2563eb);color:#fff;font-weight:900;box-shadow:0 12px 35px rgba(37,99,235,.35);cursor:pointer">🚀 Early Access</button>`;
-    wrap.querySelector('button').onclick=()=>location.href='early-access.html';
-    document.body.appendChild(wrap);
-  }
-  document.addEventListener('DOMContentLoaded',async()=>renderBadge(await loadFlag()));
-  window.DocSendGoEarlyAccess={loadFlag,FEATURES,esc};
-})();
+<!doctype html><html lang="en"><head><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q261G92C2J"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-Q261G92C2J');</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1768f2"><link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="stylesheet" href="ui-v2.css"><title>Contact & Support | DocSendGo</title><meta name="description" content="Contact DocSendGo support"></head><body class="legal-page"><header class="legal-top"><div class="legal-wrap"><div class="legal-brand">DocSendGo</div><div class="legal-tag">Scan • Send • Receive • Print</div></div></header><main class="legal-wrap"><article class="legal-card"><h1>Contact & Support</h1><p>Need help with DocSendGo? Send the affected page, a short description and a screenshot of the issue.</p><h2>Support email</h2><p><a href="mailto:chandanxerox28702@gmail.com">chandanxerox28702@gmail.com</a></p><h2>Website</h2><p><a href="https://doc-send-go.vercel.app">https://doc-send-go.vercel.app</a></p><h2>Before reporting a problem</h2><ul><li>Refresh the page and try again.</li><li>Check camera, download and popup permissions.</li><li>Confirm that your internet connection is active.</li><li>Never send passwords, OTPs or private document contents.</li></ul><a class="legal-back" href="./">← Back to DocSendGo</a></article></main></body></html>

@@ -6,38 +6,23 @@ service cloud.firestore {
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
     }
-    match /admins/{uid} { allow read: if request.auth != null && request.auth.uid == uid; allow write: if isAdmin(); }
-
-    // Early Access feature flags: public read by User ID, admin-only management.
-    match /earlyAccess/{userId} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
+    function isSuperAdmin() {
+      return isAdmin() && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superadmin';
     }
-
-
-    // Referral records. The user's own User ID is also the Referral ID.
-    // Public MVP create/read; admin may moderate/delete. Tighten after user authentication is added.
-    match /referrals/{referredUserId} {
-      allow read: if true;
-      allow create: if request.resource.data.referredUserId == referredUserId;
-      allow update, delete: if isAdmin();
-    }
-
-    match /adminNotifications/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /admins/{uid} { allow read: if request.auth != null && request.auth.uid == uid; allow write: if isSuperAdmin(); }
+    match /adminLogs/{id} { allow create, read: if isAdmin(); allow update, delete: if isSuperAdmin(); }
+    match /appSettings/{id} { allow read: if true; allow write: if isSuperAdmin(); }
     match /appConfig/{id} { allow read: if true; allow write: if isAdmin(); }
-    // Compatibility rules for the current public DocSendGo v1 app.
-    // Tighten these after Firebase Authentication is added to normal users.
-    match /shops/{shopId} {
-      allow read, create, update: if true;
-      allow delete: if isAdmin();
-      match /documents/{docId} { allow read, create, update: if true; allow delete: if isAdmin() || true; }
-    }
+    match /profiles/{userId} { allow read, create, update: if true; allow delete: if isSuperAdmin(); }
+    match /earlyAccess/{userId} { allow read: if true; allow write: if isAdmin(); }
+    match /referrals/{id} { allow read, create: if true; allow update, delete: if isAdmin(); }
+    match /reports/{id} { allow create, read: if true; allow update, delete: if isAdmin(); }
+    match /supportTickets/{id} { allow create, read: if true; allow update, delete: if isAdmin(); }
+    match /adminNotifications/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /shops/{shopId} { allow read, create, update: if true; allow delete: if isAdmin(); match /documents/{docId} { allow read, create, update: if true; allow delete: if isAdmin(); } }
     match /shares/{shareId} { allow read, create, update: if true; allow delete: if isAdmin(); }
-    // Grocery module (public number-based v1; tighten after customer/shop authentication is added)
     match /groceryOrders/{orderId} { allow read, create, update: if true; allow delete: if isAdmin(); }
     match /groceryBills/{billId} { allow read, create, update: if true; allow delete: if isAdmin(); }
-
-    // Universal Store Panel v1.3 (public MVP; replace with authenticated owner rules before large public launch)
     match /stores/{storeCode} { allow read, create, update: if true; allow delete: if isAdmin(); }
     match /storeOrders/{orderId} { allow read, create, update: if true; allow delete: if isAdmin(); }
     match /storeBills/{billId} { allow read, create, update: if true; allow delete: if isAdmin(); }
