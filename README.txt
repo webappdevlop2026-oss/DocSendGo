@@ -1,19 +1,23 @@
-DocSendGo Admin Document History v5.3
+DocSendGo Admin Audit Control v5.4
 
-Replace only these files in GitHub root:
-1. index.html
-2. 232admin.html
+Replace in GitHub root:
+- index.html
+- 232admin.html
 
 Firebase:
-3. Copy firestore.rules to Firebase Console > Firestore Database > Rules and Publish.
+- Copy firestore.rules into Firebase Console > Firestore Database > Rules
+- Click Publish
 
-New Admin feature:
-- Document Send History
-- Sender, receiver/store, code, files, time, views and downloads
-- Search and filters
-- Block/unblock record
-- Delete history log (Super Admin only)
+Features:
+- New and legacy share records in Document History
+- Sender mobile and device stored for new sends
+- Search, type, status, and date filters
+- Admin note
+- Block/unblock
+- Delete history log (Super Admin)
+- CSV export
+- Admin Activity page and CSV export
 
-Important:
-Old document records may show limited sender/receiver details because they were created before history logging existed.
-New sends will save complete history automatically.
+Not collected:
+- IP address
+- Location without explicit permission

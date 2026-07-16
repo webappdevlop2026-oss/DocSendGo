@@ -2197,6 +2197,8 @@
                     receiverName: (shopSnap.data() || {}).name || customerShopId,
                     senderId: senderInfo.senderId,
                     senderName: senderInfo.senderName,
+                    senderMobile: senderInfo.senderMobile || '',
+                    device: navigator.userAgent || '',
                     files: filesData.map(f => ({name:f.name || '', type:f.type || '', size:f.size || 0, url:f.url || ''})),
                     fileCount: filesData.length,
                     sentAt,
@@ -2242,8 +2244,11 @@
         async function writeDocumentHistory(id, data) {
             if(!db || !id) return;
             try {
-                await db.collection('documentHistory').doc(id).set({
+                const ref = db.collection('documentHistory').doc(id);
+                const old = await ref.get().catch(() => null);
+                await ref.set({
                     ...data,
+                    createdAt: old?.exists ? (old.data().createdAt || data.sentAt || new Date().toISOString()) : (data.sentAt || new Date().toISOString()),
                     updatedAt: new Date().toISOString()
                 }, { merge:true });
             } catch (e) {
@@ -2306,6 +2311,8 @@
                     sourcePath: `shares/${code}`,
                     senderId: senderInfo.senderId,
                     senderName: senderInfo.senderName,
+                    senderMobile: senderInfo.senderMobile || '',
+                    device: navigator.userAgent || '',
                     receiverType: 'code',
                     receiverId: '',
                     receiverName: '',
