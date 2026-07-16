@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DocSendGo v5.0 Super Admin</title>
+<title>DocSendGo v5.1 Full Admin</title>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
@@ -17,7 +17,7 @@
 <body>
 <section id="login" class="login"><div class="login-card"><h1>DocSendGo Admin</h1><p class="muted">Full control panel</p><div class="field"><label>Email</label><input id="email" type="email"></div><div class="field"><label>Password</label><input id="password" type="password"></div><button class="btn" onclick="loginAdmin()">Secure Login</button><div id="loginMsg" class="msg"></div></div></section>
 <section id="app" class="app hidden">
-<header class="top"><div><button class="btn small secondary mobile-menu" onclick="toggleMenu()">☰</button> <span class="brand">🛡️ DocSendGo v5.0 Super Admin</span> <span id="adminRoleBadge" class="badge" style="margin-left:8px"></span></div><button class="btn danger" onclick="logoutAdmin()">Logout</button></header>
+<header class="top"><div><button class="btn small secondary mobile-menu" onclick="toggleMenu()">☰</button> <span class="brand">🛡️ DocSendGo v5.1 Full Admin</span> <span id="adminRoleBadge" class="badge" style="margin-left:8px"></span></div><button class="btn danger" onclick="logoutAdmin()">Logout</button></header>
 <div class="layout"><aside id="side" class="side"><nav class="nav" id="nav">
 <button class="active" data-page="dashboard">📊 Dashboard</button><button data-page="users">👥 Users</button><button data-page="stores">🏪 Stores</button><button data-page="orders">🧾 Orders & Bills</button><button data-page="rewards">🎁 Referral & Coins</button><button data-page="reports">🚩 Reports</button><button data-page="helpdesk">🎫 Help Desk</button><button data-page="settings">⚙️ Settings</button>
 </nav></aside><main class="main">
@@ -28,7 +28,7 @@
 <section id="rewards" class="page"><div class="head"><h2>Referral, DocCoins & Feature Manager</h2></div><div class="two"><div class="card"><div class="field"><label>User ID / Referral ID</label><input id="rewardUserId"></div><button class="btn" onclick="findRewardUser()">Find</button><div id="rewardEditor"></div></div><div class="card"><h3>Reward Rules</h3><p><b>10 Coins</b><br><span class="muted">1 new feature</span></p><p><b>20 Coins</b><br><span class="muted">+2 features (total 3)</span></p><p><b>30 Coins</b><br><span class="muted">+3 features (total 6)</span></p><p><b>50 Coins</b><br><span class="muted">Super Premium</span></p></div></div></section>
 <section id="reports" class="page"><div class="head"><h2>Reports</h2><button class="btn secondary" onclick="loadReports()">Refresh</button></div><div class="card" id="reportList">No reports yet.</div></section>
 <section id="helpdesk" class="page"><div class="head"><h2>Help Desk</h2><button class="btn secondary" onclick="loadTickets()">Refresh</button></div><div class="card" id="ticketList">No tickets yet.</div></section>
-<section id="settings" class="page"><div class="head"><h2>Admin Settings</h2><button class="btn secondary" onclick="loadSettings()">Refresh</button></div><div class="two"><div class="card"><h3>Current Admin</h3><p id="adminEmail"></p><p><b>Role:</b> <span id="settingsRole"></span></p><p class="muted">Roles: superadmin, manager, support</p><p><b>Panel Version:</b> 5.0</p></div><div class="card"><h3>App Settings</h3><div class="field"><label>App Notice</label><textarea id="appNotice" placeholder="Notice shown to users"></textarea></div><div class="field"><label>Referral Feature Name</label><input id="referralFeatureName" placeholder="Early Access to New Features"></div><button class="btn" onclick="saveSettings()">Save Settings</button><div id="settingsMsg" class="msg"></div></div></div><div class="card"><h3>Recent Admin Activity</h3><div id="adminLogList" class="muted">Loading…</div></div></section>
+<section id="settings" class="page"><div class="head"><h2>Admin Settings</h2><button class="btn secondary" onclick="loadSettings()">Refresh</button></div><div class="two"><div class="card"><h3>Current Admin</h3><p id="adminEmail"></p><p><b>Role:</b> <span id="settingsRole"></span></p><p class="muted">Roles: superadmin, manager, support</p><p><b>Panel Version:</b> 5.1</p></div><div class="card"><h3>App Settings</h3><div class="field"><label>App Notice</label><textarea id="appNotice" placeholder="Notice shown to users"></textarea></div><div class="field"><label>Referral Feature Name</label><input id="referralFeatureName" placeholder="Early Access to New Features"></div><button class="btn" onclick="saveSettings()">Save Settings</button><div id="settingsMsg" class="msg"></div></div></div><div class="card"><h3>Recent Admin Activity</h3><div id="adminLogList" class="muted">Loading…</div></div></section>
 </main></div></section>
 <script>
 const firebaseConfig={apiKey:'AIzaSyDR0higGBdiwGGduTLwLpjIaQ8rtuhLayI',authDomain:'docsendgo.firebaseapp.com',projectId:'docsendgo',storageBucket:'docsendgo.appspot.com',messagingSenderId:'75254478254',appId:'1:75254478254:web:0000000000000000000000'};
