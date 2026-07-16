@@ -1351,15 +1351,7 @@
             } catch(e) { console.warn('Notification panel:', e); }
         }
 
-        function showTool(tool) {
-            document.querySelectorAll('.tool-section').forEach(s => s.classList.add('hidden'));
-            const section = document.getElementById('tool-section-' + tool);
-            if (section) section.classList.remove('hidden');
-            document.querySelectorAll('.tool-tile').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById('tool-' + tool);
-            if (activeBtn) activeBtn.classList.add('active');
-            if (section) setTimeout(() => section.scrollIntoView({behavior:'smooth', block:'start'}), 80);
-        }
+        function showTool(tool) { window.location.href = 'tools.html#' + encodeURIComponent(tool); }
         function toolComingSoon(name) {
             const old = document.getElementById('toolSoonToast'); if (old) old.remove();
             const toast = document.createElement('div'); toast.id='toolSoonToast';

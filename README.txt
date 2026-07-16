@@ -1,7 +1,8 @@
-DocSendGo Tools v5.2
+DocSendGo Tools v5.3
 
-Replace ONLY index.html in GitHub root. Do not replace admin, .well-known, Firebase rules, store files, or other files.
+Upload only these two files to GitHub root:
+1. index.html
+2. tools.html
 
-Working tools displayed: PDF Merge, Split, Rotate, Watermark, Remove Pages, Extract Pages, Page Numbers, PDF to JPG, Image Crop, Resize, Image to PDF, Image Compress, Image Convert, Image Watermark, Passport Photo, KB Photo Resize, Text to PDF, File Rename, Print Preview, Print Page, QR Scanner, QR Generator, Barcode Generator.
-
-After deploy press Ctrl+Shift+R or reinstall PWA to clear old cache.
+Do not replace admin, store, .well-known, Firebase rules or any other file.
+After Vercel deploy, open https://doc-send-go.vercel.app/tools.html and hard refresh.
