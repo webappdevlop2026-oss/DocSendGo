@@ -1,20 +1,11 @@
-Create/update Firestore admins/{FirebaseAuthUID} documents:
+DocSendGo Full Admin Fix
 
-Super Admin:
-active: true (boolean)
-role: "superadmin" (string)
+Admin URL:
+https://doc-send-go.vercel.app/232admin.html
 
-Manager:
-active: true
-role: "manager"
+Correct structure:
+- 232admin.html = Full Admin Control Panel HTML
+- .well-known/assetlinks.json = Android App Links JSON
 
-Support Admin:
-active: true
-role: "support"
-
-Permissions:
-- superadmin: all sections and app settings
-- manager: dashboard, users, stores, orders, referrals, reports
-- support: dashboard, reports, help desk
-
-Replace the existing root 232admin.html with this file.
+Upload all files from this DocSendGo-main folder to the GitHub repository root.
+Do not rename assetlinks.json to 232admin.html.
