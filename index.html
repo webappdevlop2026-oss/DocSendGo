@@ -39,6 +39,8 @@
     <script src="https://unpkg.com/pdf-lib@1.16.0/dist/pdf-lib.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bwip-js@4.5.1/dist/bwip-js-min.js"></script>
     <!-- Firebase (cross-device storage) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -638,7 +640,7 @@
     <div id="page-tools" class="page hidden">
         <div class="max-w-5xl mx-auto px-4 py-8 fade-in">
             <h2 class="text-3xl font-extrabold text-slate-800 mb-2">️ Document Tools</h2>
-            <p class="text-slate-500 mb-8">Select a tool to get started</p>
+            <p class="text-slate-500 mb-8">Every tool shown below works directly in your browser</p>
 
             <div class="tool-category-card popular-tools-card mb-6">
                 <div class="tool-cat-title">🔥 Popular Tools</div>
@@ -652,20 +654,42 @@
 
             <div class="tool-categories mb-8">
                 <div class="tool-category-card"><div class="tool-cat-title">📄 PDF Tools</div><div class="tool-grid">
-                    <button onclick="showTool('merge')" id="tool-merge" class="tool-tile"><span>🔗</span>PDF Merge<small>Working</small></button><button onclick="showTool('split')" id="tool-split" class="tool-tile"><span>✂️</span>PDF Split<small>Working</small></button><button onclick="toolComingSoon('PDF Compress')" class="tool-tile"><span>🗜️</span>PDF Compress<em class="new-badge">NEW</em></button><button onclick="toolComingSoon('PDF Rotate')" class="tool-tile"><span>🔄</span>PDF Rotate</button><button onclick="toolComingSoon('PDF Protect')" class="tool-tile"><span>🔐</span>PDF Protect</button><button onclick="toolComingSoon('Add Watermark')" class="tool-tile"><span>💧</span>Watermark</button><button onclick="toolComingSoon('Remove Pages')" class="tool-tile"><span>🗑️</span>Remove Pages</button><button onclick="toolComingSoon('Extract Pages')" class="tool-tile"><span>📤</span>Extract Pages</button><button onclick="toolComingSoon('Add Page Numbers')" class="tool-tile"><span>🔢</span>Page Numbers</button>
+                    <button onclick="showTool('merge')" id="tool-merge" class="tool-tile"><span>🔗</span>PDF Merge<small>Working</small></button>
+                    <button onclick="showTool('split')" id="tool-split" class="tool-tile"><span>✂️</span>PDF Split<small>Working</small></button>
+                    <button onclick="openSmartTool('pdfRotate')" class="tool-tile"><span>🔄</span>PDF Rotate<small>Working</small></button>
+                    <button onclick="openSmartTool('pdfWatermark')" class="tool-tile"><span>💧</span>Watermark<small>Working</small></button>
+                    <button onclick="openSmartTool('pdfRemove')" class="tool-tile"><span>🗑️</span>Remove Pages<small>Working</small></button>
+                    <button onclick="openSmartTool('pdfExtract')" class="tool-tile"><span>📤</span>Extract Pages<small>Working</small></button>
+                    <button onclick="openSmartTool('pdfNumbers')" class="tool-tile"><span>🔢</span>Page Numbers<small>Working</small></button>
+                    <button onclick="openSmartTool('pdfToJpg')" class="tool-tile"><span>🖼️</span>PDF to JPG<small>Working</small></button>
                 </div></div>
                 <div class="tool-category-card"><div class="tool-cat-title">🖼️ Image Tools</div><div class="tool-grid">
-                    <button onclick="showTool('crop')" id="tool-crop" class="tool-tile active"><span>✂️</span>Image Crop<small>Working</small></button><button onclick="showTool('resize')" id="tool-resize" class="tool-tile"><span>📐</span>Image Resize<small>Working</small></button><button onclick="showTool('img2pdf')" id="tool-img2pdf" class="tool-tile"><span>📄</span>Image to PDF<small>Working</small></button><button onclick="toolComingSoon('PDF to JPG')" class="tool-tile"><span>🖼️</span>PDF to JPG</button><button onclick="toolComingSoon('Image Compress')" class="tool-tile"><span>🗜️</span>Image Compress<em class="new-badge">NEW</em></button><button onclick="toolComingSoon('Background Remove')" class="tool-tile"><span>🪄</span>Remove BG</button><button onclick="toolComingSoon('PNG to JPG')" class="tool-tile"><span>🔁</span>PNG ↔ JPG</button><button onclick="toolComingSoon('Image Watermark')" class="tool-tile"><span>©️</span>Watermark</button>
-                </div></div>
-                <div class="tool-category-card"><div class="tool-cat-title">🏛️ Government Document Tools</div><div class="tool-grid">
-                    <button onclick="toolComingSoon('Aadhaar Photo Resize')" class="tool-tile"><span>🆔</span>Aadhaar Photo</button><button onclick="toolComingSoon('PAN Photo Resize')" class="tool-tile"><span>🪪</span>PAN Photo</button><button onclick="toolComingSoon('Passport Photo Maker')" class="tool-tile"><span>🛂</span>Passport Photo<em class="new-badge">NEW</em></button><button onclick="toolComingSoon('Signature Crop')" class="tool-tile"><span>✍️</span>Signature Crop</button><button onclick="toolComingSoon('Signature Resize')" class="tool-tile"><span>📏</span>Signature Resize</button><button onclick="toolComingSoon('20KB 50KB 100KB Photo')" class="tool-tile"><span>📦</span>KB Photo Resize</button><button onclick="toolComingSoon('Scan to PDF')" class="tool-tile"><span>📷</span>Scan to PDF<em class="new-badge">NEW</em></button><button onclick="toolComingSoon('Multi-page Scan')" class="tool-tile"><span>📑</span>Multi-page Scan</button><button onclick="toolComingSoon('Government PDF Compress')" class="tool-tile"><span>🏛️</span>Portal Compress</button><button onclick="toolComingSoon('Camera to PDF')" class="tool-tile"><span>📸</span>Camera to PDF</button><button onclick="toolComingSoon('Print Ready PDF')" class="tool-tile"><span>🖨️</span>Print Ready</button>
+                    <button onclick="showTool('crop')" id="tool-crop" class="tool-tile active"><span>✂️</span>Image Crop<small>Working</small></button>
+                    <button onclick="showTool('resize')" id="tool-resize" class="tool-tile"><span>📐</span>Image Resize<small>Working</small></button>
+                    <button onclick="showTool('img2pdf')" id="tool-img2pdf" class="tool-tile"><span>📄</span>Image to PDF<small>Working</small></button>
+                    <button onclick="openSmartTool('imageCompress')" class="tool-tile"><span>🗜️</span>Image Compress<small>Working</small></button>
+                    <button onclick="openSmartTool('imageConvert')" class="tool-tile"><span>🔁</span>PNG ↔ JPG<small>Working</small></button>
+                    <button onclick="openSmartTool('imageWatermark')" class="tool-tile"><span>©️</span>Watermark<small>Working</small></button>
+                    <button onclick="openSmartTool('passportPhoto')" class="tool-tile"><span>🛂</span>Passport Photo<small>Working</small></button>
+                    <button onclick="openSmartTool('kbPhoto')" class="tool-tile"><span>📦</span>KB Photo Resize<small>Working</small></button>
                 </div></div>
                 <div class="tool-category-card"><div class="tool-cat-title">📑 Document & Print Tools</div><div class="tool-grid">
-                    <button onclick="toolComingSoon('Word to PDF')" class="tool-tile"><span>📝</span>Word to PDF</button><button onclick="toolComingSoon('Excel to PDF')" class="tool-tile"><span>📊</span>Excel to PDF</button><button onclick="toolComingSoon('PowerPoint to PDF')" class="tool-tile"><span>📽️</span>PPT to PDF</button><button onclick="toolComingSoon('Text to PDF')" class="tool-tile"><span>📃</span>Text to PDF</button><button onclick="toolComingSoon('ZIP Unzip')" class="tool-tile"><span>🗂️</span>ZIP / Unzip</button><button onclick="toolComingSoon('File Rename')" class="tool-tile"><span>✏️</span>File Rename</button><button onclick="toolComingSoon('Print Preview')" class="tool-tile"><span>👁️</span>Print Preview</button><button onclick="toolComingSoon('Print Settings')" class="tool-tile"><span>⚙️</span>Print Settings</button>
+                    <button onclick="openSmartTool('textToPdf')" class="tool-tile"><span>📃</span>Text to PDF<small>Working</small></button>
+                    <button onclick="openSmartTool('fileRename')" class="tool-tile"><span>✏️</span>File Rename<small>Working</small></button>
+                    <button onclick="openSmartTool('printPreview')" class="tool-tile"><span>👁️</span>Print Preview<small>Working</small></button>
+                    <button onclick="window.print()" class="tool-tile"><span>🖨️</span>Print Page<small>Working</small></button>
                 </div></div>
                 <div class="tool-category-card"><div class="tool-cat-title">📷 QR & Barcode Tools</div><div class="tool-grid">
-                    <button onclick="showPage('send')" class="tool-tile"><span>📱</span>QR Scanner<small>Working</small></button><button onclick="toolComingSoon('QR Generator')" class="tool-tile"><span>▦</span>QR Generator<em class="new-badge">NEW</em></button><button onclick="toolComingSoon('Barcode Generator')" class="tool-tile"><span>▥</span>Barcode Generate<em class="new-badge">NEW</em></button><button onclick="toolComingSoon('Barcode Scanner')" class="tool-tile"><span>🔍</span>Barcode Scan</button>
+                    <button onclick="showPage('send')" class="tool-tile"><span>📱</span>QR Scanner<small>Working</small></button>
+                    <button onclick="openSmartTool('qrGenerator')" class="tool-tile"><span>▦</span>QR Generator<small>Working</small></button>
+                    <button onclick="openSmartTool('barcodeGenerator')" class="tool-tile"><span>▥</span>Barcode Generate<small>Working</small></button>
                 </div></div>
+            </div>
+
+            <div id="smartToolPanel" class="hidden bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-8 mb-8">
+              <div class="flex items-center justify-between gap-3 mb-4"><div><h3 id="smartToolTitle" class="text-xl font-bold text-slate-800"></h3><p id="smartToolHint" class="text-sm text-slate-500 mt-1"></p></div><button onclick="closeSmartTool()" class="px-3 py-2 rounded-lg bg-slate-100 font-bold">✕</button></div>
+              <div id="smartToolBody"></div>
+              <div id="smartToolStatus" class="mt-4 text-sm font-semibold"></div>
             </div>
 
             <div id="tool-section-crop" class="tool-section bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
@@ -2333,6 +2357,94 @@
                 console.error(error);
                 showToast('Download failed. Please try again.', 'error');
             }
+        }
+
+
+        // ===== SMART WORKING TOOLS =====
+        const smartTools = {
+          pdfRotate:['🔄 PDF Rotate','Select a PDF, choose rotation and download the rotated PDF.'],
+          pdfWatermark:['💧 PDF Watermark','Add text watermark to every PDF page.'],
+          pdfRemove:['🗑️ Remove PDF Pages','Enter page numbers to remove, for example: 2,4,6.'],
+          pdfExtract:['📤 Extract PDF Pages','Enter pages to keep, for example: 1,3-5.'],
+          pdfNumbers:['🔢 Add Page Numbers','Add page numbers to every PDF page.'],
+          pdfToJpg:['🖼️ PDF to JPG','Convert each PDF page to a JPG image.'],
+          imageCompress:['🗜️ Image Compress','Reduce JPG/PNG file size in your browser.'],
+          imageConvert:['🔁 PNG ↔ JPG','Convert image format and download.'],
+          imageWatermark:['©️ Image Watermark','Add custom text watermark to an image.'],
+          passportPhoto:['🛂 Passport Photo Maker','Create a standard 413×531 px passport photo.'],
+          kbPhoto:['📦 KB Photo Resize','Compress an image toward your selected KB size.'],
+          textToPdf:['📃 Text to PDF','Type or paste text and download a PDF.'],
+          fileRename:['✏️ File Rename','Rename a file locally and download the renamed copy.'],
+          printPreview:['👁️ Print Preview','Open a local image or PDF in a printable preview.'],
+          qrGenerator:['▦ QR Generator','Create and download a QR code.'],
+          barcodeGenerator:['▥ Barcode Generator','Create a Code 128 barcode and download it.']
+        };
+        function openSmartTool(type){
+          document.querySelectorAll('.tool-section').forEach(x=>x.classList.add('hidden'));
+          const p=document.getElementById('smartToolPanel'); p.classList.remove('hidden');
+          document.getElementById('smartToolTitle').textContent=smartTools[type][0];
+          document.getElementById('smartToolHint').textContent=smartTools[type][1];
+          document.getElementById('smartToolStatus').textContent='';
+          const body=document.getElementById('smartToolBody');
+          const file=(accept)=>`<label class="upload-zone block p-5 rounded-xl text-center cursor-pointer"><input id="stFile" type="file" accept="${accept}" class="hidden"><b>Choose File</b><div id="stFileName" class="text-sm text-slate-500 mt-2">No file selected</div></label>`;
+          let html='';
+          if(type.startsWith('pdf')) html=file('application/pdf');
+          if(['imageCompress','imageConvert','imageWatermark','passportPhoto','kbPhoto'].includes(type)) html=file('image/*');
+          if(type==='pdfRotate') html+=`<select id="stRotation" class="w-full mt-3 p-3 border rounded-xl"><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">270° clockwise</option></select>`;
+          if(type==='pdfWatermark') html+=`<input id="stText" class="w-full mt-3 p-3 border rounded-xl" placeholder="Watermark text" value="DocSendGo"><input id="stOpacity" type="range" min="0.1" max="0.8" step="0.1" value="0.3" class="w-full mt-3">`;
+          if(type==='pdfRemove'||type==='pdfExtract') html+=`<input id="stPages" class="w-full mt-3 p-3 border rounded-xl" placeholder="Pages: 1,3-5">`;
+          if(type==='imageCompress') html+=`<label class="block mt-3 text-sm font-bold">Quality</label><input id="stQuality" type="range" min="0.1" max="0.95" step="0.05" value="0.7" class="w-full">`;
+          if(type==='imageConvert') html+=`<select id="stFormat" class="w-full mt-3 p-3 border rounded-xl"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WEBP</option></select>`;
+          if(type==='imageWatermark') html+=`<input id="stText" class="w-full mt-3 p-3 border rounded-xl" placeholder="Watermark text" value="DocSendGo">`;
+          if(type==='kbPhoto') html+=`<input id="stTargetKb" type="number" min="10" max="1000" value="50" class="w-full mt-3 p-3 border rounded-xl" placeholder="Target KB">`;
+          if(type==='textToPdf') html=`<textarea id="stTextArea" rows="10" class="w-full p-3 border rounded-xl" placeholder="Type or paste text here..."></textarea>`;
+          if(type==='fileRename') html=file('*/*')+`<input id="stNewName" class="w-full mt-3 p-3 border rounded-xl" placeholder="New file name with extension">`;
+          if(type==='printPreview') html=file('application/pdf,image/*');
+          if(type==='qrGenerator') html=`<input id="stCodeText" class="w-full p-3 border rounded-xl" placeholder="Text or URL"><div id="stOutput" class="mt-4 flex justify-center"></div>`;
+          if(type==='barcodeGenerator') html=`<input id="stCodeText" class="w-full p-3 border rounded-xl" placeholder="Barcode text"><canvas id="stBarcode" class="mt-4 mx-auto"></canvas>`;
+          html+=`<button onclick="runSmartTool('${type}')" class="w-full btn-primary text-white py-3 rounded-xl font-bold mt-4">Process & Download</button>`;
+          body.innerHTML=html;
+          const f=document.getElementById('stFile'); if(f) f.onchange=()=>document.getElementById('stFileName').textContent=f.files[0]?.name||'No file selected';
+          p.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+        function closeSmartTool(){document.getElementById('smartToolPanel').classList.add('hidden')}
+        function stStatus(msg,ok=true){const e=document.getElementById('smartToolStatus');e.textContent=msg;e.className='mt-4 text-sm font-semibold '+(ok?'text-green-600':'text-red-600')}
+        function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+        function parsePages(text,max){const out=new Set();String(text||'').split(',').forEach(part=>{part=part.trim();if(!part)return;if(part.includes('-')){let[a,b]=part.split('-').map(Number);for(let i=Math.max(1,a);i<=Math.min(max,b);i++)out.add(i-1)}else{let n=Number(part);if(n>=1&&n<=max)out.add(n-1)}});return [...out].sort((a,b)=>a-b)}
+        async function imageCanvas(file){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);URL.revokeObjectURL(img.src);res(c)};img.onerror=rej;img.src=URL.createObjectURL(file)})}
+        async function runSmartTool(type){
+          try{
+            const f=document.getElementById('stFile')?.files?.[0];
+            if(type.startsWith('pdf')&&!f) throw Error('Please choose a PDF file.');
+            if(['imageCompress','imageConvert','imageWatermark','passportPhoto','kbPhoto','fileRename','printPreview'].includes(type)&&!f) throw Error('Please choose a file.');
+            if(type.startsWith('pdf')&&type!=='pdfToJpg'){
+              const pdf=await PDFLib.PDFDocument.load(await f.arrayBuffer()); const pages=pdf.getPages();
+              if(type==='pdfRotate'){const d=Number(document.getElementById('stRotation').value);pages.forEach(p=>p.setRotation(PDFLib.degrees((p.getRotation().angle+d)%360)))}
+              if(type==='pdfWatermark'){const text=document.getElementById('stText').value||'DocSendGo';const opacity=Number(document.getElementById('stOpacity').value);const font=await pdf.embedFont(PDFLib.StandardFonts.HelveticaBold);pages.forEach(p=>{const {width,height}=p.getSize();p.drawText(text,{x:width*.18,y:height*.5,size:Math.max(24,width/12),font,opacity,rotate:PDFLib.degrees(35),color:PDFLib.rgb(.3,.3,.3)})})}
+              if(type==='pdfNumbers'){const font=await pdf.embedFont(PDFLib.StandardFonts.Helvetica);pages.forEach((p,i)=>{const {width}=p.getSize();p.drawText(String(i+1),{x:width/2-5,y:18,size:11,font,color:PDFLib.rgb(.2,.2,.2)})})}
+              if(type==='pdfRemove'){const rm=new Set(parsePages(document.getElementById('stPages').value,pages.length));if(!rm.size)throw Error('Enter valid pages to remove.');[...rm].sort((a,b)=>b-a).forEach(i=>pdf.removePage(i));if(!pdf.getPageCount())throw Error('You cannot remove all pages.')}
+              if(type==='pdfExtract'){const keep=parsePages(document.getElementById('stPages').value,pages.length);if(!keep.length)throw Error('Enter valid pages to extract.');const n=await PDFLib.PDFDocument.create();const cp=await n.copyPages(pdf,keep);cp.forEach(p=>n.addPage(p));downloadBlob(new Blob([await n.save()],{type:'application/pdf'}),'extracted-pages.pdf');return stStatus('Extracted PDF downloaded ✅')}
+              downloadBlob(new Blob([await pdf.save()],{type:'application/pdf'}),type+'.pdf');return stStatus('PDF processed and downloaded ✅')
+            }
+            if(type==='pdfToJpg'){
+              pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
+              for(let i=1;i<=doc.numPages;i++){const pg=await doc.getPage(i),vp=pg.getViewport({scale:1.6}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));downloadBlob(b,`page-${i}.jpg`)}return stStatus(`${doc.numPages} JPG file(s) downloaded ✅`)
+            }
+            if(['imageCompress','imageConvert','imageWatermark','passportPhoto','kbPhoto'].includes(type)){
+              let c=await imageCanvas(f),ctx=c.getContext('2d'),mime='image/jpeg',quality=.9,name='processed.jpg';
+              if(type==='imageCompress'){quality=Number(document.getElementById('stQuality').value);mime=f.type==='image/png'?'image/png':'image/jpeg';name='compressed.'+(mime==='image/png'?'png':'jpg')}
+              if(type==='imageConvert'){mime=document.getElementById('stFormat').value;name='converted.'+(mime.split('/')[1].replace('jpeg','jpg'))}
+              if(type==='imageWatermark'){const t=document.getElementById('stText').value||'DocSendGo';ctx.font=`bold ${Math.max(22,c.width/18)}px sans-serif`;ctx.fillStyle='rgba(255,255,255,.65)';ctx.textAlign='right';ctx.fillText(t,c.width-20,c.height-25);name='watermarked.jpg'}
+              if(type==='passportPhoto'){const out=document.createElement('canvas');out.width=413;out.height=531;const o=out.getContext('2d');o.fillStyle='#fff';o.fillRect(0,0,out.width,out.height);const scale=Math.max(out.width/c.width,out.height/c.height),w=c.width*scale,h=c.height*scale;o.drawImage(c,(out.width-w)/2,(out.height-h)/2,w,h);c=out;name='passport-photo.jpg'}
+              if(type==='kbPhoto'){const target=Number(document.getElementById('stTargetKb').value||50)*1024;let q=.92,b;for(let i=0;i<12;i++){b=await new Promise(r=>c.toBlob(r,'image/jpeg',q));if(b.size<=target||q<=.15)break;q-=.07}downloadBlob(b,'photo-'+Math.round(b.size/1024)+'kb.jpg');return stStatus(`Downloaded: ${Math.round(b.size/1024)} KB ✅`)}
+              const b=await new Promise(r=>c.toBlob(r,mime,quality));downloadBlob(b,name);return stStatus(`Downloaded: ${Math.round(b.size/1024)} KB ✅`)
+            }
+            if(type==='textToPdf'){const text=document.getElementById('stTextArea').value.trim();if(!text)throw Error('Please enter some text.');const pdf=await PDFLib.PDFDocument.create(),font=await pdf.embedFont(PDFLib.StandardFonts.Helvetica);const lines=text.match(/.{1,85}(?:\s|$)/g)||[text];let page=pdf.addPage([595,842]),y=800;for(const line of lines){if(y<45){page=pdf.addPage([595,842]);y=800}page.drawText(line.trim(),{x:40,y,size:12,font});y-=18}downloadBlob(new Blob([await pdf.save()],{type:'application/pdf'}),'text-document.pdf');return stStatus('Text PDF downloaded ✅')}
+            if(type==='fileRename'){let n=document.getElementById('stNewName').value.trim();if(!n)throw Error('Enter a new file name.');downloadBlob(f,n);return stStatus('Renamed file downloaded ✅')}
+            if(type==='printPreview'){const u=URL.createObjectURL(f),w=window.open('','_blank');w.document.write(`<title>Print Preview</title><style>body{margin:0;text-align:center}img,iframe{max-width:100%;width:100%;height:96vh;border:0}</style>${f.type==='application/pdf'?`<iframe src="${u}"></iframe>`:`<img src="${u}" onload="window.print()">`}<button onclick="window.print()">Print</button>`);return stStatus('Print preview opened ✅')}
+            if(type==='qrGenerator'){const t=document.getElementById('stCodeText').value.trim();if(!t)throw Error('Enter text or URL.');const o=document.getElementById('stOutput');o.innerHTML='';new QRCode(o,{text:t,width:240,height:240,correctLevel:QRCode.CorrectLevel.H});setTimeout(()=>{const c=o.querySelector('canvas');if(c){const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='qrcode.png';a.click()}},250);return stStatus('QR code created and downloaded ✅')}
+            if(type==='barcodeGenerator'){const t=document.getElementById('stCodeText').value.trim();if(!t)throw Error('Enter barcode text.');const c=document.getElementById('stBarcode');bwipjs.toCanvas(c,{bcid:'code128',text:t,scale:3,height:12,includetext:true,textxalign:'center'});const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='barcode.png';a.click();return stStatus('Barcode downloaded ✅')}
+          }catch(e){console.error(e);stStatus(e.message||'Tool failed. Please try another file.',false)}
         }
 
         // ===== IMAGE CROP =====

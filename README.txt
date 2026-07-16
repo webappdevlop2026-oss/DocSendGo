@@ -1,28 +1,7 @@
-DOCSENDGO ADMIN ALL FEATURES v5.1
+DocSendGo Tools v5.2
 
-UPLOAD ONLY THIS FILE:
-1. Delete the old 232admin.html from GitHub root.
-2. Upload the new 232admin.html from this folder.
-3. Do NOT change .well-known/assetlinks.json.
-4. Do NOT replace index.html, store.html, manifest, icons, or service worker.
-5. Commit changes and wait for Vercel deployment to become Ready.
-6. Open: https://doc-send-go.vercel.app/232admin.html?v=51
+Replace ONLY index.html in GitHub root. Do not replace admin, .well-known, Firebase rules, store files, or other files.
 
-ADMIN FEATURES INCLUDED:
-- Live dashboard counts
-- User search, block/unblock, delete profile
-- Store search/filter, active/suspend/delete
-- Order status: accept, processing, complete, cancel
-- Bill list, print, delete
-- Referral and DocCoins manager
-- Early Access and Feature #1-#6 control
-- Super Premium control
-- Reports resolve
-- Help Desk reply and close
-- App notice and referral settings
-- Admin activity logs
-- Role permissions: superadmin, manager, support
+Working tools displayed: PDF Merge, Split, Rotate, Watermark, Remove Pages, Extract Pages, Page Numbers, PDF to JPG, Image Crop, Resize, Image to PDF, Image Compress, Image Convert, Image Watermark, Passport Photo, KB Photo Resize, Text to PDF, File Rename, Print Preview, Print Page, QR Scanner, QR Generator, Barcode Generator.
 
-FIRESTORE ADMIN DOCUMENT:
-active = true (boolean)
-role = superadmin (string)
+After deploy press Ctrl+Shift+R or reinstall PWA to clear old cache.
