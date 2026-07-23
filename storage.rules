@@ -1,8 +1,21 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Compatibility with the current public upload flow.
-    // Add normal-user Authentication before making this stricter.
-    match /{allPaths=**} { allow read, write: if true; }
+    function allowedUpload() {
+      return request.resource != null
+        && request.resource.size > 0
+        && request.resource.size < 20 * 1024 * 1024
+        && request.resource.contentType.matches(
+          'application/pdf|image/(jpeg|png|webp)|text/plain|application/msword|application/vnd.openxmlformats-officedocument.wordprocessingml.document|application/vnd.ms-excel|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|application/vnd.ms-powerpoint|application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        );
+    }
+
+    // Existing DocSendGo sharing works without account login, so reads remain public.
+    // Uploads are limited to supported document/image types and 20 MB per file.
+    match /{allPaths=**} {
+      allow read: if true;
+      allow create, update: if allowedUpload();
+      allow delete: if false;
+    }
   }
 }

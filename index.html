@@ -565,6 +565,7 @@
         <button onclick="showPage('tools');closeMobilePanels()">🛠️ <span>Document Tools</span></button>
         <button onclick="showPage('shops');closeMobilePanels()">👤 <span>My Profile & Files</span></button>
         <button onclick="openReferralPage(event);closeMobilePanels()">🎁 <span>Refer & Earn</span></button>
+        <button onclick="shareDocSendGoApp();closeMobilePanels()">🔗 <span>Share App</span></button>
       </nav>
       <div class="drawer-foot">DocSendGo • Secure file sharing</div>
     </aside>
@@ -976,7 +977,7 @@
                 </div>
 
                 <div class="upload-zone rounded-2xl p-10 text-center mb-6 cursor-pointer" onclick="document.getElementById('customerFileInput').click()">
-                    <input type="file" id="customerFileInput" multiple class="hidden">
+                    <input type="file" id="customerFileInput" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" multiple class="hidden">
                     <div class="text-6xl mb-4">📎</div>
                     <p class="text-slate-700 font-bold text-lg">Select Files</p>
                 </div>
@@ -1017,6 +1018,15 @@
                 <span class="text-lg font-bold text-white">DocSendGo</span>
             </div>
             <p class="text-sm mb-2">Scan • Send • Receive • Print</p>
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs mt-4">
+                <a href="about.html" class="hover:text-white">About</a><span>•</span>
+                <a href="privacy.html" class="hover:text-white">Privacy</a><span>•</span>
+                <a href="terms.html" class="hover:text-white">Terms</a><span>•</span>
+                <a href="contact.html" class="hover:text-white">Contact</a><span>•</span>
+                <a href="faq.html" class="hover:text-white">FAQ</a><span>•</span>
+                <button type="button" onclick="shareDocSendGoApp()" class="hover:text-white">Share App</button>
+            </div>
+            <p class="text-xs mt-4">Developed by <a href="https://www.digitalagencybychandandas.in/" target="_blank" rel="noopener" class="text-sky-300 hover:text-white">Digital Agency by Chandan Das</a></p>
         </div>
     </footer>
 
@@ -1058,15 +1068,20 @@
             db = firebase.firestore();
             storageRef = firebase.storage().ref();
         } else {
-    
-        document.getElementById('profilePhotoInput').addEventListener('change', function(e){
-            selectedProfilePhotoFile=e.target.files[0]||null;
-            if(selectedProfilePhotoFile) document.getElementById('profilePhotoPreview').src=URL.createObjectURL(selectedProfilePhotoFile);
-        });
-        document.addEventListener('DOMContentLoaded', () => {
-                document.getElementById('setupBanner').classList.remove('hidden');
+            document.addEventListener('DOMContentLoaded', () => {
+                const setupBanner = document.getElementById('setupBanner');
+                if (setupBanner) setupBanner.classList.remove('hidden');
             });
         }
+
+        const profilePhotoInputEl = document.getElementById('profilePhotoInput');
+        if (profilePhotoInputEl) profilePhotoInputEl.addEventListener('change', function(e){
+            selectedProfilePhotoFile = e.target.files[0] || null;
+            if (selectedProfilePhotoFile) {
+                const preview = document.getElementById('profilePhotoPreview');
+                if (preview) preview.src = URL.createObjectURL(selectedProfilePhotoFile);
+            }
+        });
 
         let cropper = null;
         let currentShareFiles = [];
@@ -1089,9 +1104,31 @@
             return true;
         }
 
+        const MAX_UPLOAD_FILES = 8;
+        const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+        const MAX_TOTAL_UPLOAD_BYTES = 50 * 1024 * 1024;
+        const ALLOWED_UPLOAD_EXTENSIONS = new Set(['pdf','jpg','jpeg','png','webp','doc','docx','xls','xlsx','ppt','pptx','txt']);
+
+        function validateUploadFiles(files) {
+            const list = Array.from(files || []);
+            if (!list.length) throw new Error('Please choose at least one file.');
+            if (list.length > MAX_UPLOAD_FILES) throw new Error(`You can send up to ${MAX_UPLOAD_FILES} files at a time.`);
+            let total = 0;
+            for (const file of list) {
+                const ext = (file.name.split('.').pop() || '').toLowerCase();
+                if (!ALLOWED_UPLOAD_EXTENSIONS.has(ext)) throw new Error(`Unsupported file type: ${file.name}`);
+                if (file.size <= 0) throw new Error(`Empty file cannot be uploaded: ${file.name}`);
+                if (file.size > MAX_UPLOAD_BYTES) throw new Error(`${file.name} is larger than 20 MB.`);
+                total += file.size;
+            }
+            if (total > MAX_TOTAL_UPLOAD_BYTES) throw new Error('Selected files are larger than the 50 MB total limit.');
+            return list;
+        }
+
         // Upload files to Firebase Storage with attachment metadata.
         // contentDisposition forces the browser to download instead of only opening the file.
         async function uploadFilesToStorage(files, pathPrefix) {
+            files = validateUploadFiles(files);
             const results = [];
             for (const file of files) {
                 const safeName = file.name.replace(/[\r\n"]/g, '_');
@@ -2142,14 +2179,22 @@
 
         // ===== SENDER UPLOAD TO RECEIVER =====
         document.getElementById('customerFileInput').addEventListener('change', function(e) {
-            customerFiles = Array.from(e.target.files);
+            try {
+                customerFiles = validateUploadFiles(e.target.files);
+            } catch (error) {
+                customerFiles = [];
+                e.target.value = '';
+                document.getElementById('customerSubmitBtn').disabled = true;
+                showToast(error.message, 'error');
+                return;
+            }
             const infoDiv = document.getElementById('customerFileInfo');
             infoDiv.innerHTML = customerFiles.map(f => `
                 <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4">
                     <div class="flex items-center space-x-3">
                         <span class="text-3xl">${getFileIcon(f.name)}</span>
                         <div>
-                            <p class="font-semibold text-slate-800">${f.name}</p>
+                            <p class="font-semibold text-slate-800">${escapeHtml(f.name)}</p>
                             <p class="text-sm text-slate-500">${formatFileSize(f.size)}</p>
                         </div>
                     </div>
@@ -2257,15 +2302,23 @@
         }
 
         // ===== FILE SHARING =====
-        document.getElementById('shareInput').addEventListener('change', function(e) {
-            currentShareFiles = Array.from(e.target.files);
+        const shareInputEl = document.getElementById('shareInput');
+        if (shareInputEl) shareInputEl.addEventListener('change', function(e) {
+            try {
+                currentShareFiles = validateUploadFiles(e.target.files);
+            } catch (error) {
+                currentShareFiles = [];
+                e.target.value = '';
+                showToast(error.message, 'error');
+                return;
+            }
             const infoDiv = document.getElementById('shareFileInfo');
             infoDiv.innerHTML = currentShareFiles.map(f => `
                 <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4">
                     <div class="flex items-center space-x-3">
                         <span class="text-3xl">${getFileIcon(f.name)}</span>
                         <div>
-                            <p class="font-semibold text-slate-800">${f.name}</p>
+                            <p class="font-semibold text-slate-800">${escapeHtml(f.name)}</p>
                             <p class="text-sm text-slate-500">${formatFileSize(f.size)}</p>
                         </div>
                     </div>
@@ -2625,7 +2678,7 @@
                     <div class="flex items-center space-x-3">
                         <span class="text-xl">📕</span>
                         <div>
-                            <p class="text-sm font-semibold text-slate-700">${f.name}</p>
+                            <p class="text-sm font-semibold text-slate-700">${escapeHtml(f.name)}</p>
                             <p class="text-xs text-slate-400">${formatFileSize(f.size)}</p>
                         </div>
                     </div>
@@ -2743,7 +2796,7 @@
                 <div class="file-item flex items-center space-x-3 bg-slate-50 rounded-xl px-4 py-3">
                     <span class="text-xl">🖼️</span>
                     <div class="flex-1">
-                        <p class="text-sm font-semibold text-slate-700">${f.name}</p>
+                        <p class="text-sm font-semibold text-slate-700">${escapeHtml(f.name)}</p>
                         <p class="text-xs text-slate-400">${formatFileSize(f.size)}</p>
                     </div>
                     <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full font-semibold">Page ${i+1}</span>
@@ -2792,6 +2845,7 @@
             const params = new URLSearchParams(window.location.search);
             const code = params.get('code');
             const shop = params.get('shop');
+            const nativeAction = params.get('nativeAction');
 
             if(code) {
                 showPage('receive');
@@ -2810,6 +2864,10 @@
                 } else {
                     showToast('Receiver not found!', 'error');
                 }
+            } else if (nativeAction) {
+                const nativePages = { send: 'send', scan: 'send', receive: 'receive', tools: 'tools', profile: 'shops', home: 'home' };
+                showPage(nativePages[nativeAction] || 'home');
+                if (nativeAction === 'scan') setTimeout(() => { if (typeof startScanner === 'function') startScanner(); }, 700);
             }
         });
     </script>
@@ -2848,9 +2906,6 @@
  });
 })();
 </script>
-<script src="early-access.js">
-        window.addEventListener('hashchange', handleAppHashRoute);
-        window.addEventListener('DOMContentLoaded', handleAppHashRoute);
-</script>
+<script src="early-access.js"></script>
 </body>
 </html>
