@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'docsendgo-v7-code-share';
+const CACHE_VERSION = 'docsendgo-v8-desktop-upload';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const OFFLINE_URL = '/offline.html';

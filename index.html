@@ -635,6 +635,25 @@
             <div class="slider-dots"><button class="active" aria-label="Slide 1"></button><button aria-label="Slide 2"></button><button aria-label="Slide 3"></button></div>
           </div>
         </section>
+
+        <!-- Desktop quick actions: upload is visible without scanning a QR -->
+        <section class="hidden md:grid max-w-7xl mx-auto px-4 sm:px-6 mt-6 grid-cols-3 gap-5" aria-label="Quick file actions">
+          <button type="button" onclick="showPage('send')" class="text-left bg-white border-2 border-blue-100 rounded-2xl p-6 shadow-sm hover:border-blue-400 hover:shadow-lg transition-all">
+            <div class="text-4xl mb-3">📤</div>
+            <h2 class="text-xl font-extrabold text-slate-800">Upload File & Get Code</h2>
+            <p class="text-sm text-slate-500 mt-2">Choose a document from this computer, generate a 6-character code and share it for download.</p>
+          </button>
+          <button type="button" onclick="showPage('receive')" class="text-left bg-white border-2 border-emerald-100 rounded-2xl p-6 shadow-sm hover:border-emerald-400 hover:shadow-lg transition-all">
+            <div class="text-4xl mb-3">📥</div>
+            <h2 class="text-xl font-extrabold text-slate-800">Enter Code & Download</h2>
+            <p class="text-sm text-slate-500 mt-2">Enter the sender's share code to view, print or download the file on your PC.</p>
+          </button>
+          <button type="button" onclick="showPage('send');setTimeout(showQRScanner,50)" class="text-left bg-white border-2 border-violet-100 rounded-2xl p-6 shadow-sm hover:border-violet-400 hover:shadow-lg transition-all">
+            <div class="text-4xl mb-3">📷</div>
+            <h2 class="text-xl font-extrabold text-slate-800">Scan QR & Send</h2>
+            <p class="text-sm text-slate-500 mt-2">Use a camera or enter a receiver ID to send directly to a receiver profile.</p>
+          </button>
+        </section>
     </div>
 
     <!-- ==================== TOOLS PAGE ==================== -->
@@ -1364,6 +1383,11 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
             if(page === 'home') renderMobileHome();
+            // On desktop, open the file-upload/code generator immediately.
+            // Mobile keeps the two-choice screen (Code Share / QR Scan).
+            if(page === 'send' && window.innerWidth >= 768) {
+                showRegularShare();
+            }
             if(page === 'shops') updateShopsList();
             if(page === 'referral') renderReferralPage();
             if(page === 'shopDashboard') updateShopDashboard();
