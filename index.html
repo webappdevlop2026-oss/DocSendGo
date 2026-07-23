@@ -789,42 +789,114 @@
         </div>
     </div>
 
-    <!-- ==================== SEND PAGE (FIXED QR SCANNER) ==================== -->
+    <!-- ==================== SEND PAGE: CODE SHARE + DIRECT QR SEND ==================== -->
     <div id="page-send" class="page hidden">
         <div class="max-w-4xl mx-auto px-4 py-8 fade-in">
-            <h2 class="text-3xl font-extrabold text-slate-800 mb-2">📤 Send Files</h2>
-            <p class="text-slate-500 mb-5">Scan the receiver’s QR code first, then upload and send your files directly.</p>
+            <h2 class="text-3xl font-extrabold text-slate-800 mb-2">📤 Send Documents</h2>
+            <p class="text-slate-500 mb-6">Choose how you want to send the file.</p>
 
-            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-8">
-                <div class="grid grid-cols-3 gap-2 text-center text-sm font-semibold text-slate-700">
-                    <div><div class="text-2xl mb-1">1️⃣</div>Receiver shows QR</div>
-                    <div><div class="text-2xl mb-1">2️⃣</div>Sender scans QR</div>
-                    <div><div class="text-2xl mb-1">3️⃣</div>Upload & send</div>
+            <!-- Two main send options -->
+            <div id="sendOptions" class="grid md:grid-cols-2 gap-5">
+                <button type="button" onclick="showRegularShare()" class="text-left bg-white rounded-2xl border-2 border-blue-100 p-6 shadow-sm hover:border-blue-400 hover:shadow-lg transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-100 text-3xl flex items-center justify-center mb-4">🔢</div>
+                    <h3 class="text-xl font-extrabold text-slate-800">Upload & Get Share Code</h3>
+                    <p class="text-sm text-slate-500 mt-2">Upload documents and generate a 6-character code. The receiver can enter the code and download the file.</p>
+                    <span class="inline-flex mt-4 rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">Best for code sharing</span>
+                </button>
+
+                <button type="button" onclick="showQRScanner()" class="text-left bg-white rounded-2xl border-2 border-violet-100 p-6 shadow-sm hover:border-violet-400 hover:shadow-lg transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-violet-100 text-3xl flex items-center justify-center mb-4">📷</div>
+                    <h3 class="text-xl font-extrabold text-slate-800">Scan QR & Send Directly</h3>
+                    <p class="text-sm text-slate-500 mt-2">Scan the receiver’s personal QR code and upload the documents directly to their profile.</p>
+                    <span class="inline-flex mt-4 rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700">Best for direct delivery</span>
+                </button>
+            </div>
+
+            <!-- Option 1: upload and generate code -->
+            <div id="regularShareSection" class="hidden">
+                <button type="button" onclick="hideRegularShare()" class="mb-4 text-sm font-bold text-slate-500 hover:text-slate-800">← Back to send options</button>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
+                    <div class="text-center mb-6">
+                        <div class="text-6xl mb-3">🔢</div>
+                        <h3 class="text-2xl font-bold text-slate-800">Upload File & Generate Code</h3>
+                        <p class="text-slate-500 mt-2">The generated code can be opened from the Receive Files page on another phone or computer.</p>
+                    </div>
+
+                    <div class="upload-zone rounded-2xl p-8 text-center mb-5 cursor-pointer" onclick="document.getElementById('shareInput').click()">
+                        <input type="file" id="shareInput" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" multiple class="hidden">
+                        <div class="text-6xl mb-3">📎</div>
+                        <p class="text-slate-700 font-bold text-lg">Select Document or Image</p>
+                        <p class="text-xs text-slate-400 mt-2">PDF, image, Word, Excel, PowerPoint or TXT • Maximum 20 MB per file</p>
+                    </div>
+
+                    <div id="shareFileInfo" class="hidden mb-5 space-y-2"></div>
+
+                    <div class="mb-5">
+                        <label class="text-sm font-semibold text-slate-600 mb-2 block">Note (Optional)</label>
+                        <textarea id="shareNote" rows="3" class="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary outline-none" placeholder="Write a short note for the receiver"></textarea>
+                    </div>
+
+                    <button type="button" onclick="generateShareLink()" id="shareBtn" disabled class="w-full btn-primary text-white py-4 rounded-xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed">🔗 Generate Share Code & QR</button>
+
+                    <div id="shareResult" class="hidden mt-6 fade-in">
+                        <div class="rounded-2xl border-2 border-green-200 bg-green-50 p-5 text-center">
+                            <div class="text-4xl mb-2">✅</div>
+                            <h4 class="text-lg font-extrabold text-green-800">File uploaded successfully</h4>
+                            <p class="text-sm text-green-700 mt-1">Give this code to the receiver:</p>
+                            <div id="shareCodeDisplay" class="my-4 text-4xl font-black tracking-[0.25em] text-slate-900">ABC123</div>
+                            <div id="qrcode" class="flex justify-center bg-white rounded-2xl p-4 max-w-[240px] mx-auto"></div>
+                            <p class="text-xs text-slate-500 mt-4">Receiver: Open “Receive Files” → enter this code → View / Print / Download.</p>
+                            <div class="grid sm:grid-cols-3 gap-3 mt-5">
+                                <button type="button" onclick="copyCode()" class="bg-white border-2 border-blue-200 text-blue-700 py-3 rounded-xl font-bold">📋 Copy Code</button>
+                                <button type="button" onclick="shareCodeWithReceiver()" class="bg-emerald-600 text-white py-3 rounded-xl font-bold">📤 Share Code</button>
+                                <button type="button" onclick="downloadQR()" class="bg-slate-800 text-white py-3 rounded-xl font-bold">⬇️ Download QR</button>
+                            </div>
+                            <button type="button" onclick="resetCodeShare()" class="mt-4 text-sm font-bold text-slate-600 underline">Upload another file</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
-                <div class="text-center mb-6">
-                    <div class="text-6xl mb-4">📱</div>
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Scan Receiver QR Code</h3>
-                    <p class="text-slate-500">Point your camera at the receiver’s personal QR code</p>
-                </div>
-
-                <div class="scanner-wrapper mb-6" id="scannerContainer">
-                    <div id="reader"></div>
-                    <div class="scan-overlay hidden" id="scanOverlay"><div class="scan-box"><div class="scan-line"></div></div></div>
-                    <div id="scannerPlaceholder" class="bg-slate-900 text-white py-20 text-center">
-                        <div class="text-6xl mb-4">📷</div>
-                        <p class="text-slate-400">Camera not started yet</p>
-                        <p class="text-slate-500 text-sm mt-2">Click “Start Camera” below</p>
+            <!-- Option 2: scan receiver QR and send directly -->
+            <div id="qrScannerSection" class="hidden">
+                <button type="button" onclick="hideQRScanner()" class="mb-4 text-sm font-bold text-slate-500 hover:text-slate-800">← Back to send options</button>
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-5">
+                    <div class="grid grid-cols-3 gap-2 text-center text-sm font-semibold text-slate-700">
+                        <div><div class="text-2xl mb-1">1️⃣</div>Receiver shows QR</div>
+                        <div><div class="text-2xl mb-1">2️⃣</div>Scan the QR</div>
+                        <div><div class="text-2xl mb-1">3️⃣</div>Upload & send</div>
                     </div>
                 </div>
-                <div id="scannerStatus" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 text-center mb-4">
-                    <p class="text-sm text-blue-700">Camera permission allow করুন QR scan করার জন্য</p>
-                </div>
-                <div class="space-y-3">
-                    <button onclick="startScanner()" id="startScanBtn" class="w-full btn-primary text-white py-4 rounded-xl font-bold text-lg">📷 Start Camera</button>
-                    <button onclick="stopScanner()" id="stopScanBtn" class="w-full bg-red-500 text-white py-4 rounded-xl font-bold text-lg hidden">⏹️ Stop Scanner</button>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
+                    <div class="text-center mb-6">
+                        <div class="text-6xl mb-4">📱</div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Scan Receiver QR Code</h3>
+                        <p class="text-slate-500">Point your camera at the receiver’s personal QR code</p>
+                    </div>
+
+                    <div class="scanner-wrapper mb-6" id="scannerContainer">
+                        <div id="reader"></div>
+                        <div class="scan-overlay hidden" id="scanOverlay"><div class="scan-box"><div class="scan-line"></div></div></div>
+                        <div id="scannerPlaceholder" class="bg-slate-900 text-white py-20 text-center">
+                            <div class="text-6xl mb-4">📷</div>
+                            <p class="text-slate-400">Camera not started yet</p>
+                            <p class="text-slate-500 text-sm mt-2">Click “Start Camera” below</p>
+                        </div>
+                    </div>
+                    <div id="scannerStatus" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 text-center mb-4">
+                        <p class="text-sm text-blue-700">Allow camera permission to scan the QR code.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button type="button" onclick="startScanner()" id="startScanBtn" class="w-full btn-primary text-white py-4 rounded-xl font-bold text-lg">📷 Start Camera</button>
+                        <button type="button" onclick="stopScanner()" id="stopScanBtn" class="w-full bg-red-500 text-white py-4 rounded-xl font-bold text-lg hidden">⏹️ Stop Scanner</button>
+                    </div>
+
+                    <div class="flex items-center gap-3 my-6"><div class="h-px bg-slate-200 flex-1"></div><span class="text-xs font-bold text-slate-400">OR ENTER RECEIVER ID</span><div class="h-px bg-slate-200 flex-1"></div></div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="manualShopCode" maxlength="12" class="flex-1 border-2 border-slate-200 rounded-xl px-5 py-3 text-center font-bold uppercase tracking-wider focus:ring-2 focus:ring-primary outline-none" placeholder="DSGXXXXXX">
+                        <button type="button" onclick="manualShopEntry()" class="btn-primary text-white px-6 py-3 rounded-xl font-bold">Open Receiver</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1504,20 +1576,29 @@
 
         async function manualShopEntry() {
             if(!requireFirebase()) return;
-            const code = document.getElementById('manualShopCode').value.trim().toUpperCase();
+            const input = document.getElementById('manualShopCode');
+            const code = input.value.trim().toUpperCase();
             if(!code) {
-                showToast('Enter a receiver code!', 'error');
+                showToast('Enter a receiver ID!', 'error');
+                input.focus();
                 return;
             }
 
-            const shopSnap = await db.collection('shops').doc(code).get();
-            if(shopSnap.exists) {
-                customerShopId = code;
-                document.getElementById('customerShopName').textContent = shopSnap.data().name;
-                showPage('customerUpload');
-                showToast('Receiver found! ✅');
-            } else {
-                showToast('Receiver not found with this code!', 'error');
+            try {
+                const shopSnap = await db.collection('shops').doc(code).get();
+                if(shopSnap.exists) {
+                    const receiverData = shopSnap.data() || {};
+                    customerShopId = code;
+                    document.getElementById('customerShopName').textContent = receiverData.name || 'Receiver';
+                    document.getElementById('customerReceiverId').textContent = receiverData.code || code;
+                    document.getElementById('customerReceiverPhoto').src = receiverData.photoUrl || defaultAvatar(receiverData.name || 'Receiver');
+                    showPage('customerUpload');
+                    showToast('Receiver found! Upload files now ✅');
+                } else {
+                    showToast('Receiver not found with this ID!', 'error');
+                }
+            } catch (error) {
+                showToast('Could not find receiver. Check internet and try again.', 'error');
             }
         }
 
@@ -2113,6 +2194,27 @@
 @media(min-width:768px){.mobile-home{display:none!important}}
 </style>
 
+
+<style id="code-share-update-styles">
+#sendOptions > button{display:block;width:100%;cursor:pointer}
+#sendOptions > button:first-child{border-color:#dbeafe}
+#sendOptions > button:first-child:hover{border-color:#60a5fa}
+#sendOptions > button:nth-child(2){border-color:#ede9fe}
+#sendOptions > button:nth-child(2):hover{border-color:#a78bfa}
+#sendOptions > button:first-child .w-14{background:#dbeafe}
+#sendOptions > button:nth-child(2) .w-14{background:#ede9fe}
+#sendOptions > button:first-child .inline-flex{background:#eff6ff;color:#1d4ed8}
+#sendOptions > button:nth-child(2) .inline-flex{background:#f5f3ff;color:#6d28d9}
+#shareBtn:disabled{opacity:.5;cursor:not-allowed}
+#shareCodeDisplay{letter-spacing:.25em}
+#qrcode{max-width:240px}
+#shareResult button[onclick="shareCodeWithReceiver()"]{background:#059669;color:#fff}
+#shareResult .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:640px){
+  #shareResult .grid{grid-template-columns:1fr}
+  #shareCodeDisplay{font-size:2rem;letter-spacing:.18em}
+}
+</style>
 </head><body><div class="top"><div class="name">🖨️ ${safeName}</div><button class="print-btn" onclick="window.print()">🖨️ Print Now</button></div><div class="viewer">${viewer}</div><script>${autoPrintScript}<\/script></body></html>`);
             tab.document.close();
         }
@@ -2394,6 +2496,7 @@
                 });
 
                 showToast('Share code generated! 🎉');
+                setTimeout(() => document.getElementById('shareResult')?.scrollIntoView({behavior:'smooth', block:'center'}), 150);
             } catch(err) {
                 showToast('Error: ' + err.message, 'error');
             }
@@ -2415,6 +2518,41 @@
             a.download = 'DocSendGo-QR.png';
             a.click();
             showToast('QR downloaded! ✅');
+        }
+
+        async function shareCodeWithReceiver() {
+            const code = document.getElementById('shareCodeDisplay')?.textContent?.trim();
+            if(!code || code === 'ABC123') return;
+            const shareUrl = window.location.href.split('?')[0] + '?code=' + encodeURIComponent(code);
+            const text = `DocSendGo file share code: ${code}
+Open and download: ${shareUrl}`;
+            try {
+                if(navigator.share) {
+                    await navigator.share({ title:'DocSendGo File', text, url:shareUrl });
+                } else {
+                    await navigator.clipboard.writeText(text);
+                    showToast('Code and link copied! 📋');
+                }
+            } catch (error) {
+                if(error?.name !== 'AbortError') showToast('Could not share. Please copy the code.', 'error');
+            }
+        }
+
+        function resetCodeShare() {
+            currentShareFiles = [];
+            const input = document.getElementById('shareInput');
+            if(input) input.value = '';
+            const note = document.getElementById('shareNote');
+            if(note) note.value = '';
+            document.getElementById('shareFileInfo')?.classList.add('hidden');
+            if(document.getElementById('shareFileInfo')) document.getElementById('shareFileInfo').innerHTML = '';
+            document.getElementById('shareResult')?.classList.add('hidden');
+            const qr = document.getElementById('qrcode');
+            if(qr) qr.innerHTML = '';
+            const btn = document.getElementById('shareBtn');
+            if(btn) { btn.disabled = true; btn.textContent = '🔗 Generate Share Code & QR'; }
+            document.getElementById('shareCodeDisplay').textContent = 'ABC123';
+            window.scrollTo({ top: document.getElementById('regularShareSection')?.offsetTop || 0, behavior:'smooth' });
         }
 
         // ===== FILE RECEIVING (Firestore) =====
