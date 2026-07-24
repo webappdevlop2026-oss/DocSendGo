@@ -59,6 +59,12 @@
         .nav-active { background: linear-gradient(135deg, #0ea5e9, #6366f1); color: white; }
         .upload-zone { border: 2px dashed #94a3b8; transition: all 0.3s; }
         .upload-zone:hover, .upload-zone.dragover { border-color: #0ea5e9; background: rgba(14,165,233,0.05); }
+        /* Multi-document list helpers (used by dynamically rendered file rows) */
+        .min-w-0 { min-width: 0; }
+        .shrink-0 { flex-shrink: 0; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .border-red-200 { border-color: #fecaca; }
+        .text-red-700 { color: #b91c1c; }
         .btn-primary { background: linear-gradient(135deg, #0ea5e9, #6366f1); }
         .btn-primary:hover { background: linear-gradient(135deg, #0284c7, #4f46e5); }
         .hero-pattern {
@@ -640,8 +646,8 @@
         <section class="hidden md:grid max-w-7xl mx-auto px-4 sm:px-6 mt-6 grid-cols-3 gap-5" aria-label="Quick file actions">
           <button type="button" onclick="showPage('send')" class="text-left bg-white border-2 border-blue-100 rounded-2xl p-6 shadow-sm hover:border-blue-400 hover:shadow-lg transition-all">
             <div class="text-4xl mb-3">📤</div>
-            <h2 class="text-xl font-extrabold text-slate-800">Upload File & Get Code</h2>
-            <p class="text-sm text-slate-500 mt-2">Choose a document from this computer, generate a 6-character code and share it for download.</p>
+            <h2 class="text-xl font-extrabold text-slate-800">Upload File(s) & Get Code</h2>
+            <p class="text-sm text-slate-500 mt-2">Choose one or multiple documents from this computer, generate one 6-character code and share all files together.</p>
           </button>
           <button type="button" onclick="showPage('receive')" class="text-left bg-white border-2 border-emerald-100 rounded-2xl p-6 shadow-sm hover:border-emerald-400 hover:shadow-lg transition-all">
             <div class="text-4xl mb-3">📥</div>
@@ -837,18 +843,23 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
                     <div class="text-center mb-6">
                         <div class="text-6xl mb-3">🔢</div>
-                        <h3 class="text-2xl font-bold text-slate-800">Upload File & Generate Code</h3>
-                        <p class="text-slate-500 mt-2">The generated code can be opened from the Receive Files page on another phone or computer.</p>
+                        <h3 class="text-2xl font-bold text-slate-800">Upload One or Multiple Files & Generate Code</h3>
+                        <p class="text-slate-500 mt-2">All selected files will be saved under one code. The receiver can open that code on another phone or computer and download every file.</p>
                     </div>
 
-                    <div class="upload-zone rounded-2xl p-8 text-center mb-5 cursor-pointer" onclick="document.getElementById('shareInput').click()">
+                    <div class="upload-zone rounded-2xl p-8 text-center mb-4 cursor-pointer" onclick="document.getElementById('shareInput').click()">
                         <input type="file" id="shareInput" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" multiple class="hidden">
                         <div class="text-6xl mb-3">📎</div>
-                        <p class="text-slate-700 font-bold text-lg">Select Document or Image</p>
-                        <p class="text-xs text-slate-400 mt-2">PDF, image, Word, Excel, PowerPoint or TXT • Maximum 20 MB per file</p>
+                        <p class="text-slate-700 font-bold text-lg">Select One or Multiple Documents</p>
+                        <p class="text-sm text-blue-600 font-semibold mt-2">You can send 1 file or many files together using one share code.</p>
+                        <p class="text-xs text-slate-400 mt-2">PDF, image, Word, Excel, PowerPoint or TXT • Up to 20 files • 20 MB per file • 100 MB total</p>
                     </div>
 
-                    <div id="shareFileInfo" class="hidden mb-5 space-y-2"></div>
+                    <div id="shareFileInfo" class="hidden mb-3 space-y-2"></div>
+                    <div id="shareFileActions" class="hidden grid grid-cols-2 gap-3 mb-5">
+                        <button type="button" onclick="document.getElementById('shareInput').click()" class="bg-blue-50 border-2 border-blue-200 text-blue-700 py-3 rounded-xl font-bold">➕ Add More Files</button>
+                        <button type="button" onclick="clearShareFiles()" class="bg-red-50 border-2 border-red-200 text-red-700 py-3 rounded-xl font-bold">🗑️ Clear All</button>
+                    </div>
 
                     <div class="mb-5">
                         <label class="text-sm font-semibold text-slate-600 mb-2 block">Note (Optional)</label>
@@ -860,7 +871,7 @@
                     <div id="shareResult" class="hidden mt-6 fade-in">
                         <div class="rounded-2xl border-2 border-green-200 bg-green-50 p-5 text-center">
                             <div class="text-4xl mb-2">✅</div>
-                            <h4 class="text-lg font-extrabold text-green-800">File uploaded successfully</h4>
+                            <h4 id="shareSuccessTitle" class="text-lg font-extrabold text-green-800">Documents uploaded successfully</h4>
                             <p class="text-sm text-green-700 mt-1">Give this code to the receiver:</p>
                             <div id="shareCodeDisplay" class="my-4 text-4xl font-black tracking-[0.25em] text-slate-900">ABC123</div>
                             <div id="qrcode" class="flex justify-center bg-white rounded-2xl p-4 max-w-[240px] mx-auto"></div>
@@ -870,7 +881,7 @@
                                 <button type="button" onclick="shareCodeWithReceiver()" class="bg-emerald-600 text-white py-3 rounded-xl font-bold">📤 Share Code</button>
                                 <button type="button" onclick="downloadQR()" class="bg-slate-800 text-white py-3 rounded-xl font-bold">⬇️ Download QR</button>
                             </div>
-                            <button type="button" onclick="resetCodeShare()" class="mt-4 text-sm font-bold text-slate-600 underline">Upload another file</button>
+                            <button type="button" onclick="resetCodeShare()" class="mt-4 text-sm font-bold text-slate-600 underline">Send more documents</button>
                         </div>
                     </div>
                 </div>
@@ -1064,16 +1075,22 @@
                     <img id="customerReceiverPhoto" class="w-24 h-24 rounded-full object-cover bg-slate-100 border-4 border-white shadow mx-auto mb-4" alt="Receiver">
                     <h2 class="text-2xl font-extrabold text-slate-800 mb-1" id="customerShopName">Receiver Name</h2>
                     <p class="text-sm text-slate-500 mb-2">User ID: <span id="customerReceiverId" class="font-mono font-bold"></span></p>
-                    <p class="text-slate-500">You scanned this receiver. Select files to send directly.</p>
+                    <p class="text-slate-500">You scanned this receiver. Select one file or multiple documents and send them together.</p>
                 </div>
 
-                <div class="upload-zone rounded-2xl p-10 text-center mb-6 cursor-pointer" onclick="document.getElementById('customerFileInput').click()">
+                <div class="upload-zone rounded-2xl p-10 text-center mb-4 cursor-pointer" onclick="document.getElementById('customerFileInput').click()">
                     <input type="file" id="customerFileInput" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" multiple class="hidden">
                     <div class="text-6xl mb-4">📎</div>
-                    <p class="text-slate-700 font-bold text-lg">Select Files</p>
+                    <p class="text-slate-700 font-bold text-lg">Select One or Multiple Files</p>
+                    <p class="text-sm text-blue-600 font-semibold mt-2">Send 1 file or up to 20 files together.</p>
+                    <p class="text-xs text-slate-400 mt-2">20 MB per file • 100 MB total</p>
                 </div>
 
-                <div id="customerFileInfo" class="hidden mb-6 space-y-2"></div>
+                <div id="customerFileInfo" class="hidden mb-3 space-y-2"></div>
+                <div id="customerFileActions" class="hidden grid grid-cols-2 gap-3 mb-6">
+                    <button type="button" onclick="document.getElementById('customerFileInput').click()" class="bg-blue-50 border-2 border-blue-200 text-blue-700 py-3 rounded-xl font-bold">➕ Add More Files</button>
+                    <button type="button" onclick="clearCustomerFiles()" class="bg-red-50 border-2 border-red-200 text-red-700 py-3 rounded-xl font-bold">🗑️ Clear All</button>
+                </div>
 
                 <div class="mb-6">
                     <label class="text-sm font-semibold text-slate-600 mb-2 block"> Sender Name (Optional)</label>
@@ -1195,9 +1212,9 @@
             return true;
         }
 
-        const MAX_UPLOAD_FILES = 8;
+        const MAX_UPLOAD_FILES = 20;
         const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
-        const MAX_TOTAL_UPLOAD_BYTES = 50 * 1024 * 1024;
+        const MAX_TOTAL_UPLOAD_BYTES = 100 * 1024 * 1024;
         const ALLOWED_UPLOAD_EXTENSIONS = new Set(['pdf','jpg','jpeg','png','webp','doc','docx','xls','xlsx','ppt','pptx','txt']);
 
         function validateUploadFiles(files) {
@@ -1212,8 +1229,134 @@
                 if (file.size > MAX_UPLOAD_BYTES) throw new Error(`${file.name} is larger than 20 MB.`);
                 total += file.size;
             }
-            if (total > MAX_TOTAL_UPLOAD_BYTES) throw new Error('Selected files are larger than the 50 MB total limit.');
+            if (total > MAX_TOTAL_UPLOAD_BYTES) throw new Error('Selected files are larger than the 100 MB total limit.');
             return list;
+        }
+
+        function fileIdentity(file) {
+            return `${file.name}::${file.size}::${file.lastModified || 0}`;
+        }
+
+        function mergeSelectedFiles(existingFiles, newFiles) {
+            const combined = new Map();
+            [...(existingFiles || []), ...Array.from(newFiles || [])].forEach(file => {
+                combined.set(fileIdentity(file), file);
+            });
+            return validateUploadFiles([...combined.values()]);
+        }
+
+        function selectedFilesTotal(files) {
+            return (files || []).reduce((sum, file) => sum + (file.size || 0), 0);
+        }
+
+        function renderShareFiles() {
+            const infoDiv = document.getElementById('shareFileInfo');
+            const actions = document.getElementById('shareFileActions');
+            const btn = document.getElementById('shareBtn');
+            if (!infoDiv || !btn) return;
+
+            if (!currentShareFiles.length) {
+                infoDiv.innerHTML = '';
+                infoDiv.classList.add('hidden');
+                actions?.classList.add('hidden');
+                btn.disabled = true;
+                btn.textContent = '🔗 Generate Share Code & QR';
+                return;
+            }
+
+            const total = selectedFilesTotal(currentShareFiles);
+            infoDiv.innerHTML = `
+                <div class="flex items-center justify-between rounded-xl border border-blue-200 bg-blue-50 p-3">
+                    <div>
+                        <p class="font-extrabold text-blue-800">${currentShareFiles.length} file${currentShareFiles.length === 1 ? '' : 's'} selected</p>
+                        <p class="text-xs text-blue-600">Total size: ${formatFileSize(total)} • One code will open all files</p>
+                    </div>
+                    <span class="text-2xl">📦</span>
+                </div>
+                ${currentShareFiles.map((file, index) => `
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 rounded-xl p-4">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <span class="text-3xl shrink-0">${getFileIcon(file.name)}</span>
+                            <div class="min-w-0">
+                                <p class="font-semibold text-slate-800 truncate">${escapeHtml(file.name)}</p>
+                                <p class="text-sm text-slate-500">${formatFileSize(file.size)}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="removeShareFile(${index})" class="shrink-0 rounded-lg bg-red-50 px-3 py-2 text-sm font-bold text-red-600" aria-label="Remove ${escapeHtml(file.name)}">✕</button>
+                    </div>
+                `).join('')}
+            `;
+            infoDiv.classList.remove('hidden');
+            actions?.classList.remove('hidden');
+            btn.disabled = false;
+            btn.textContent = `🔗 Generate One Code for ${currentShareFiles.length} File${currentShareFiles.length === 1 ? '' : 's'}`;
+        }
+
+        function removeShareFile(index) {
+            currentShareFiles.splice(index, 1);
+            renderShareFiles();
+        }
+
+        function clearShareFiles() {
+            currentShareFiles = [];
+            const input = document.getElementById('shareInput');
+            if (input) input.value = '';
+            renderShareFiles();
+        }
+
+        function renderCustomerFiles() {
+            const infoDiv = document.getElementById('customerFileInfo');
+            const actions = document.getElementById('customerFileActions');
+            const btn = document.getElementById('customerSubmitBtn');
+            if (!infoDiv || !btn) return;
+
+            if (!customerFiles.length) {
+                infoDiv.innerHTML = '';
+                infoDiv.classList.add('hidden');
+                actions?.classList.add('hidden');
+                btn.disabled = true;
+                btn.textContent = '📤 Send to Receiver';
+                return;
+            }
+
+            const total = selectedFilesTotal(customerFiles);
+            infoDiv.innerHTML = `
+                <div class="flex items-center justify-between rounded-xl border border-blue-200 bg-blue-50 p-3">
+                    <div>
+                        <p class="font-extrabold text-blue-800">${customerFiles.length} file${customerFiles.length === 1 ? '' : 's'} selected</p>
+                        <p class="text-xs text-blue-600">Total size: ${formatFileSize(total)} • Files will be sent together</p>
+                    </div>
+                    <span class="text-2xl">📦</span>
+                </div>
+                ${customerFiles.map((file, index) => `
+                    <div class="flex items-center justify-between gap-3 bg-slate-50 rounded-xl p-4">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <span class="text-3xl shrink-0">${getFileIcon(file.name)}</span>
+                            <div class="min-w-0">
+                                <p class="font-semibold text-slate-800 truncate">${escapeHtml(file.name)}</p>
+                                <p class="text-sm text-slate-500">${formatFileSize(file.size)}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="removeCustomerFile(${index})" class="shrink-0 rounded-lg bg-red-50 px-3 py-2 text-sm font-bold text-red-600" aria-label="Remove ${escapeHtml(file.name)}">✕</button>
+                    </div>
+                `).join('')}
+            `;
+            infoDiv.classList.remove('hidden');
+            actions?.classList.remove('hidden');
+            btn.disabled = false;
+            btn.textContent = `📤 Send ${customerFiles.length} File${customerFiles.length === 1 ? '' : 's'} to Receiver`;
+        }
+
+        function removeCustomerFile(index) {
+            customerFiles.splice(index, 1);
+            renderCustomerFiles();
+        }
+
+        function clearCustomerFiles() {
+            customerFiles = [];
+            const input = document.getElementById('customerFileInput');
+            if (input) input.value = '';
+            renderCustomerFiles();
         }
 
         // Upload files to Firebase Storage with attachment metadata.
@@ -2306,35 +2449,20 @@
         // ===== SENDER UPLOAD TO RECEIVER =====
         document.getElementById('customerFileInput').addEventListener('change', function(e) {
             try {
-                customerFiles = validateUploadFiles(e.target.files);
-            } catch (error) {
-                customerFiles = [];
+                customerFiles = mergeSelectedFiles(customerFiles, e.target.files);
                 e.target.value = '';
-                document.getElementById('customerSubmitBtn').disabled = true;
+                renderCustomerFiles();
+            } catch (error) {
+                e.target.value = '';
                 showToast(error.message, 'error');
-                return;
             }
-            const infoDiv = document.getElementById('customerFileInfo');
-            infoDiv.innerHTML = customerFiles.map(f => `
-                <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">${getFileIcon(f.name)}</span>
-                        <div>
-                            <p class="font-semibold text-slate-800">${escapeHtml(f.name)}</p>
-                            <p class="text-sm text-slate-500">${formatFileSize(f.size)}</p>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            infoDiv.classList.remove('hidden');
-            document.getElementById('customerSubmitBtn').disabled = false;
         });
 
         async function submitToShop() {
             if(!requireFirebase()) return;
             if(customerFiles.length === 0 || !customerShopId) return;
 
-            document.getElementById('customerSubmitBtn').textContent = ' Submitting...';
+            document.getElementById('customerSubmitBtn').textContent = `⏳ Sending ${customerFiles.length} file${customerFiles.length === 1 ? '' : 's'}...`;
             document.getElementById('customerSubmitBtn').disabled = true;
 
             try {
@@ -2382,13 +2510,9 @@
                 showToast('Files sent to receiver! ✅');
 
                 setTimeout(() => {
-                    document.getElementById('customerFileInput').value = '';
                     document.getElementById('customerName').value = '';
-                    document.getElementById('customerFileInfo').classList.add('hidden');
                     document.getElementById('customerSuccess').classList.add('hidden');
-                    document.getElementById('customerSubmitBtn').disabled = true;
-                    document.getElementById('customerSubmitBtn').textContent = '📤 Send to Receiver';
-                    customerFiles = [];
+                    clearCustomerFiles();
                 }, 3000);
 
             } catch(err) {
@@ -2431,34 +2555,20 @@
         const shareInputEl = document.getElementById('shareInput');
         if (shareInputEl) shareInputEl.addEventListener('change', function(e) {
             try {
-                currentShareFiles = validateUploadFiles(e.target.files);
+                currentShareFiles = mergeSelectedFiles(currentShareFiles, e.target.files);
+                e.target.value = '';
+                renderShareFiles();
             } catch (error) {
-                currentShareFiles = [];
                 e.target.value = '';
                 showToast(error.message, 'error');
-                return;
             }
-            const infoDiv = document.getElementById('shareFileInfo');
-            infoDiv.innerHTML = currentShareFiles.map(f => `
-                <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-3xl">${getFileIcon(f.name)}</span>
-                        <div>
-                            <p class="font-semibold text-slate-800">${escapeHtml(f.name)}</p>
-                            <p class="text-sm text-slate-500">${formatFileSize(f.size)}</p>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            infoDiv.classList.remove('hidden');
-            document.getElementById('shareBtn').disabled = false;
         });
 
         async function generateShareLink() {
             if(!requireFirebase()) return;
             if(currentShareFiles.length === 0) return;
 
-            document.getElementById('shareBtn').textContent = '⏳ Generating...';
+            document.getElementById('shareBtn').textContent = `⏳ Uploading ${currentShareFiles.length} file${currentShareFiles.length === 1 ? '' : 's'}...`;
             document.getElementById('shareBtn').disabled = true;
 
             try {
@@ -2504,6 +2614,8 @@
                 });
 
                 document.getElementById('shareCodeDisplay').textContent = code;
+                const successTitle = document.getElementById('shareSuccessTitle');
+                if (successTitle) successTitle.textContent = `${filesData.length} file${filesData.length === 1 ? '' : 's'} uploaded under one code`;
                 document.getElementById('shareResult').classList.remove('hidden');
 
                 const qrContainer = document.getElementById('qrcode');
@@ -2525,8 +2637,7 @@
                 showToast('Error: ' + err.message, 'error');
             }
 
-            document.getElementById('shareBtn').textContent = '🔗 Generate Share Code & QR';
-            document.getElementById('shareBtn').disabled = false;
+            renderShareFiles();
         }
 
         function copyCode() {
@@ -2563,19 +2674,16 @@ Open and download: ${shareUrl}`;
         }
 
         function resetCodeShare() {
-            currentShareFiles = [];
-            const input = document.getElementById('shareInput');
-            if(input) input.value = '';
+            clearShareFiles();
             const note = document.getElementById('shareNote');
             if(note) note.value = '';
-            document.getElementById('shareFileInfo')?.classList.add('hidden');
-            if(document.getElementById('shareFileInfo')) document.getElementById('shareFileInfo').innerHTML = '';
             document.getElementById('shareResult')?.classList.add('hidden');
             const qr = document.getElementById('qrcode');
             if(qr) qr.innerHTML = '';
-            const btn = document.getElementById('shareBtn');
-            if(btn) { btn.disabled = true; btn.textContent = '🔗 Generate Share Code & QR'; }
-            document.getElementById('shareCodeDisplay').textContent = 'ABC123';
+            const codeDisplay = document.getElementById('shareCodeDisplay');
+            if(codeDisplay) codeDisplay.textContent = 'ABC123';
+            const successTitle = document.getElementById('shareSuccessTitle');
+            if(successTitle) successTitle.textContent = 'Documents uploaded successfully';
             window.scrollTo({ top: document.getElementById('regularShareSection')?.offsetTop || 0, behavior:'smooth' });
         }
 

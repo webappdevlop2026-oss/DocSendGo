@@ -1,0 +1,20 @@
+DocSendGo Multi-Document Update
+
+এই আপডেটে:
+- একটি file অথবা একসাথে একাধিক file নির্বাচন করা যাবে।
+- প্রথমবার file নেওয়ার পরে “Add More Files” দিয়ে আরও file যোগ করা যাবে।
+- প্রতিটি file আলাদাভাবে Remove করা যাবে।
+- “Clear All” দিয়ে সব selected file সরানো যাবে।
+- সর্বোচ্চ 20টি file একসাথে পাঠানো যাবে।
+- প্রতিটি file সর্বোচ্চ 20 MB এবং মোট সর্বোচ্চ 100 MB।
+- সব selected file-এর জন্য একটি Share Code ও একটি QR তৈরি হবে।
+- Receiver একই code দিয়ে সব file View / Print / Download করতে পারবে।
+- QR scan করে direct send করার ক্ষেত্রেও একই multi-file ব্যবস্থা রয়েছে।
+- Service Worker cache version আপডেট করা হয়েছে।
+
+GitHub Update:
+1. ZIP extract করুন।
+2. GitHub repository-এর পুরোনো file-গুলোর জায়গায় নতুন file upload করুন।
+3. Vercel redeploy করুন।
+4. PC-তে Ctrl + Shift + R চাপুন।
+5. Mobile-এ browser cache clear করুন বা app পুনরায় খুলুন।

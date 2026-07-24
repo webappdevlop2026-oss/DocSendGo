@@ -1,4 +1,50 @@
-<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0ea5e9"><meta name="description" content="Official DocSendGo support and data deletion request information."><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><title>Contact & Support | DocSendGo</title><style>
-:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#0f172a;background:#f8fafc}
-*{box-sizing:border-box}body{margin:0;background:#f8fafc}.site-top{background:linear-gradient(135deg,#0f172a,#0ea5e9 58%,#6366f1);color:#fff;padding:22px 18px}.site-wrap{width:min(940px,calc(100% - 28px));margin:auto}.site-brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:23px}.site-logo{width:44px;height:44px;border-radius:14px;background:#fff;color:#1768f2;display:grid;place-items:center;font-weight:950}.site-tag{opacity:.9;margin-top:4px;font-size:13px}.site-card{background:#fff;margin:24px auto;padding:28px;border-radius:22px;box-shadow:0 16px 44px rgba(15,23,42,.09);line-height:1.72;border:1px solid #e8eef8}.site-card h1{font-size:31px;line-height:1.2;margin:0 0 9px}.site-card h2{font-size:20px;margin:28px 0 8px}.site-card h3{font-size:17px;margin:20px 0 6px}.muted{color:#64748b;font-size:14px}.pill{display:inline-flex;padding:6px 10px;border-radius:999px;background:#e0f2fe;color:#0369a1;font-weight:800;font-size:12px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.button{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 17px;border-radius:13px;text-decoration:none;font-weight:850;background:linear-gradient(135deg,#0ea5e9,#4f46e5);color:#fff;border:0;cursor:pointer}.button.secondary{background:#eef2ff;color:#3730a3}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.box{padding:17px;border-radius:17px;background:#f8fafc;border:1px solid #e5eaf2}.box b{display:block;margin-bottom:5px}.site-footer{text-align:center;padding:18px 14px 36px;color:#64748b;font-size:13px}.site-footer a{color:#2563eb}.faq details{padding:15px 0;border-bottom:1px solid #e5e7eb}.faq summary{cursor:pointer;font-weight:850}.faq p{margin:9px 0 0}.notice{padding:14px 16px;border-radius:15px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}.success{padding:14px 16px;border-radius:15px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46}ul{padding-left:22px}a{color:#0284c7}.support-link{word-break:break-word}@media(max-width:640px){.site-card{margin:14px auto;padding:20px;border-radius:18px}.site-top{padding:17px 14px}.site-card h1{font-size:26px}.grid{grid-template-columns:1fr}}
-</style></head><body><header class="site-top"><div class="site-wrap"><div class="site-brand"><div class="site-logo">DS</div><div>DocSendGo<div class="site-tag">Scan • Send • Receive • Print</div></div></div></div></header><main class="site-wrap"><article class="site-card"><span class="pill">Support</span><h1>Contact DocSendGo</h1><p>For help with app access, file sharing, printing, profile problems or a privacy request, use the official support website below.</p><div class="box"><b>Support website</b><a class="support-link" href="https://www.digitalagencybychandandas.in/" target="_blank" rel="noopener">www.digitalagencybychandandas.in</a></div><h2>When requesting support</h2><ul><li>Mention the app name: <strong>DocSendGo</strong>.</li><li>Explain the screen and action where the problem occurred.</li><li>Send a screenshot only after hiding private document information, mobile numbers and codes.</li><li>Never send your password, OTP or complete identity document through a public message.</li></ul><h2>Data deletion request</h2><p>Use the support website and clearly write <strong>“DocSendGo data deletion request”</strong>. Include only the User ID or Share Code needed to locate the record. Do not attach the document again unless support specifically asks through a secure channel.</p><div class="actions"><a class="button" href="https://www.digitalagencybychandandas.in/" target="_blank" rel="noopener">Open support website</a><a class="button secondary" href="faq.html">Read FAQ</a></div></article></main><footer class="site-footer">DocSendGo • Developed by <a href="https://www.digitalagencybychandandas.in/" target="_blank" rel="noopener">Digital Agency by Chandan Das</a></footer></body></html>
+(() => {
+  'use strict';
+  const APP_URL = 'https://doc-send-go.vercel.app/';
+
+  window.shareDocSendGoApp = async function shareDocSendGoApp() {
+    const data = {
+      title: 'DocSendGo',
+      text: 'DocSendGo – Scan, send, receive and print documents securely.',
+      url: APP_URL
+    };
+    try {
+      if (window.AndroidBridge && typeof window.AndroidBridge.shareText === 'function') {
+        window.AndroidBridge.shareText(`${data.text} ${data.url}`);
+        return;
+      }
+      if (navigator.share) {
+        await navigator.share(data);
+        return;
+      }
+      await navigator.clipboard.writeText(`${data.text} ${data.url}`);
+      if (typeof window.showToast === 'function') window.showToast('App link copied ✅');
+      else alert('App link copied');
+    } catch (error) {
+      if (error && error.name !== 'AbortError') {
+        if (typeof window.showToast === 'function') window.showToast('Unable to share right now', 'error');
+      }
+    }
+  };
+
+  const makeNetworkBanner = () => {
+    if (document.getElementById('dsgNetworkBanner')) return;
+    const bar = document.createElement('div');
+    bar.id = 'dsgNetworkBanner';
+    bar.setAttribute('role', 'status');
+    bar.style.cssText = 'display:none;position:fixed;left:12px;right:12px;top:12px;z-index:10050;padding:11px 14px;border-radius:13px;background:#7f1d1d;color:#fff;text-align:center;font:800 13px system-ui;box-shadow:0 10px 30px #0f172a40';
+    bar.textContent = 'No internet connection — sending and receiving are paused.';
+    document.body.appendChild(bar);
+    const update = () => { bar.style.display = navigator.onLine ? 'none' : 'block'; };
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    update();
+  };
+
+  window.addEventListener('DOMContentLoaded', () => {
+    makeNetworkBanner();
+    if (window.AndroidBridge && typeof window.AndroidBridge.isNativeApp === 'function') {
+      document.documentElement.classList.add('native-android-app');
+    }
+  });
+})();

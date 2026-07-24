@@ -1,50 +1,31 @@
-(() => {
-  'use strict';
-  const APP_URL = 'https://doc-send-go.vercel.app/';
-
-  window.shareDocSendGoApp = async function shareDocSendGoApp() {
-    const data = {
-      title: 'DocSendGo',
-      text: 'DocSendGo – Scan, send, receive and print documents securely.',
-      url: APP_URL
-    };
-    try {
-      if (window.AndroidBridge && typeof window.AndroidBridge.shareText === 'function') {
-        window.AndroidBridge.shareText(`${data.text} ${data.url}`);
-        return;
-      }
-      if (navigator.share) {
-        await navigator.share(data);
-        return;
-      }
-      await navigator.clipboard.writeText(`${data.text} ${data.url}`);
-      if (typeof window.showToast === 'function') window.showToast('App link copied ✅');
-      else alert('App link copied');
-    } catch (error) {
-      if (error && error.name !== 'AbortError') {
-        if (typeof window.showToast === 'function') window.showToast('Unable to share right now', 'error');
-      }
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
     }
-  };
-
-  const makeNetworkBanner = () => {
-    if (document.getElementById('dsgNetworkBanner')) return;
-    const bar = document.createElement('div');
-    bar.id = 'dsgNetworkBanner';
-    bar.setAttribute('role', 'status');
-    bar.style.cssText = 'display:none;position:fixed;left:12px;right:12px;top:12px;z-index:10050;padding:11px 14px;border-radius:13px;background:#7f1d1d;color:#fff;text-align:center;font:800 13px system-ui;box-shadow:0 10px 30px #0f172a40';
-    bar.textContent = 'No internet connection — sending and receiving are paused.';
-    document.body.appendChild(bar);
-    const update = () => { bar.style.display = navigator.onLine ? 'none' : 'block'; };
-    window.addEventListener('online', update);
-    window.addEventListener('offline', update);
-    update();
-  };
-
-  window.addEventListener('DOMContentLoaded', () => {
-    makeNetworkBanner();
-    if (window.AndroidBridge && typeof window.AndroidBridge.isNativeApp === 'function') {
-      document.documentElement.classList.add('native-android-app');
+    function isSuperAdmin() {
+      return isAdmin() && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'superadmin';
     }
-  });
-})();
+    match /admins/{uid} { allow read: if request.auth != null && request.auth.uid == uid; allow write: if isSuperAdmin(); }
+    match /adminLogs/{id} { allow create, read: if isAdmin(); allow update, delete: if isSuperAdmin(); }
+    match /appSettings/{id} { allow read: if true; allow write: if isSuperAdmin(); }
+    match /appConfig/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /profiles/{userId} { allow read, create, update: if true; allow delete: if isSuperAdmin(); }
+    match /earlyAccess/{userId} { allow read: if true; allow write: if isAdmin(); }
+    match /referrals/{id} { allow read, create: if true; allow update, delete: if isAdmin(); }
+    match /reports/{id} { allow create, read: if true; allow update, delete: if isAdmin(); }
+    match /supportTickets/{id} { allow create, read: if true; allow update, delete: if isAdmin(); }
+    match /adminNotifications/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /shops/{shopId} { allow read, create, update: if true; allow delete: if isAdmin(); match /documents/{docId} { allow read, create, update: if true; allow delete: if isAdmin(); } }
+    match /documentHistory/{historyId} { allow create, update: if true; allow read, delete: if isAdmin(); }
+    match /shares/{shareId} { allow read, create, update: if true; allow delete: if isAdmin(); }
+    match /groceryOrders/{orderId} { allow read, create, update: if true; allow delete: if isAdmin(); }
+    match /groceryBills/{billId} { allow read, create, update: if true; allow delete: if isAdmin(); }
+    match /stores/{storeCode} { allow read, create, update: if true; allow delete: if isAdmin(); }
+    match /storeOrders/{orderId} { allow read, create, update: if true; allow delete: if isAdmin(); }
+    match /storeBills/{billId} { allow read, create, update: if true; allow delete: if isAdmin(); }
+  }
+}
